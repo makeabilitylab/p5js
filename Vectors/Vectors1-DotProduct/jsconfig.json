@@ -1,0 +1,8 @@
+{
+    "include": [
+      "*.js",
+      "libraries/*.js",
+      "node_modules/@types/p5/global.d.ts",
+      "c:\\Users\\jonfr\\.vscode\\extensions\\samplavigne.p5-vscode-1.2.3\\p5types\\global.d.ts"
+    ]
+}
