@@ -1,0 +1,5 @@
+{
+    "files.exclude": {
+        "p5types/": true
+    }
+}
