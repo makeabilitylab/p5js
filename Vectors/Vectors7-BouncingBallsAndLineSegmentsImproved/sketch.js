@@ -41,7 +41,7 @@ function setup() {
 
 function draw() {
   background(200);
-
+  
   if (keyIsDown(LEFT_ARROW)) {
     ball.rotate(-0.01);
   } else if (keyIsDown(RIGHT_ARROW)) {

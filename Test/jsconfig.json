@@ -4,7 +4,4 @@
     "libraries/*.js",
     "..\\p5types\\global.d.ts",
   ],
-  "old": [
-    "/Users/jonf/.vscode/extensions/samplavigne.p5-vscode-1.2.3/p5types/global.d.ts"
-  ]
 }
