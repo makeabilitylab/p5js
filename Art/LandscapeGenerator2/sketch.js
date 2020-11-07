@@ -39,7 +39,7 @@ function setup() {
   topColor = getRandomTopBGColor();
   bottomColor = color(hue(topColor), saturation(topColor) * 0.9, brightness(topColor) * 1.5);
   sun = new Sun(topColor);
-
+  
   for (let i = 0; i < maxMountainRanges; i++) {
     let mountainRange = new MountainRange(i, maxMountainRanges, topColor);
     mountainRanges.push(mountainRange);
