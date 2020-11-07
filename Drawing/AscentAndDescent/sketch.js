@@ -1,5 +1,10 @@
 // Original: https://editor.p5js.org/aferriss/sketches/SJERxF4Zm
 // See also: https://p5js.org/reference/#/p5/textAscent
+//
+// TODO:
+//  - have drop down to select fonts (to see how things change)
+//  - print out ascent and descent information
+//  - be able to set font size
 function setup() {
   createCanvas(400, 400);
   noSmooth();
