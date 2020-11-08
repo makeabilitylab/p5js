@@ -10,8 +10,8 @@ function setup() {
  
   // Two different ways of accessing the same element. One is the p5js way
   // the other is the standard js way
-  // print(select("#slider-size").attribute('max'));
-  // print(document.getElementById("slider-size").max);
+  // print(select("#slider-size").attribute('max')); // p5 way
+  // print(document.getElementById("slider-size").max); // standard js way
   document.getElementById("slider-size").max = min(width, height);
 
   let hexColor = "#" + hex(red(_ballFillColor),2) + hex(green(_ballFillColor),2) + hex(blue(_ballFillColor),2);
