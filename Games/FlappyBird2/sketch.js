@@ -188,6 +188,17 @@ function drawScore() {
  
 }
 
+function mousePressed(){
+  bird.flap();
+
+  if(isGameOver == true && mouseButton === RIGHT){
+    resetGame();
+  }else if(hasGameBegun == false && mouseButton === RIGHT){
+    hasGameBegun = true;
+    loop();
+  }
+}
+
 function keyPressed(){
   if (key == ' '){ // spacebar 
     bird.flap();
