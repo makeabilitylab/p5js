@@ -113,6 +113,32 @@ function drawScore() {
   }
 }
 
+function mousePressed(){
+  let snakeHead = snake.getHead();
+  let diffY = mouseY - snakeHead.y;
+  let diffX = mouseX - snakeHead.x;
+  let hasRunIntoSelf = false;
+  
+  if(mouseY < snakeHead.y && abs(diffY) >= abs(diffX)){
+    hasRunIntoSelf = !snake.setDir(DIRECTION.UP);
+  }else if(mouseY > snakeHead.y && abs(diffY) >= abs(diffX)){
+    hasRunIntoSelf = !snake.setDir(DIRECTION.DOWN);
+  }else if(mouseX > snakeHead.x){
+    hasRunIntoSelf = !snake.setDir(DIRECTION.RIGHT);
+  }else if(mouseX < snakeHead.x){
+    hasRunIntoSelf = !snake.setDir(DIRECTION.LEFT);
+  }
+
+  if (hasRunIntoSelf){
+    isGameOver = true;  
+  }
+
+  if (isGameOver == true && key === ' ') {
+    setupGameEntities();
+    isGameOver = false;
+  }
+}
+
 function keyPressed() {
   let hasRunIntoSelf = false;
   switch (keyCode) {
