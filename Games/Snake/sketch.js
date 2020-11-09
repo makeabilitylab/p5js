@@ -115,13 +115,13 @@ function drawScore() {
 
 function mousePressed(){
   let snakeHead = snake.getHead();
-  let diffY = mouseY - snakeHead.y;
-  let diffX = mouseX - snakeHead.x;
+  let diffY = abs(mouseY - snakeHead.y);
+  let diffX = abs(mouseX - snakeHead.x);
   let hasRunIntoSelf = false;
   
-  if(mouseY < snakeHead.y && abs(diffY) >= abs(diffX)){
+  if(mouseY < snakeHead.y && diffY >= diffX){
     hasRunIntoSelf = !snake.setDir(DIRECTION.UP);
-  }else if(mouseY > snakeHead.y && abs(diffY) >= abs(diffX)){
+  }else if(mouseY > snakeHead.y && diffY >= diffX){
     hasRunIntoSelf = !snake.setDir(DIRECTION.DOWN);
   }else if(mouseX > snakeHead.x){
     hasRunIntoSelf = !snake.setDir(DIRECTION.RIGHT);
