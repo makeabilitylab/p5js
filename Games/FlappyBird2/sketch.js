@@ -189,6 +189,10 @@ function drawScore() {
  
 }
 
+function touchStarted(){
+  mousePressed();
+}
+
 function mousePressed(){
   bird.flap();
 
