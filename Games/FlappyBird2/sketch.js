@@ -27,6 +27,7 @@
 //    has something similar: https://www.youtube.com/watch?v=aKiyCeIuwn4)
 //
 // Possible TODOs:
+//  - give custom instructions if on an iPhone or tablet
 //  - add in comments: https://javascript.info/comments
 //  - add code to github (and a runnable version from github.io)
 //  - add in sound effects?
@@ -191,9 +192,11 @@ function drawScore() {
 function mousePressed(){
   bird.flap();
 
-  if(isGameOver == true && mouseButton === RIGHT){
+  if(isGameOver == true && 
+    (mouseButton === RIGHT || touches.length >= 2)){
     resetGame();
-  }else if(hasGameBegun == false && mouseButton === RIGHT){
+  }else if(hasGameBegun == false && 
+    (mouseButton === RIGHT || touches.length >= 2)){
     hasGameBegun = true;
     loop();
   }
