@@ -25,16 +25,24 @@
     </div>
     <div class="w3-bar-block">
       <span class="w3-bar-item">Size: 
-        <input id="slider-size" type="range" min="1" max="100" value="50" onchange="sizeChanged(this, event)" style="width:100%"/>
+        <input id="slider-size" type="range" min="1" max="100" value="50" onchange="ballSizeChanged(this, event)" style="width:100%"/>
       </span>
       <span class="w3-bar-item">Color: 
-        <input id="color-picker" type="color" onchange="colorChanged(this, event)" style="width:100%"/>
+        <input id="color-picker" type="color" onchange="ballColorChanged(this, event)" style="width:100%"/>
+      </span>
+      <span class="w3-bar-item">
+        <input class="w3-check" type="checkbox" onchange="autoFillDivChanged(this, event)">
+        <label>Auto-fill div</label>
+      </span>  
+      <span class="w3-bar-item">
+        <input class="w3-check" type="checkbox" onchange="fullScreenModeChanged(this, event)">
+        <label>Full screen</label>
       </span> 
     </div>
   </div>
 
   <div id="main" style="margin-left:200px">
-    <div class="w3-container w3-display-container"> <!-- add 0 padding here to have no left padding -->
+    <div class="w3-container w3-display-container" style="padding:0px;"> <!-- add 0 padding here to have no left padding -->
       <span title="Expanded Sidebar" style="display:none" id="expanded-sidebar"
         class="w3-button w3-transparent w3-display-topleft w3-xlarge" onclick="openSidebar()">&#9776;</span>
       <div id="sketch-container">
