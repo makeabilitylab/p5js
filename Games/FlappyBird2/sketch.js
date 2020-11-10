@@ -84,6 +84,7 @@ function resetGame(){
   bird = new Bird(64, height / 2);
   barriers = [createBarrier()];
   nextSpawnDistance = random(minDistanceBetweenPipes, width - width/4);
+  startingSpeed = 4;
   //nextSpawnDistance = random(width, width * 2);
   loop();
 } 
