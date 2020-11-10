@@ -191,7 +191,10 @@ function drawScore() {
 
 function touchStarted(){
   mousePressed();
-  print("touchStarted with " + touches.length + " touches")
+  print("touchStarted with " + touches.length + " touches");
+
+  // prevent default
+  return false;
 }
 
 function mousePressed(){
@@ -206,7 +209,10 @@ function mousePressed(){
     loop();
   }
 
-  print("mousePressed: mouseButton = " + mouseButton)
+  print("mousePressed: mouseButton = " + mouseButton);
+
+  // prevent default
+  return false;
 }
 
 function keyPressed(){
