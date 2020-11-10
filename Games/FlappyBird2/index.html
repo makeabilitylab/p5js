@@ -10,7 +10,8 @@
 </head>
 
 <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action -->
-<body style="touch-action: manipulation;">
+<!-- to disable the right click context menu: https://stackoverflow.com/a/39895262 -->
+<body style="touch-action: manipulation;" oncontextmenu="return false;">
   <script src="sketch.js"></script>
   <script src="shape.js"></script>
   <script src="barrier.js"></script>
