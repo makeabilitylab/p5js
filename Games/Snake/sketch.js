@@ -139,7 +139,8 @@ function mousePressed(){
     isGameOver = true;  
   }
 
-  if (isGameOver == true && key === ' ') {
+  if (isGameOver == true && 
+    (mouseButton === RIGHT || touches.length >= 2)) {
     setupGameEntities();
     isGameOver = false;
   }
