@@ -191,6 +191,7 @@ function drawScore() {
 
 function touchStarted(){
   mousePressed();
+  print("touchStarted with " + touches.length + " touches")
 }
 
 function mousePressed(){
@@ -204,6 +205,8 @@ function mousePressed(){
     hasGameBegun = true;
     loop();
   }
+
+  print("mousePressed: mouseButton = " + mouseButton)
 }
 
 function keyPressed(){
