@@ -113,6 +113,12 @@ function drawScore() {
   }
 }
 
+function touchStarted(){
+  print("touchStarted: ", mouseX, mouseY);
+  mousePressed();
+  
+}
+
 function mousePressed(){
   let snakeHead = snake.getHead();
   let diffY = abs(mouseY - snakeHead.y);
