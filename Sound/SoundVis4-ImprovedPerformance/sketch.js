@@ -69,17 +69,26 @@ function preload(){
 }
 
 function setup() {
+
   let canvasWidth = 900; // windowWidth
   let canvasHeight = 600;
   
-  if(goFullScreen){
-    canvasWidth = windowWidth;
-    canvasHeight = windowHeight;
-  }
+  // if(goFullScreen){
+  //   canvasWidth = windowWidth;
+  //   canvasHeight = windowHeight;
+  // }
   
-  createCanvas(canvasWidth, canvasHeight);
+  canvas = createCanvas(canvasWidth, canvasHeight);
+
+  // Move the canvas so it’s inside our <div id="sketch-container">.
+  canvas.parent('sketch-container');
   
   mic = new p5.AudioIn();
+
+  getAudioContext().onstatechange = function() {
+    console.log("getAudioContext().onstatechange", getAudioContext().state);
+  }
+
   mic.start();
   
   let micSamplingRate = sampleRate();
@@ -109,6 +118,25 @@ function setup() {
   
   backgroundColor = color(90);
   
+  canvasHasBeenResized();
+  
+  noFill();
+  
+  //frameRate(2); // slow down draw rate for debugging
+}
+
+function fullScreenModeChanged(src, e){
+  print("fullScreenModeChanged", src, e);
+  fullscreen(src.checked);
+  resizeCanvas(window.innerWidth, window.innerHeight);
+  canvasHasBeenResized();
+}
+
+function canvasHasBeenResized(){
+  print("canvasHasBeenResized");
+  noLoop();
+  visualizations.length = 0; // https://stackoverflow.com/a/1234337
+
   // split the canvas into different parts for the visualization
   let yTop = 0;
   let yHeight = height / 3;
@@ -121,7 +149,7 @@ function setup() {
   
   // when we call fft.waveform(), this function returns an array of sound amplitude values 
   // (between -1.0 and +1.0). Length of this buffer is equal to bins (defaults to 1024). 
-  let lengthOfOneWaveformBufferInSecs = numFftBins/samplingRate;
+  let lengthOfOneWaveformBufferInSecs = numFftBins/sampleRate();
   yTop = scrollingSpectrogram.getBottom();
   instantWaveFormVis = new InstantWaveformVis(xBottom, yTop, xBottomWidth, yHeight, backgroundColor, lengthOfOneWaveformBufferInSecs);
   xBottom += xBottomWidth;
@@ -129,17 +157,23 @@ function setup() {
   xBottom += xBottomWidth;
   spectrumBarGraph = new SpectrumBarGraph(xBottom, yTop, xBottomWidth, yHeight, backgroundColor);
   
-  // Put all visuzliations into an array, which helps for setting up
+  // Put all visualizations into an array, which helps for setting up
   // color schemes, etc.
   visualizations.push(scrollingWaveform);
   visualizations.push(scrollingSpectrogram);
   visualizations.push(instantWaveFormVis);
   visualizations.push(spectrumVis);
   visualizations.push(spectrumBarGraph);
-  
-  noFill();
-  
-  //frameRate(2); // slow down draw rate for debugging
+
+  loop();
+}
+
+window.onresize = function() {
+  // TODO: this is almost working but doesn't seem to accomodate the sidebar.
+  // we really want to measure the size of the 'sketch-container'
+  print("onresize event");
+  resizeCanvas(window.innerWidth, window.innerHeight);
+  canvasHasBeenResized();
 }
 
 function audioInErrorCallback(){
@@ -151,6 +185,10 @@ function mouseClicked() {
   
   //fft = new p5.FFT(0, numFftBins);
   //fft.setInput(mic);
+
+  getAudioContext().resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
 }
 
 function draw() {
