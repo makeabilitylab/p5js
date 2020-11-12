@@ -1,0 +1,15 @@
+{
+  "name": "draw_together",
+  "version": "1.0.0",
+  "description": "A Node.js project to draw together over the web",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jon E. Froehlich",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.0.1"
+  }
+}
