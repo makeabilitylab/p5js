@@ -54,7 +54,7 @@ let classificationResults;
 function preload() {
   // I originally tried to load a font like this example, but it didn't work
   //  - Example: https://editor.p5js.org/allison.parrish/sketches/ByyxP7Gbe
-  arcadeFont = loadFont('arcadefont.ttf');
+  arcadeFont = loadFont('assets/arcadefont.ttf');
   
   let options = { probabilityThreshold: 0.9 };
   soundClassifier = ml5.soundClassifier('SpeechCommands18w', options); 

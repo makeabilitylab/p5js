@@ -54,7 +54,7 @@ let minDistanceBetweenPipes;
 let nextSpawnDistance;
 
 function preload() {
-  arcadeFont = loadFont('arcadefont.ttf');
+  arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
 function setup() {
