@@ -25,20 +25,37 @@
 let video;
 let poseNet;
 let human = null;
+let handpose = null;
+let handPosePredictions = [];
+let video2;
 
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
   video.hide();
-  
+
   // setup PoseNet. This can take a while, so we load it 
   // asynchronously (when it's done, it will call modelReady)
-  poseNet = ml5.poseNet(video, onModelReady); //call onModelReady when setup
+  poseNet = ml5.poseNet(video, onPoseNetModelReady); //call onModelReady when setup
   poseNet.on('pose', onPoseDetected); // call onPoseDetected when pose detected
+
+  video2 = createCapture(VIDEO);
+  video2.hide();
+  handpose = ml5.handpose(video2, onHandPoseReady);
+
+  // // This sets up an event that fills the global variable "predictions"
+  // // with an array every time new hand poses are detected
+  handpose.on("predict", results => {
+    handPosePredictions = results;
+  });
 }
 
-function onModelReady() {
+function onPoseNetModelReady() {
   print("The PoseNet model is ready...");
+}
+
+function onHandPoseReady() {
+  print("The hand pose model is ready...");
 }
 
 function onPoseDetected(poses) {
@@ -55,49 +72,38 @@ function draw() {
   noStroke(); // turn off drawing outlines of shapes
 
   if (human != null) {
-    
+
     // For keypoints, see:
     // https://github.com/tensorflow/tfjs-models/tree/master/posenet#keypoints
     // The arm keypoints are 5 - 10
     const pose = human.pose;
-    for(let i = 5; i <= 10; i++){
-      drawKeypoint(pose.keypoints[i]);
+    for (let i = 5; i <= 10; i++) {
+      drawPoseNetKeypoint(pose.keypoints[i]);
     }
   }
 
-  function drawKeypoint(kp){
-    //console.log(kp);
-    fill(255, 0, 0, 220);
-    ellipse(kp.position.x, kp.position.y, 10);
-    text(kp.part, kp.position.x, kp.position.y);
-    text(kp.score, kp.position.x, kp.position.y + 15);
+  if(handPosePredictions != null){
+    drawHandposeKeypoints();
   }
+}
 
-  /**
-   * Draws a nose at the given x,y position
-   * 
-   * @param {number} x the x pos of the nose
-   * @param {number} y the y pos of the nose
-   */
-  function drawNose(x, y) {
-    fill(255, 0, 0);
-    let noseWidth = 30;
-    ellipse(x, y, noseWidth);
-  }
+function drawPoseNetKeypoint(kp) {
+  //console.log(kp);
+  fill(255, 0, 0, 220);
+  ellipse(kp.position.x, kp.position.y, 10);
+  text(kp.part, kp.position.x, kp.position.y);
+  text(kp.score, kp.position.x, kp.position.y + 15);
+}
 
-  /**
-   * Draws an eye at the given x,y position
-   * 
-   * @param {number} x the x pos of the eye
-   * @param {number} y the y pos of the eye
-   */
-  function drawEye(x, y) {
-    fill(255);
-    let eyeWidth = 40;
-    let pupilWidth = 15;
-    ellipse(x, y, eyeWidth);
-
-    fill(0);
-    ellipse(x, y, pupilWidth);
+// A function to draw ellipses over the detected keypoints
+function drawHandposeKeypoints() {
+  for (let i = 0; i < handPosePredictions.length; i += 1) {
+    const prediction = handPosePredictions[i];
+    for (let j = 0; j < prediction.landmarks.length; j += 1) {
+      const keypoint = prediction.landmarks[j];
+      fill(0, 255, 0);
+      noStroke();
+      ellipse(keypoint[0], keypoint[1], 10, 10);
+    }
   }
 }
