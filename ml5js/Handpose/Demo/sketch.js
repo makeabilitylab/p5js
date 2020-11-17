@@ -15,6 +15,10 @@
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 //
+// TODO: 
+//  - calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
+//  - calculate angle from palm to middle finger to determine angle of hand?
+//  - use hand angle to calculate wave rate
 
 let handposeModel;
 let video;
