@@ -25,6 +25,7 @@
 let video;
 let poseNet;
 let human = null;
+let handpose = null;
 
 function setup() {
   createCanvas(640, 480);
@@ -33,12 +34,24 @@ function setup() {
   
   // setup PoseNet. This can take a while, so we load it 
   // asynchronously (when it's done, it will call modelReady)
-  poseNet = ml5.poseNet(video, onModelReady); //call onModelReady when setup
+  poseNet = ml5.poseNet(video, onPoseNetModelReady); //call onModelReady when setup
   poseNet.on('pose', onPoseDetected); // call onPoseDetected when pose detected
+
+  handpose = ml5.handpose(video, onHandPoseModelReady);
+
+  // This sets up an event that fills the global variable "predictions"
+  // with an array every time new hand poses are detected
+  handpose.on("predict", results => {
+    predictions = results;
+  });
 }
 
-function onModelReady() {
+function onPoseNetModelReady() {
   print("The PoseNet model is ready...");
+}
+
+function onHandPoseModelReady() {
+  print("The Handpose model is ready...");
 }
 
 function onPoseDetected(poses) {
