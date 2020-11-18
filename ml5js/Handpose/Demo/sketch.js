@@ -15,48 +15,96 @@
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 //
+// TODO: 
+//  - calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
+//  - calculate angle from palm to middle finger to determine angle of hand?
+//  - use hand angle to calculate wave rate
 
-let handpose;
+let handposeModel;
 let video;
 let predictions = [];
+let curHandpose = null;
 
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
-  video.size(width, height);
+  // video.size(width, height);
 
-  handpose = ml5.handpose(video, modelReady);
+  handposeModel = ml5.handpose(video, onHandposeModelReady);
 
   // This sets up an event that fills the global variable "predictions"
   // with an array every time new hand poses are detected
-  handpose.on("predict", results => {
-    predictions = results;
-  });
+  handposeModel.on("predict", onNewHandposePrediction);
 
   // Hide the video element, and just show the canvas
   video.hide();
 }
 
-function modelReady() {
-  console.log("Model ready!");
+function onHandposeModelReady() {
+  console.log("Handpose model ready!");
+}
+
+function onNewHandposePrediction(predictions) {
+  if(predictions && predictions.length > 0){
+    curHandpose = predictions[0];
+    console.log(curHandpose);
+  }else{
+    curHandpose = null;
+  }
 }
 
 function draw() {
   image(video, 0, 0, width, height);
 
-  // We can call both functions to draw all keypoints and the skeletons
-  drawKeypoints();
+  drawHand(curHandpose);
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints() {
-  for (let i = 0; i < predictions.length; i += 1) {
-    const prediction = predictions[i];
-    for (let j = 0; j < prediction.landmarks.length; j += 1) {
-      const keypoint = prediction.landmarks[j];
-      fill(0, 255, 0);
-      noStroke();
-      ellipse(keypoint[0], keypoint[1], 10, 10);
-    }
+function drawHand(handpose) {
+  if(!handpose){
+    return;
   }
+
+  // The handpose data is in this format, see: https://learn.ml5js.org/#/reference/handpose?id=predict
+  // {
+  //   handInViewConfidence: 1, // The probability of a hand being present.
+  //   boundingBox: { // The bounding box surrounding the hand.
+  //     topLeft: [162.91, -17.42],
+  //     bottomRight: [548.56, 368.23],
+  //   },
+  //   landmarks: [ // The 3D coordinates of each hand landmark.
+  //     [472.52, 298.59, 0.00],
+  //     [412.80, 315.64, -6.18],
+  //     ...
+  //   ],
+  //   annotations: { // Semantic groupings of the `landmarks` coordinates.
+  //     thumb: [
+  //       [412.80, 315.64, -6.18]
+  //       [350.02, 298.38, -7.14],
+  //       ...
+  //     ],
+  //     ...
+  //   }
+
+  // Draw landmarks
+  for (let j = 0; j < handpose.landmarks.length; j += 1) {
+    const landmark = handpose.landmarks[j];
+    fill(0, 255, 0, 200);
+    noStroke();
+    ellipse(landmark[0], landmark[1], 10, 10);
+  }
+
+  // Draw bounding box
+  noFill();
+  stroke(0, 255, 0, 200);
+  const bb = handpose.boundingBox;
+  const bbWidth = bb.bottomRight[0] - bb.topLeft[0];
+  const bbHeight = bb.bottomRight[1] - bb.topLeft[1];
+  rect(bb.topLeft[0], bb.topLeft[1], bbWidth, bbHeight);
+
+  // Draw confidence
+  fill(0, 255, 0, 200);
+  noStroke();
+  text(nfc(handpose.handInViewConfidence, 2), bb.topLeft[0], bb.topLeft[1] - 15);
+  
 }

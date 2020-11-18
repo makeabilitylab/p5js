@@ -29,6 +29,7 @@
 //  - [done] some pipes have multiple holes that you need to choose?
 //  - [done] track high scores and show them?
 //  - [done] bird flaps with arms in PoseNet
+//  - update instructions to have user flap
 //  - strength of bird flap corresponds to max,min distance of arms on flap
 //    as well as the speed of the flap
 //  - use flap motion to start game :-)
@@ -58,7 +59,7 @@ let armFlap = null;
 let drawDebugInfo = false; // set to true to turn on debug info
 
 function preload() {
-  arcadeFont = loadFont('arcadefont.ttf');
+  arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
 function setup() {
