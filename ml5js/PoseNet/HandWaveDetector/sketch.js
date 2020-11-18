@@ -11,7 +11,12 @@
 //  - [done] calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
 //  - [done] calculate angle from palm to middle finger to determine angle of hand?
 //  - use hand angle to calculate wave rate
-//  - fix bug in rotating bounding box around hand
+//  - to determine wave:
+//    - first, check to see if hand is mostly open. if so, consider this wave stance.
+//      to do this, could check the landmarks for each finger and deviation from a straight
+//      line from palm to end of finger. another way, simply check that end finger points
+//      are on top of all other points
+//    - second, determine angle of wave
 
 let handposeModel;
 let video;
@@ -98,7 +103,11 @@ function drawHand(handpose) {
   // Draw confidence
   fill(255, 0, 0);
   noStroke();
-  text(nfc(handpose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 15);
+  text(nfc(handpose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 12);
+
+  // Check if hand wave position
+  const handWavePosition = isInHandWavePosition(handpose);
+  text("handWavePosition: " + handWavePosition, tightBoundingBox.left, tightBoundingBox.top - 24);
 
   // Hand angle
   const a = handpose.annotations;
@@ -121,9 +130,22 @@ function drawHand(handpose) {
   rect(0, 0, tightBoundingBoxWidth, tightBoundingBoxHeight);
   pop();
 
-  // TODO: try a diff approach here
-  // take the normal at both the pamBase point and the middleFinger point
-  // and then the width of that normal is the width of the bounding box
+  // Draw tiny circles where the max extent finger points are
+  stroke(255);
+  fill(255);
+  const maxFingerPtSize = 3;
+  ellipse(tightBoundingBox.furthestLeftPoint.x, tightBoundingBox.furthestLeftPoint.y, maxFingerPtSize);
+  ellipse(tightBoundingBox.furthestRightPoint.x, tightBoundingBox.furthestRightPoint.y, maxFingerPtSize);
+  ellipse(tightBoundingBox.mostTopPoint.x, tightBoundingBox.mostTopPoint.y, maxFingerPtSize);
+  ellipse(tightBoundingBox.mostBottomPoint.x, tightBoundingBox.mostBottomPoint.y, maxFingerPtSize);
+
+  // Draw minimum distance lines to those points
+  // TODO: in future consider drawing a bounding box using these projections
+  const op1 = lineSegment.getOrthogonalProjection(tightBoundingBox.furthestRightPoint);
+  line(op1.x, op1.y, tightBoundingBox.furthestRightPoint.x, tightBoundingBox.furthestRightPoint.y);
+
+  const op2 = lineSegment.getOrthogonalProjection(tightBoundingBox.furthestLeftPoint);
+  line(op2.x, op2.y, tightBoundingBox.furthestLeftPoint.x, tightBoundingBox.furthestLeftPoint.y);
 }
 
 function drawKeypoints(handpose) {
@@ -136,6 +158,11 @@ function drawKeypoints(handpose) {
   let boundingBoxRight = boundingBoxLeft;
   let boundingBoxBottom = boundingBoxTop;
 
+  let furthestLeftPoint = createVector(boundingBoxLeft, boundingBoxTop);
+  let furthestRightPoint = createVector(boundingBoxLeft, boundingBoxTop);
+  let mostTopPoint = createVector(boundingBoxLeft, boundingBoxTop);
+  let mostBottomPoint = createVector(boundingBoxLeft, boundingBoxTop);
+
   // draw keypoints
   for (let j = 0; j < handpose.landmarks.length; j += 1) {
     const landmark = handpose.landmarks[j];
@@ -144,14 +171,26 @@ function drawKeypoints(handpose) {
     ellipse(landmark[0], landmark[1], 10, 10);
     if (landmark[0] < boundingBoxLeft) {
       boundingBoxLeft = landmark[0];
-    } else if (landmark[0] > boundingBoxRight) {
+      furthestLeftPoint.x = landmark[0];
+      furthestLeftPoint.y = landmark[1];
+    } 
+    
+    if (landmark[0] > boundingBoxRight) {
       boundingBoxRight = landmark[0];
+      furthestRightPoint.x = landmark[0];
+      furthestRightPoint.y = landmark[1];
     }
 
     if (landmark[1] < boundingBoxTop) {
       boundingBoxTop = landmark[1];
-    } else if (landmark[1] > boundingBoxBottom) {
+      mostTopPoint.x = landmark[0];
+      mostTopPoint.y = landmark[1];
+    } 
+    
+    if (landmark[1] > boundingBoxBottom) {
       boundingBoxBottom = landmark[1];
+      mostBottomPoint.x = landmark[0];
+      mostBottomPoint.y = landmark[1];
     }
   }
 
@@ -160,8 +199,70 @@ function drawKeypoints(handpose) {
     left: boundingBoxLeft,
     right: boundingBoxRight,
     top: boundingBoxTop,
-    bottom: boundingBoxBottom
+    bottom: boundingBoxBottom,
+
+    furthestLeftPoint: furthestLeftPoint,
+    furthestRightPoint: furthestRightPoint,
+    mostTopPoint: mostTopPoint,
+    mostBottomPoint: mostBottomPoint,
   };
+}
+
+/**
+ * Uses a basic heuristic to determine if hand is in hand pose position
+ * @param {ml5js handpose} handpose 
+ */
+function isInHandWavePosition(handpose){
+  if (!handpose) {
+    return false;
+  }
+
+  // Loop through all the skeletons detected
+  const a = handpose.annotations;
+
+  // Check to see if the palm base is lower than the index, middle, ring, and pinky bases
+  // Note that we purposefully don't check the thumb here as that base can be lower than the palm
+  // when waving
+  if(a.palmBase[0][1] < a.indexFinger[0][1] ||
+     a.palmBase[0][1] < a.middleFinger[0][1] ||
+     a.palmBase[0][1] < a.ringFinger[0][1] ||
+     a.palmBase[0][1] < a.pinky[0][1]){
+       return false;
+     }
+
+  // For every finger skeleton, check to make sure the points are ordered
+  // If not, probably not in a waving position
+  for (let i = 0; i < a.thumb.length - 1; i++) {
+    if(a.thumb[i][1] < a.thumb[i + 1][1]){
+      return false;
+    }
+  }
+
+  for (let i = 0; i < a.indexFinger.length - 1; i++) {
+    if(a.indexFinger[i][1] < a.indexFinger[i + 1][1]){
+      return false;
+    }
+  }
+
+  for (let i = 0; i < a.middleFinger.length - 1; i++) {
+    if(a.middleFinger[i][1] < a.middleFinger[i + 1][1]){
+      return false;
+    }
+  }
+
+  for (let i = 0; i < a.ringFinger.length - 1; i++) {
+    if(a.ringFinger[i][1] < a.ringFinger[i + 1][1]){
+      return false;
+    }
+  }
+
+  for (let i = 0; i < a.pinky.length - 1; i++) {
+    if(a.pinky[i][1] < a.pinky[i + 1][1]){
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // A function to draw the skeletons
@@ -180,15 +281,19 @@ function drawSkeleton(handpose) {
   for (let i = 0; i < a.thumb.length - 1; i++) {
     line(a.thumb[i][0], a.thumb[i][1], a.thumb[i + 1][0], a.thumb[i + 1][1]);
   }
+
   for (let i = 0; i < a.indexFinger.length - 1; i++) {
     line(a.indexFinger[i][0], a.indexFinger[i][1], a.indexFinger[i + 1][0], a.indexFinger[i + 1][1]);
   }
+
   for (let i = 0; i < a.middleFinger.length - 1; i++) {
     line(a.middleFinger[i][0], a.middleFinger[i][1], a.middleFinger[i + 1][0], a.middleFinger[i + 1][1]);
   }
+
   for (let i = 0; i < a.ringFinger.length - 1; i++) {
     line(a.ringFinger[i][0], a.ringFinger[i][1], a.ringFinger[i + 1][0], a.ringFinger[i + 1][1]);
   }
+
   for (let i = 0; i < a.pinky.length - 1; i++) {
     line(a.pinky[i][0], a.pinky[i][1], a.pinky[i + 1][0], a.pinky[i + 1][1]);
   }
