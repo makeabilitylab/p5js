@@ -175,8 +175,7 @@ class LineSegment{
     noStroke();
     //rotate(-vec.heading());
     textSize(8);
-    let lbl = nfc(degrees(vec.heading()), 1)+ "°" + 
-              ", " + nfc(vec.mag(), 1);
+    let lbl = nfc(degrees(vec.heading()), 1)+ "°" + ", " + nfc(vec.mag(), 1);
     let lblWidth = textWidth(lbl);
     text(lbl, -lblWidth, 12);
     
