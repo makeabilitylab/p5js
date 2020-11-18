@@ -9,8 +9,9 @@
 //
 // TODO: 
 //  - [done] calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
-//  - calculate angle from palm to middle finger to determine angle of hand?
+//  - [done] calculate angle from palm to middle finger to determine angle of hand?
 //  - use hand angle to calculate wave rate
+//  - fix bug in rotating bounding box around hand
 
 let handposeModel;
 let video;
@@ -119,6 +120,10 @@ function drawHand(handpose) {
   rotate(lineSegment.heading - PI/2);
   rect(0, 0, tightBoundingBoxWidth, tightBoundingBoxHeight);
   pop();
+
+  // TODO: try a diff approach here
+  // take the normal at both the pamBase point and the middleFinger point
+  // and then the width of that normal is the width of the bounding box
 }
 
 function drawKeypoints(handpose) {
