@@ -38,6 +38,7 @@ function setup() {
 
 function onHandposeModelReady() {
   console.log("Handpose model ready!");
+  document.getElementById("status").style.display = "none";
 }
 
 function onNewHandposePrediction(predictions) {
