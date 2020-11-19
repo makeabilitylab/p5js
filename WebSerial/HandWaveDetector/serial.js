@@ -57,7 +57,7 @@ async function connectSerial() {
     const writableStreamClosed = textEncoder.readable.pipeTo(serialPort.writable);
     serialWriter = textEncoder.writable.getWriter();
 
-    document.getElementById("connect-button").style.visibility = "hidden";
+    document.getElementById("connect-button").style.display = "none";
     document.getElementById('error_message').innerHTML = "";
 
     // And now wait for data from the serial port
