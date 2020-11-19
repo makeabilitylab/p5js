@@ -102,6 +102,27 @@ function draw() {
   drawHand(curHandpose);
 }
 
+async function serialWriteHandWaveDetected(handWaveAngle) {
+
+  // // let remappedAngle = //-70, 
+  if(serialWriter){
+    console.log("Writing to serial: ", src.value.toString());
+    let rv = await serialWriter.write(src.value.toString() + "\n");
+    console.log("Writing finished.");
+  }
+}
+
+async function serialWriteHandWaveAngle(handWaveAngle) {
+
+  // // let remappedAngle = //-70, 
+  let remappedAngle = handWaveAngle + 180;
+  if(serialWriter){
+    console.log("Writing to serial: ", remappedAngle.toString());
+    let rv = await serialWriter.write(remappedAngle + "\n");
+    console.log("Writing finished.");
+  }
+}
+
 // A function to draw ellipses over the detected keypoints
 function drawHand(handpose) {
   if (!handpose) {
@@ -162,12 +183,15 @@ function drawHand(handpose) {
   lineSegment.draw();
 
   if (handWavePosition) {
+    
     const handWaveAngle = degrees(lineSegment.getHeading());
+    serialWriteHandWaveAngle(handWaveAngle);
     if (handWaveAngle > leftAngleWaveThreshold) {
       // hand wave angle just exceeded left angle wave threshold
       if (handWaveState == HandWaveStateEnum.HAND_WAVE_RIGHT_THRESHOLD_EXCEEDED) {
         overallHandWaveCount++;
         contiguousHandWaveCount++;
+        //serialWriteHandWaveDetected(handWaveAngle);
       }
 
       handWaveState = HandWaveStateEnum.HAND_WAVE_LEFT_THRESHOLD_EXCEEDED;
@@ -177,6 +201,7 @@ function drawHand(handpose) {
       if (handWaveState == HandWaveStateEnum.HAND_WAVE_LEFT_THRESHOLD_EXCEEDED) {
         overallHandWaveCount++;
         contiguousHandWaveCount++;
+        //serialWriteHandWaveDetected(handWaveAngle);
       }
 
       handWaveState = HandWaveStateEnum.HAND_WAVE_RIGHT_THRESHOLD_EXCEEDED;
