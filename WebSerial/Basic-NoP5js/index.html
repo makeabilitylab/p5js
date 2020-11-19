@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Simple Web Serial I/O Demo</title>
+</head>
+
+<body>
+  <button id="connect-button" onclick="onConnectButtonClick()">Connect via Serial Port</button>
+  <div id="interactive-controls" style="visibility: hidden;">
+      <h1>Set NeoPixel fade level:</h1>
+      <input id="slider" type="range" min="0" max="255" value="50" onchange="onSliderValueChanged(this, event)" />
+  </div>
+  <div id="target"></div>
+  <script src="serial.js"></script>
+</body>
+
+</html>
