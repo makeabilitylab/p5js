@@ -1,6 +1,18 @@
 // This code outputs a slider value over Web Serial and also receives serial input and prints to console. 
 // The code is based on https://web.dev/serial/
 //
+// Currently, this code only works on Chrome and *only* if you enable an experimental flag:
+// 1. First, type chrome://flags in the address bar
+// 2. Then, in the search box, type "experimental-web-platform-features"
+// 3. This flag should be set to "Enabled"
+// 4. Restart your browser
+// 
+// To test that this worked
+// 1. Open Chrome to any webpage
+// 2. Open the dev console (cmd-option-i on Mac or ctrl-shift-i on Windows) and type: > navigator.serial
+// 3. If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
+//    If, instead, it says "undefined" then it didn't work. Try restarting your computer and then Chrome.
+//
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 
@@ -11,8 +23,14 @@ async function onSliderValueChanged(src, event) {
   console.log("Writing to serial: ", src.value.toString());
   let rv = await serialWriter.write(src.value.toString() + "\n");
   console.log("Writing finished.");
+
+  // Update the slider value text
+  document.getElementById('slider_value').innerHTML = src.value;
 }
 
+/**
+ * Automatically called when the connect button has been clicked
+ */
 function onConnectButtonClick() {
   if (navigator.serial) {
     connectSerial();
@@ -21,8 +39,11 @@ function onConnectButtonClick() {
   }
 }
 
+/**
+ * Connects to the Web Serial port and starts listening to serial input
+ */
 async function connectSerial() {
-  const log = document.getElementById('target');
+  const log = document.getElementById('error_message');
 
   try {
     // Prompt user to select any serial port.
@@ -47,6 +68,7 @@ async function connectSerial() {
 
     document.getElementById("connect-button").style.visibility = "hidden";
     document.getElementById("interactive-controls").style.visibility = "visible";
+    document.getElementById('error_message').innerHTML = "";
 
     // Now that the serialWriter is established, send out the initial slider value
     onSliderValueChanged(document.getElementById("slider"), null);
@@ -56,16 +78,16 @@ async function connectSerial() {
       // We are going to communicate with the Arduino using text for now
       const textDecoder = new TextDecoderStream();
       const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
-      const reader = textDecoder.readable
+      const serialReader = textDecoder.readable
         .pipeThrough(new TransformStream(new LineBreakTransformer()))
         .getReader();
 
       try {
         while (true) {
-          const { value, done } = await reader.read();
+          const { value, done } = await serialReader.read();
           if (done) {
             // Allow the serial port to be closed later.
-            reader.releaseLock();
+            serialReader.releaseLock();
             break;
           }
           if (value) {
