@@ -42,7 +42,7 @@ class LineSegment {
   /**
    * Returns the heading of the line segment in radians
    */
-  get heading() {
+  getHeading() {
     let diffVector = p5.Vector.sub(this.pt2, this.pt1);
     return diffVector.heading();
   }

@@ -22,6 +22,28 @@ let handposeModel;
 let video;
 let curHandpose = null;
 
+// For approximate hand wave estimation, we simply examine the angle of an open palm hand
+// If the user moves their hand across a left angle threshold and a right angle threshold
+// then a hand wave detected
+const leftAngleWaveThreshold = -75; // in degrees
+const rightAngleWaveThreshold = -100; // in degrees
+
+let lastHandWaveAngleThresholdExceeded = null; // stores the last hand wave angle exceeded
+let overallHandWaveCount = 0;
+let contiguousHandWaveCount = 0;
+
+let HandWaveStateEnum = {
+  INITIAL: 1,
+  HAND_WAVE_LEFT_THRESHOLD_EXCEEDED: 2,
+  HAND_WAVE_RIGHT_THRESHOLD_EXCEEDED: 3,
+};
+
+let handWaveState = HandWaveStateEnum.INITIAL;
+
+// For debugging
+let contiguousHandPoseDetections = 0;
+let timestampFirstContiguousHandPoseDetection = -1;
+
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
@@ -45,13 +67,39 @@ function onNewHandposePrediction(predictions) {
   if (predictions && predictions.length > 0) {
     curHandpose = predictions[0];
     // console.log(curHandpose);
+    if (contiguousHandPoseDetections == 0) {
+      timestampFirstContiguousHandPoseDetection = millis();
+    }
+    contiguousHandPoseDetections++;
   } else {
     curHandpose = null;
+    contiguousHandPoseDetections = 0;
   }
 }
 
 function draw() {
+
+  // Draw the video to the screen
   image(video, 0, 0, width, height);
+
+  // Draw debug info
+  fill(255);
+  noStroke();
+
+  const yTextHeight = 15;
+  let yDebugText = 15;
+  let xDebugText = 6;
+  text("fps: " + nfc(frameRate(), 1), xDebugText, yDebugText);
+
+  yDebugText += yTextHeight;
+  if (!curHandpose) {
+    text("Hand detected: false", xDebugText, yDebugText);
+  } else {
+    text("Hand detected: true", xDebugText, yDebugText);
+    yDebugText += yTextHeight;
+    let handPoseDetectionsPerSecond = contiguousHandPoseDetections / (millis() - timestampFirstContiguousHandPoseDetection) * 1000;
+    text("Hand detections / sec: " + nfc(handPoseDetectionsPerSecond, 1), xDebugText, yDebugText);
+  }
 
   drawHand(curHandpose);
 }
@@ -101,33 +149,66 @@ function drawHand(handpose) {
   const bbHeight = bb.bottomRight[1] - bb.topLeft[1];
   rect(bb.topLeft[0], bb.topLeft[1], bbWidth, bbHeight);
 
-  // Draw confidence
-  fill(255, 0, 0);
-  noStroke();
-  text(nfc(handpose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 12);
-
-  // Check if hand wave position
+  // Check if in hand wave position
   const handWavePosition = isInHandWavePosition(handpose);
-  text("handWavePosition: " + handWavePosition, tightBoundingBox.left, tightBoundingBox.top - 24);
 
   // Hand angle
   const a = handpose.annotations;
   stroke(0, 0, 255, 200);
   const palmBaseVector = createVector(a.palmBase[0][0], a.palmBase[0][1]);
   const middleFingerVector = createVector(a.middleFinger[a.middleFinger.length - 1][0], a.middleFinger[a.middleFinger.length - 1][1]);
-  // line(palmBaseVector.x, palmBaseVector.y, middleFingerVector.x, middleFingerVector.y);
-  
+
   // draw hand angle
   let lineSegment = new LineSegment(palmBaseVector, middleFingerVector);
   lineSegment.strokeColor = color(0, 0, 255, 200);
   lineSegment.draw();
 
+  if (handWavePosition) {
+    const handWaveAngle = degrees(lineSegment.getHeading());
+    if (handWaveAngle > leftAngleWaveThreshold) {
+      // hand wave angle just exceeded left angle wave threshold
+      if (handWaveState == HandWaveStateEnum.HAND_WAVE_RIGHT_THRESHOLD_EXCEEDED) {
+        overallHandWaveCount++;
+        contiguousHandWaveCount++;
+      }
+
+      handWaveState = HandWaveStateEnum.HAND_WAVE_LEFT_THRESHOLD_EXCEEDED;
+      lastHandWaveAngleThresholdExceeded = handWaveAngle;
+    } else if (handWaveAngle < rightAngleWaveThreshold) {
+      // hand wave angle just exceeded right angle wave threshold
+      if (handWaveState == HandWaveStateEnum.HAND_WAVE_LEFT_THRESHOLD_EXCEEDED) {
+        overallHandWaveCount++;
+        contiguousHandWaveCount++;
+      }
+
+      handWaveState = HandWaveStateEnum.HAND_WAVE_RIGHT_THRESHOLD_EXCEEDED;
+      lastHandWaveAngleThresholdExceeded = handWaveAngle;
+    }
+  } else {
+    contiguousHandWaveCount = 0;
+    handWaveState = HandWaveStateEnum.INITIAL;
+    lastHandWaveAngleThresholdExceeded = null;
+  }
+
+  // Draw confidence
+  fill(255, 0, 0);
+  noStroke();
+  const yTextHeight = 12;
+  let yTextPos = tightBoundingBox.top - yTextHeight;
+  text(nfc(handpose.handInViewConfidence, 2), tightBoundingBox.left, yTextPos);
+
+  yTextPos -= yTextHeight;
+  text("Wave count: " + contiguousHandWaveCount, tightBoundingBox.left, yTextPos);
+
+  yTextPos -= yTextHeight;
+  text("Is hand in 'handwave' position: " + handWavePosition, tightBoundingBox.left, yTextPos);
+
   // draw rotated bounding box
   push();
   noFill();
-  rectMode(CENTER) 
-  translate(tightBoundingBox.left + tightBoundingBoxWidth/2.0, tightBoundingBox.top + tightBoundingBoxHeight/2.0);
-  rotate(lineSegment.heading - PI/2);
+  rectMode(CENTER)
+  translate(tightBoundingBox.left + tightBoundingBoxWidth / 2.0, tightBoundingBox.top + tightBoundingBoxHeight / 2.0);
+  rotate(lineSegment.heading - PI / 2);
   rect(0, 0, tightBoundingBoxWidth, tightBoundingBoxHeight);
   pop();
 
@@ -174,8 +255,8 @@ function drawKeypoints(handpose) {
       boundingBoxLeft = landmark[0];
       furthestLeftPoint.x = landmark[0];
       furthestLeftPoint.y = landmark[1];
-    } 
-    
+    }
+
     if (landmark[0] > boundingBoxRight) {
       boundingBoxRight = landmark[0];
       furthestRightPoint.x = landmark[0];
@@ -186,8 +267,8 @@ function drawKeypoints(handpose) {
       boundingBoxTop = landmark[1];
       mostTopPoint.x = landmark[0];
       mostTopPoint.y = landmark[1];
-    } 
-    
+    }
+
     if (landmark[1] > boundingBoxBottom) {
       boundingBoxBottom = landmark[1];
       mostBottomPoint.x = landmark[0];
@@ -213,7 +294,7 @@ function drawKeypoints(handpose) {
  * Uses a basic heuristic to determine if hand is in hand pose position
  * @param {ml5js handpose} handpose 
  */
-function isInHandWavePosition(handpose){
+function isInHandWavePosition(handpose) {
   if (!handpose) {
     return false;
   }
@@ -224,41 +305,41 @@ function isInHandWavePosition(handpose){
   // Check to see if the palm base is lower than the index, middle, ring, and pinky bases
   // Note that we purposefully don't check the thumb here as that base can be lower than the palm
   // when waving
-  if(a.palmBase[0][1] < a.indexFinger[0][1] ||
-     a.palmBase[0][1] < a.middleFinger[0][1] ||
-     a.palmBase[0][1] < a.ringFinger[0][1] ||
-     a.palmBase[0][1] < a.pinky[0][1]){
-       return false;
-     }
+  if (a.palmBase[0][1] < a.indexFinger[0][1] ||
+    a.palmBase[0][1] < a.middleFinger[0][1] ||
+    a.palmBase[0][1] < a.ringFinger[0][1] ||
+    a.palmBase[0][1] < a.pinky[0][1]) {
+    return false;
+  }
 
   // For every finger skeleton, check to make sure the points are ordered
   // If not, probably not in a waving position
   for (let i = 0; i < a.thumb.length - 1; i++) {
-    if(a.thumb[i][1] < a.thumb[i + 1][1]){
+    if (a.thumb[i][1] < a.thumb[i + 1][1]) {
       return false;
     }
   }
 
   for (let i = 0; i < a.indexFinger.length - 1; i++) {
-    if(a.indexFinger[i][1] < a.indexFinger[i + 1][1]){
+    if (a.indexFinger[i][1] < a.indexFinger[i + 1][1]) {
       return false;
     }
   }
 
   for (let i = 0; i < a.middleFinger.length - 1; i++) {
-    if(a.middleFinger[i][1] < a.middleFinger[i + 1][1]){
+    if (a.middleFinger[i][1] < a.middleFinger[i + 1][1]) {
       return false;
     }
   }
 
   for (let i = 0; i < a.ringFinger.length - 1; i++) {
-    if(a.ringFinger[i][1] < a.ringFinger[i + 1][1]){
+    if (a.ringFinger[i][1] < a.ringFinger[i + 1][1]) {
       return false;
     }
   }
 
   for (let i = 0; i < a.pinky.length - 1; i++) {
-    if(a.pinky[i][1] < a.pinky[i + 1][1]){
+    if (a.pinky[i][1] < a.pinky[i + 1][1]) {
       return false;
     }
   }
