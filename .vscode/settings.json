@@ -1,7 +1,6 @@
 {
     "files.exclude": {
-        "_p5types/": true,
-        "_libraries": true
+        "_p5types/": true
     },
     "liveServer.settings.port": 5501
 }
