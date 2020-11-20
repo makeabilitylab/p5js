@@ -31,6 +31,22 @@ function onConnectButtonClick() {
 }
 
 /**
+ * Called when the serial connection is established
+ */
+function onSerialConnectionEstablished() {
+  document.getElementById("connect-button").style.display = "none";
+  document.getElementById('error_message').innerHTML = "";
+}
+
+/**
+ * Called when new data has been received
+ * @param {String} data a text string received on serial port (full line of text with '\n' stripped off)
+ */
+function onNewSerialDataReceived(data){
+  console.log("Serial received:", data);
+}
+
+/**
  * Connects to the Web Serial port and starts listening to serial input
  */
 async function connectSerial() {
@@ -57,18 +73,17 @@ async function connectSerial() {
     const writableStreamClosed = textEncoder.readable.pipeTo(serialPort.writable);
     serialWriter = textEncoder.writable.getWriter();
 
-    document.getElementById("connect-button").style.display = "none";
-    document.getElementById('error_message').innerHTML = "";
+    // We communicate with the Arduino using text for now
+    const textDecoder = new TextDecoderStream();
+    const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
+    const serialReader = textDecoder.readable
+      .pipeThrough(new TransformStream(new LineBreakTransformer()))
+      .getReader();
+
+    onSerialConnectionEstablished();
 
     // And now wait for data from the serial port
     while (serialPort.readable) {
-      // We are going to communicate with the Arduino using text for now
-      const textDecoder = new TextDecoderStream();
-      const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
-      const serialReader = textDecoder.readable
-        .pipeThrough(new TransformStream(new LineBreakTransformer()))
-        .getReader();
-
       try {
         while (true) {
           const { value, done } = await serialReader.read();
@@ -78,7 +93,7 @@ async function connectSerial() {
             break;
           }
           if (value) {
-            console.log("Serial received:", value);
+            onNewSerialDataReceived(value);
           }
         }
       } catch (error) {
@@ -86,7 +101,6 @@ async function connectSerial() {
         console.error(error);
       }
     }
-
   } catch (error) {
     log.innerHTML = error;
   }

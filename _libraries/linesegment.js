@@ -1,3 +1,9 @@
+// This library provides basic line segment functionality, including drawing
+// and vector operations
+//
+// By Jon E. Froehlich
+// http://makeabilitylab.io/
+//
 class LineSegment {
   constructor(x1, y1, x2, y2) {
     //x1 and y1 can either be vectors or the points for p1
