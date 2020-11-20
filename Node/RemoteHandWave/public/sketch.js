@@ -3,6 +3,9 @@
 // Part 2: Using Express with Node - WebSockets and p5.js Tutorial: https://youtu.be/2hhEOGXcCvg
 // Part 3: Connecting Client to Server with Socket.io - WebSockets and p5.js Tutorial: https://youtu.be/HZWmrt3Jy10
 // Part 4: Shared Drawing Canvas - WebSockets and p5.js Tutorial: https://youtu.be/i6eP1Lw4gZk
+//
+// To auto-deploy to Heroku from a subdir: https://medium.com/@timanovsky/heroku-buildpack-to-support-deployment-from-subdirectory-e743c2c838dd
+// How to deploy to Heroku: https://www.freecodecamp.org/news/how-to-deploy-a-nodejs-app-to-heroku-from-github-without-installing-heroku-on-your-machine-433bec770efe/
 function setup() {
   createCanvas(400, 400);
 
