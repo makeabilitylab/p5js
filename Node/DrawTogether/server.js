@@ -1,10 +1,14 @@
 var express = require('express');
 var app = express();
-var server = app.listen(3000);
+
+// See: https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html
+// https://www.freecodecamp.org/news/how-to-deploy-a-nodejs-app-to-heroku-from-github-without-installing-heroku-on-your-machine-433bec770efe/
+const port = process.env.PORT || 3000;
+var server = app.listen(port);
 
 app.use(express.static('public'));
 
-console.log("My socket server is running");
+console.log("My socket server is running on port", port);
 
 var socket = require('socket.io');
 var io = socket(server);
