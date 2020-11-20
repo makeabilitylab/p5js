@@ -6,40 +6,154 @@
 //
 // To auto-deploy to Heroku from a subdir: https://medium.com/@timanovsky/heroku-buildpack-to-support-deployment-from-subdirectory-e743c2c838dd
 // How to deploy to Heroku: https://www.freecodecamp.org/news/how-to-deploy-a-nodejs-app-to-heroku-from-github-without-installing-heroku-on-your-machine-433bec770efe/
-function setup() {
-  createCanvas(400, 400);
 
-  // const socketURL = process.env.NODE_ENV === 'production'
-  //     ? window.location.hostname
-  //     : 'https://localhost:3000';
+// const { rejects } = require("assert");
+// const { text } = require("body-parser");
+
+const SOCKET_EVENT_HANDWAVE = "handwave";
+
+// We set up an app here: https://hand-wave.herokuapp.com/
+let handposeModel;
+let video;
+let hand;
+
+let mostRecentRemoteHandData = null;
+
+function setup() {
+  createCanvas(640, 480);
+  hand = new Hand();
+  video = createCapture(VIDEO);
+  // video.size(width, height);
 
   // if no url is passed to connect, defaults to defaults to window.location
   socket = io.connect();
+  socket.on(SOCKET_EVENT_HANDWAVE, onNewHandWaveEventFromServer);
 
-  socket.on('mouse', newMouseDataFromServer);
+  handposeModel = ml5.handpose(video, onHandPoseModelReady);
 
-  background(30);
-  noStroke();
+  // Call onNewHandposePrediction every time a new handpose is predicted
+  handposeModel.on("predict", onNewHandPosePrediction);
+
+  // Hide the video element, and just show the canvas
+  video.hide();
+
+  hand.on(Hand.EVENT_ENTERED_HAND_WAVE_POSITION, onHandWavePositionEntered);
+  hand.on(Hand.EVENT_NEW_HAND_WAVE_ANGLE, onNewHandWaveAngle);
+  hand.on(Hand.EVENT_EXITED_HAND_WAVE_POSITION, onHandWavePositionExited);
 }
 
-function newMouseDataFromServer(data) {
-  console.log("Received data", data);
-  fill(220, 220, 220, 200);
-  ellipse(data.x, data.y, 30, 30);
+function onNewHandWaveEventFromServer(data) {
+  console.log("onNewHandWaveEventFromServer:", data);
+  mostRecentRemoteHandData = data;
 }
 
-function mouseDragged() {
-  fill(200, 0, 200, 100);
-  ellipse(mouseX, mouseY, 30, 30);
+function onNewHandWaveAngle(handWaveAngle) {
+  // console.log("onNewHandWaveAngle", handWaveAngle);
+  serialWriteHandWaveAngle(handWaveAngle);
+  sendNewWaveEventToServer(hand, handWaveAngle);
+}
+
+function sendNewWaveEventToServer(hand, handWaveAngle) {
+  let boundingBox = null;
+  if (hand.isInHandWavePosition) {
+    boundingBox = {
+      topLeft: {
+        x: hand.tightBoundingBox.left,
+        y: hand.tightBoundingBox.top
+      },
+      bottomRight: {
+        x: hand.tightBoundingBox.right,
+        y: hand.tightBoundingBox.bottom
+      }
+    };
+  }
 
   let data = {
-    x: mouseX,
-    y: mouseY
+    boundingBox: boundingBox,
+    handInWavePosition: hand.isInHandWavePosition,
+    handWaveAngle: handWaveAngle
   }
 
   console.log("Sending data", data);
-  socket.emit('mouse', data);
+  socket.emit(SOCKET_EVENT_HANDWAVE, data);
+}
+
+function onHandWavePositionEntered() {
+  console.log("onHandWavePositionEntered");
+  sendNewWaveEventToServer(hand, null);
+}
+
+function onHandWavePositionExited() {
+  console.log("onHandWavePositionExited");
+  sendNewWaveEventToServer(hand, null);
+}
+
+function onHandPoseModelReady() {
+  console.log("Handpose model ready!");
+  document.getElementById("status").style.display = "none";
+}
+
+/**
+ * Called by ml5js Handpose library
+ * 
+ * @param {*} predictions 
+ */
+function onNewHandPosePrediction(predictions) {
+  hand.setNewHandPose(predictions);
 }
 
 function draw() {
+
+  // Draw the video to the screen
+  image(video, 0, 0, width, height);
+
+  // Draw debug info
+  fill(255);
+  noStroke();
+  const yTextHeight = 15;
+  let yDebugText = 15;
+  let xDebugText = 6;
+  text("fps: " + nfc(frameRate(), 1), xDebugText, yDebugText);
+
+  yDebugText += yTextHeight;
+  if (!hand.hasHandPose) {
+    text("Hand detected: false", xDebugText, yDebugText);
+  } else {
+    text("Hand detected: true", xDebugText, yDebugText);
+    yDebugText += yTextHeight;
+    let handPoseDetectionsPerSecond = hand.contiguousHandPoseDetections / (millis() - hand.timestampFirstContiguousHandPoseDetection) * 1000;
+    text("Hand detections / sec: " + nfc(handPoseDetectionsPerSecond, 1), xDebugText, yDebugText);
+  }
+
+  hand.draw();
+
+  if (mostRecentRemoteHandData) {
+    // draw bounding box from remote hand position
+    const data = mostRecentRemoteHandData;
+
+    if (mostRecentRemoteHandData.handInWavePosition) {
+      noFill();
+      stroke(128, 0, 128, 200);
+      const bbWidth = data.boundingBox.bottomRight.x - data.boundingBox.topLeft.x;
+      const bbHeight = data.boundingBox.bottomRight.y - data.boundingBox.topLeft.y;
+      rect(data.boundingBox.topLeft.x, data.boundingBox.topLeft.y, bbWidth, bbHeight);
+
+      noStroke();
+      fill(128, 0, 128, 200);
+      // text(data.handWaveAngle, data.boundingBox.left, data.boundingBox.top - 15); 
+
+      text(data.handWaveAngle, 100, 100);
+    }
+  }
+}
+
+async function serialWriteHandWaveAngle(handWaveAngle) {
+
+  // // let remappedAngle = //-70, 
+  let remappedAngle = handWaveAngle + 180;
+  if (serialWriter) {
+    console.log("Writing to serial: ", remappedAngle.toString());
+    let rv = await serialWriter.write(remappedAngle + "\n");
+    console.log("Writing finished.");
+  }
 }

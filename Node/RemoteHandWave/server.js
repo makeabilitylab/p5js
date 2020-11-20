@@ -25,9 +25,9 @@ function onNewConnection(socket){
         console.log(`User disconnected with id=${socket.id}. Total num of clients: `, socket.server.engine.clientsCount);
     });
 
-    socket.on('mouse', (data) => {
-        console.log("Received mouse data=", data, "from user=", socket.id);
-        socket.broadcast.emit('mouse', data);
+    socket.on("handwave", (data) => {
+        console.log(`Received handwave data=`, data, "from user=", socket.id);
+        socket.broadcast.emit("handwave", data);
     });
 }
 
