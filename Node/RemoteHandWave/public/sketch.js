@@ -45,11 +45,15 @@ function setup() {
 function onNewHandWaveEventFromServer(data) {
   console.log("onNewHandWaveEventFromServer:", data);
   mostRecentRemoteHandData = data;
+
+  if(date && data.handWaveAngle){
+    serialWriteHandWaveAngle(data.handWaveAngle);
+  }
 }
 
 function onNewHandWaveAngle(handWaveAngle) {
   // console.log("onNewHandWaveAngle", handWaveAngle);
-  serialWriteHandWaveAngle(handWaveAngle);
+  //serialWriteHandWaveAngle(handWaveAngle);
   sendNewWaveEventToServer(hand, handWaveAngle);
 }
 
@@ -145,7 +149,6 @@ function draw() {
       const bbHeight = data.boundingBox.bottomRight.y - data.boundingBox.topLeft.y;
       rect(data.boundingBox.topLeft.x, data.boundingBox.topLeft.y, bbWidth, bbHeight);
     
-
       const yTextHeight = 15;
       let yText = data.boundingBox.topLeft.y - yTextHeight;
 
