@@ -55,7 +55,7 @@ function onNewHandWaveAngle(handWaveAngle) {
 
 function sendNewWaveEventToServer(hand, handWaveAngle) {
   let boundingBox = null;
-  if (hand.isInHandWavePosition) {
+  if (hand.handPose) {
     boundingBox = {
       topLeft: {
         x: hand.tightBoundingBox.left,
@@ -68,10 +68,16 @@ function sendNewWaveEventToServer(hand, handWaveAngle) {
     };
   }
 
+  let landmarks = null;
+  if (hand.handPose) {
+    landmarks = hand.handPose.landmarks;
+  }
+
   let data = {
     boundingBox: boundingBox,
     handInWavePosition: hand.isInHandWavePosition,
-    handWaveAngle: handWaveAngle
+    handWaveAngle: handWaveAngle,
+    landmarks: landmarks
   }
 
   console.log("Sending data", data);
@@ -130,20 +136,38 @@ function draw() {
   if (mostRecentRemoteHandData) {
     // draw bounding box from remote hand position
     const data = mostRecentRemoteHandData;
+    const remoteHandColor = color(255, 255, 255, 200);
 
-    if (mostRecentRemoteHandData.handInWavePosition) {
+    if(mostRecentRemoteHandData.boundingBox){
       noFill();
-      stroke(128, 0, 128, 200);
+      stroke(remoteHandColor);
       const bbWidth = data.boundingBox.bottomRight.x - data.boundingBox.topLeft.x;
       const bbHeight = data.boundingBox.bottomRight.y - data.boundingBox.topLeft.y;
       rect(data.boundingBox.topLeft.x, data.boundingBox.topLeft.y, bbWidth, bbHeight);
+    
+
+      const yTextHeight = 15;
+      let yText = data.boundingBox.topLeft.y - yTextHeight;
 
       noStroke();
-      fill(128, 0, 128, 200);
-      // text(data.handWaveAngle, data.boundingBox.left, data.boundingBox.top - 15); 
+      fill(remoteHandColor);
+      text("Is remote hand in wave position: " + mostRecentRemoteHandData.handInWavePosition, data.boundingBox.topLeft.x, yText);
 
-      if (data.handWaveAngle) {
-        text(data.handWaveAngle, data.boundingBox.topLeft.x, data.boundingBox.topLeft.y - 15);
+      if (mostRecentRemoteHandData.handInWavePosition) {
+        yText -= yTextHeight;
+        if (data.handWaveAngle) {
+          text("Remote hand wave angle: " + nfc(data.handWaveAngle, 1), data.boundingBox.topLeft.x, yText);
+        }
+      }
+    }
+
+    if(mostRecentRemoteHandData.landmarks){
+      noStroke();
+      fill(remoteHandColor);
+      const remoteHandLandmarks = mostRecentRemoteHandData.landmarks;
+      for (let i = 0; i < remoteHandLandmarks.length; i += 1) {
+        const landmark = remoteHandLandmarks[i];
+        ellipse(landmark[0], landmark[1], 10, 10);
       }
     }
   }
