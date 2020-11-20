@@ -142,7 +142,9 @@ function draw() {
       fill(128, 0, 128, 200);
       // text(data.handWaveAngle, data.boundingBox.left, data.boundingBox.top - 15); 
 
-      text(data.handWaveAngle, 100, 100);
+      if (data.handWaveAngle) {
+        text(data.handWaveAngle, data.boundingBox.topLeft.x, data.boundingBox.topLeft.y - 15);
+      }
     }
   }
 }
