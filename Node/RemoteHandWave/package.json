@@ -1,0 +1,21 @@
+{
+  "name": "remotehandwave",
+  "version": "1.0.0",
+  "description": "A demonstration of using ml5js handpose, hand.js, and Web Serial to detect hand waving and communicate it out the serial",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ml5js",
+    "handpose",
+    "web",
+    "serial"
+  ],
+  "author": "Jon E. Froehlich",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.0.3"
+  }
+}
