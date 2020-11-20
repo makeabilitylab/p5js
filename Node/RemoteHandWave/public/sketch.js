@@ -46,7 +46,7 @@ function onNewHandWaveEventFromServer(data) {
   console.log("onNewHandWaveEventFromServer:", data);
   mostRecentRemoteHandData = data;
 
-  if(date && data.handWaveAngle){
+  if(data && data.handWaveAngle){
     serialWriteHandWaveAngle(data.handWaveAngle);
   }
 }
