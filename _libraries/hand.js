@@ -378,10 +378,10 @@ class Hand {
     }
 
     // draw keypoints
-    for (let j = 0; j < this.handPose.landmarks.length; j += 1) {
-      const landmark = this.handPose.landmarks[j];
-      fill(0, 255, 0, 200);
-      noStroke();
+    fill(0, 255, 0, 200);
+    noStroke();
+    for (let i = 0; i < this.handPose.landmarks.length; i += 1) {
+      const landmark = this.handPose.landmarks[i];
       ellipse(landmark[0], landmark[1], 10, 10);
     }
   }
