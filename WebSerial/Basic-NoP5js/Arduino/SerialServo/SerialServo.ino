@@ -9,7 +9,6 @@
  * developers to write JavaScript code in a web browser to read/write data over the serial
  * port, including to devices like Arduino.
  *
- * 
  * By Jon E. Froehlich
  * @jonfroehlich
  * http://makeabilitylab.io
