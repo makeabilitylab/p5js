@@ -19,6 +19,10 @@
 var serialPort;
 var serialWriter;
 
+/**
+ * By default, we don't show the connect button for web serial (as it's only relevant to certain clients)
+ * @param {boolean} shouldShowButton 
+ */
 function showConnectButton(shouldShowButton){
   if(shouldShowButton){
     document.getElementById("connect-button").style.display = "";
@@ -43,7 +47,7 @@ function onConnectButtonClick() {
  */
 function onSerialConnectionEstablished() {
   document.getElementById("connect-button").style.display = "none";
-  document.getElementById('error_message').innerHTML = "";
+  document.getElementById('error-message').innerHTML = "";
 }
 
 /**
@@ -58,7 +62,7 @@ function onNewSerialDataReceived(data){
  * Connects to the Web Serial port and starts listening to serial input
  */
 async function connectSerial() {
-  const log = document.getElementById('error_message');
+  const log = document.getElementById('error-message');
 
   try {
     // Prompt user to select any serial port.
