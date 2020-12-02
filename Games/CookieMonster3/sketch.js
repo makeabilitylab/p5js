@@ -25,6 +25,7 @@
 //   this will make game more challenging over time
 // - support two player! (so have two heads, of different types?)
 //   or G's idea was to control Cookie Monster! (which is a good idea!)
+// - Control eating by using ml5js (or face keypoint identification) to recognize open mouth
 // - another idea is to add in another kind of cookie that when you eat it,
 //   gives you a super power (For example, shrinks cookie monster down or makes you fast, or makes cookie monster run from you)
 // - have crumbs fall when cookie eaten
