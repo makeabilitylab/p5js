@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>A tocbot test</title>
+
+
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <!-- <link rel="stylesheet" type="text/css" href="css/tocbot-examples.css"> -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">
+
+</head>
+
+<body>
+
+  <nav id="tocbot-toc" class="js-toc tocbot-right"></nav>
+  <!-- <nav class="toc toc-right js-toc relative z-1 transition--300 absolute pa4 is-position-fixed"> -->
+
+  <div class="js-toc-content">
+    <h1 id="heading-1a">Heading 1a</h1>
+    <h2 id="heading-2a">Heading 2a</h2>
+    <h3 id="heading-3a">Heading 3a</h3>
+    <h3 id="heading-3b">Heading 3b</h3>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.min.js"></script>
+
+  <script>
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3',
+    });
+  </script>
+</body>
+
+</html>
