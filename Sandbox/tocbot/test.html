@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>L1&#58; Using buttons - Physical Computing</title>
+    <link rel="shortcut icon" href="http://localhost:4000/physcomp/favicon.ico" type="image/x-icon">
+    <!-- TODO: when upgrading just-the-docs, need to change this to just-the-docs-default.css See: https://github.com/pmarsceill/just-the-docs/issues/350 -->
+    <link rel="stylesheet" href="http://localhost:4000/physcomp/assets/css/just-the-docs.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161192681-1"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', "UA-161192681-1"); </script>
+    <script type="text/javascript" src="http://localhost:4000/physcomp/assets/js/vendor/lunr.min.js"></script>
+    <script type="text/javascript" src="http://localhost:4000/physcomp/assets/js/just-the-docs.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Begin Jekyll SEO tag v2.6.1 -->
+    <title>L1: Using buttons | Physical Computing</title>
+    <meta name="generator" content="Jekyll v3.8.7" />
+    <meta property="og:title" content="L1: Using buttons" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="description" content="A learning resource for prototyping interactive digital-physical systems" />
+    <meta property="og:description"
+        content="A learning resource for prototyping interactive digital-physical systems" />
+    <link rel="canonical" href="http://localhost:4000/physcomp/arduino/buttons.html" />
+    <meta property="og:url" content="http://localhost:4000/physcomp/arduino/buttons.html" />
+    <meta property="og:site_name" content="Physical Computing" />
+    <script
+        type="application/ld+json"> {"headline":"L1: Using buttons","url":"http://localhost:4000/physcomp/arduino/buttons.html","description":"A learning resource for prototyping interactive digital-physical systems","@type":"WebPage","@context":"https://schema.org"}</script>
+    <!-- End Jekyll SEO tag -->
+    <!-- Mar 19, 2020: Just switched from cdn.mathjax.org to cdnjs based on https://www.mathjax.org/cdn-shutting-down/-->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <!-- tocbot is an awesome automatic table-of-contents generator/navigator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.11.1/tocbot.css">
+    <!-- <link rel="stylesheet" href="/physcomp/_includes/css/custom.css"> <link rel="stylesheet" href="/physcomp/css/custom2.css"> <link rel="stylesheet" href="/physcompcss/custom.css"> <link rel="stylesheet" href="custom2.css"> <link rel="stylesheet" href="/assets/css/custom.css"> -->
+    <link rel="stylesheet" href="/physcomp/assets/css/custom.css">
+    <!-- <style type="text/css"> body {background-color: green;} h1 {color: blue;} p {color: red;} </style> -->
+</head>
+
+<body> <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="link" viewBox="0 0 16 16">
+            <title>Link</title>
+            <path fill-rule="evenodd"
+                d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z">
+            </path>
+        </symbol>
+    </svg>
+    <div class="page-wrap">
+        <div class="side-bar">
+            <div class="site-header"> <a href="http://localhost:4000/physcomp" class="site-title lh-tight"> Physical
+                    Computing </a> <button class="menu-button fs-3 js-main-nav-trigger" data-text-toggle="Hide"
+                    type="button">Menu</button> </div>
+            <div class="navigation main-nav js-main-nav">
+                <nav aria-label="Main navigation" role="navigation">
+                    <ul class="navigation-list">
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/"
+                                class="navigation-list-link">Home</a></li>
+                        <li class="navigation-list-item active"> <a href="http://localhost:4000/physcomp/arduino/"
+                                class="navigation-list-link active">Intro to Arduino</a>
+                            <ul class="navigation-list-child-list">
+                                <li class="navigation-list-item"> <a
+                                        href="http://localhost:4000/physcomp/arduino/intro-output.html"
+                                        class="navigation-list-link">Output</a></li>
+                                <li class="navigation-list-item active"> <a
+                                        href="http://localhost:4000/physcomp/arduino/intro-input.html"
+                                        class="navigation-list-link active">Input</a>
+                                    <ul class="navigation-list-child-list">
+                                        <li class="navigation-list-item active"> <a
+                                                href="http://localhost:4000/physcomp/arduino/buttons.html"
+                                                class="navigation-list-link active">L1&#58; Using buttons</a></li>
+                                        <li class="navigation-list-item"> <a
+                                                href="http://localhost:4000/physcomp/arduino/piano.html"
+                                                class="navigation-list-link">L2&#58; A simple piano</a></li>
+                                        <li class="navigation-list-item"> <a
+                                                href="http://localhost:4000/physcomp/arduino/potentiometers.html"
+                                                class="navigation-list-link">L3&#58; Potentiometers</a></li>
+                                        <li class="navigation-list-item"> <a
+                                                href="http://localhost:4000/physcomp/arduino/force-sensitive-resistors.html"
+                                                class="navigation-list-link">L4&#58; Force-Sensitive Resistors</a></li>
+                                    </ul>
+                                </li>
+                                <li class="navigation-list-item"> <a
+                                        href="http://localhost:4000/physcomp/arduino/inside-arduino.html"
+                                        class="navigation-list-link">Inside Arduino</a></li>
+                            </ul>
+                        </li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/sensors/"
+                                class="navigation-list-link">Sensors</a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/esp32/"
+                                class="navigation-list-link">ESP32</a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/signals/"
+                                class="navigation-list-link">Signals</a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/resources/"
+                                class="navigation-list-link">Resources</a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/arduino/oled.html"
+                                class="navigation-list-link"></a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/arduino/mouse.html"
+                                class="navigation-list-link"></a></li>
+                        <li class="navigation-list-item"> <a href="http://localhost:4000/physcomp/arduino/i2c.html"
+                                class="navigation-list-link"></a></li>
+                        <li class="navigation-list-item"> <a
+                                href="http://localhost:4000/physcomp/esp32/analog-read.html"
+                                class="navigation-list-link"></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <footer class="site-footer">
+                <p class="text-small text-grey-dk-000 mb-4">This site uses <a
+                        href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for
+                    Jekyll.</p>
+            </footer>
+        </div>
+        <div class="main-content-wrap js-main-content" tabindex="0">
+            <div class="main-content">
+                <div class="page-header js-page-header">
+                    <div class="search">
+                        <div class="search-input-wrap"> <input type="text" class="js-search-input search-input"
+                                tabindex="0" placeholder="Search Physical Computing"
+                                aria-label="Search Physical Computing" autocomplete="off"> <svg width="14" height="14"
+                                viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" class="search-icon">
+                                <title>Search</title>
+                                <g fill-rule="nonzero">
+                                    <path
+                                        d="M17.332 20.735c-5.537 0-10-4.6-10-10.247 0-5.646 4.463-10.247 10-10.247 5.536 0 10 4.601 10 10.247s-4.464 10.247-10 10.247zm0-4c3.3 0 6-2.783 6-6.247 0-3.463-2.7-6.247-6-6.247s-6 2.784-6 6.247c0 3.464 2.7 6.247 6 6.247z" />
+                                    <path d="M11.672 13.791L.192 25.271 3.02 28.1 14.5 16.62z" />
+                                </g>
+                            </svg> </div>
+                        <div class="js-search-results search-results-wrap"></div>
+                    </div>
+                    <ul class="list-style-none text-small aux-nav">
+                        <li class="d-inline-block my-0"><a href="//makeabilitylab.cs.washington.edu">Makeability Lab</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="page">
+                    <nav class="breadcrumb-nav">
+                        <ol class="breadcrumb-nav-list">
+                            <li class="breadcrumb-nav-list-item"><a href="http://localhost:4000/physcomp/arduino/">Intro
+                                    to Arduino</a></li>
+                            <li class="breadcrumb-nav-list-item"><a
+                                    href="http://localhost:4000/physcomp/arduino/intro-input.html">Input</a></li>
+                            <li class="breadcrumb-nav-list-item">L1&#58; Using buttons</li>
+                        </ol>
+                    </nav>
+                    <div id="main-content" class="page-content js-toc-content" role="main">
+                        <nav id="tocbot-toc" class="js-toc"></nav>
+                        <h1 class="no_toc" id="lesson-1-using-buttons"> <a href="#lesson-1-using-buttons"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Lesson 1: Using buttons </h1>
+                        <h2 class="no_toc text-delta" id="table-of-contents"> <a href="#table-of-contents"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Table of Contents </h2>
+                        <ol id="markdown-toc">
+                            <li><a href="#switches" id="markdown-toc-switches">Switches</a></li>
+                            <li><a href="#making-an-initial-button-circuit"
+                                    id="markdown-toc-making-an-initial-button-circuit">Making an initial button
+                                    circuit</a>
+                                <ol>
+                                    <li><a href="#materials" id="markdown-toc-materials">Materials</a></li>
+                                    <li><a href="#four-legged-tactile-buttons"
+                                            id="markdown-toc-four-legged-tactile-buttons">Four-legged tactile
+                                            buttons</a></li>
+                                    <li><a href="#using-buttons-without-a-microcontroller"
+                                            id="markdown-toc-using-buttons-without-a-microcontroller">Using buttons
+                                            without a microcontroller</a></li>
+                                </ol>
+                            </li>
+                            <li><a href="#intro-to-digital-input" id="markdown-toc-intro-to-digital-input">Intro to
+                                    digital input</a>
+                                <ol>
+                                    <li><a href="#digital-io-refresher" id="markdown-toc-digital-io-refresher">Digital
+                                            I/O refresher</a></li>
+                                    <li><a href="#what-is-digital-input" id="markdown-toc-what-is-digital-input">What is
+                                            digital input?</a></li>
+                                    <li><a href="#is-it-low-or-is-it-high" id="markdown-toc-is-it-low-or-is-it-high">Is
+                                            it LOW or is it HIGH?</a></li>
+                                </ol>
+                            </li>
+                            <li><a href="#hooking-up-digital-input-with-microcontrollers"
+                                    id="markdown-toc-hooking-up-digital-input-with-microcontrollers">Hooking up digital
+                                    input with microcontrollers</a>
+                                <ol>
+                                    <li><a href="#the-floating-pin-problem"
+                                            id="markdown-toc-the-floating-pin-problem">The floating pin problem</a></li>
+                                    <li><a href="#an-incorrect-attempt-to-fix-the-floating-pin"
+                                            id="markdown-toc-an-incorrect-attempt-to-fix-the-floating-pin">An
+                                            (incorrect) attempt to fix the floating pin</a></li>
+                                    <li><a href="#pull-down-resistors" id="markdown-toc-pull-down-resistors">Pull-down
+                                            resistors</a></li>
+                                    <li><a href="#pull-up-resistors" id="markdown-toc-pull-up-resistors">Pull-up
+                                            resistors</a></li>
+                                    <li><a href="#internal-pull-up-resistors"
+                                            id="markdown-toc-internal-pull-up-resistors">Internal pull-up resistors</a>
+                                    </li>
+                                    <li><a href="#what-value-should-i-use-for-my-pull-down-or-pull-up-resistors"
+                                            id="markdown-toc-what-value-should-i-use-for-my-pull-down-or-pull-up-resistors">What
+                                            value should I use for my pull-down or pull-up resistors?</a>
+                                        <ol>
+                                            <li><a href="#tradeoffs-in-selecting-a-pull-up-resistor"
+                                                    id="markdown-toc-tradeoffs-in-selecting-a-pull-up-resistor">Tradeoffs
+                                                    in selecting a pull-up resistor</a></li>
+                                            <li><a href="#tradeoffs-in-selecting-a-pull-down-resistor"
+                                                    id="markdown-toc-tradeoffs-in-selecting-a-pull-down-resistor">Tradeoffs
+                                                    in selecting a pull-down resistor</a></li>
+                                        </ol>
+                                    </li>
+                                    <li><a href="#want-to-dive-deeper" id="markdown-toc-want-to-dive-deeper">Want to
+                                            dive deeper?</a></li>
+                                </ol>
+                            </li>
+                            <li><a href="#lets-make-stuff" id="markdown-toc-lets-make-stuff">Let’s make stuff!</a></li>
+                            <li><a href="#pull-down-resistor-configuration"
+                                    id="markdown-toc-pull-down-resistor-configuration">Pull-down resistor
+                                    configuration</a>
+                                <ol>
+                                    <li><a href="#pull-down-resistor-wiring-diagram"
+                                            id="markdown-toc-pull-down-resistor-wiring-diagram">Pull-down resistor
+                                            wiring diagram</a></li>
+                                    <li><a href="#code-to-turn-on-led-with-button-press"
+                                            id="markdown-toc-code-to-turn-on-led-with-button-press">Code to turn on LED
+                                            with button press</a></li>
+                                </ol>
+                            </li>
+                            <li><a href="#pull-up-resistor-configuration"
+                                    id="markdown-toc-pull-up-resistor-configuration">Pull-up resistor configuration</a>
+                            </li>
+                            <li><a href="#internal-pull-up-resistor-configuration"
+                                    id="markdown-toc-internal-pull-up-resistor-configuration">Internal pull-up resistor
+                                    configuration</a></li>
+                            <li><a href="#putting-it-all-together" id="markdown-toc-putting-it-all-together">Putting it
+                                    all together</a></li>
+                            <li><a href="#next-lesson" id="markdown-toc-next-lesson">Next Lesson</a></li>
+                        </ol>
+                        <hr />
+                        <p>This is the first lesson in the <a href="/physcomp/arduino/intro-input.html"><strong>Intro to
+                                    Arduino Input</strong></a> lesson series. We assume you’ve already completed the <a
+                                href="/physcomp/arduino/intro-output.html"><strong>Intro to Arduino Output</strong></a>
+                            series. If not, please complete that first!</p>
+                        <p>In this lesson, we’ll finally get to build something interactive: turning on an LED with a
+                            push button. We’ll cover buttons (aka momentary switches), how to use digital input with the
+                            <a href="https://www.arduino.cc/reference/en/language/functions/digital-io/digitalread/"><code
+                                    class="language-plaintext highlighter-rouge">digitalRead</code></a> function, and
+                            pull-up and pull-down resistors.</p>
+                        <p>Switches themselves are conceptually easy to understand—they are either “closed” or “open”.
+                            We use switches everyday when we turn on and off our light circuits in our home. However,
+                            when using switches with microcontrollers, we’ve found that students often struggle to
+                            understand why pull-up or pull-down resistors are necessary. So, take your time with this
+                            lesson. Try to understand the <strong>why</strong> and <strong>how</strong> of these
+                            resistors in your circuits.</p>
+                        <p>For example, in the animation below, we show a button circuit with a pull-down resistor
+                            hooked up to Pin 2. Importantly, notice <strong>where</strong> the current flows when the
+                            button is pressed—perhaps surprisingly, it does <strong>not</strong> flow into Pin 2. In
+                            fact, (virtually) no current flows into Pin 2! Why not? We’ll talk about this and more in
+                            this lesson!</p>
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/movies/Arduino_Button_InternalLED_Animation_Edited.gif"
+                                alt="Animation showing a Arduino Uno and a button hooked up to Pin 2 with a pull-down resistor configuration. When the button is pressed, the animation shows the current going from Vcc through the button and down through the pull-down resistor" />
+                            Animation shows the Arduino’s built-in LED illuminating when the button on Pin 2 is pressed.
+                            When the button is pressed, current flows from
+                            <script type="math/tex">V_{CC}</script> through the pull-down resistor to GND. We’ll learn
+                            more about this circuit in this lesson.</p>
+                        <h2 id="switches"> <a href="#switches" class="anchor-heading"><svg viewBox="0 0 16 16"
+                                    aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Switches </h2>
+                        <p>As noted above, switches are simple components: they’re typically either “open”
+                            (disconnected) or “closed” (connected). There are lots of different types of switches from
+                            <strong>momentary switches</strong> (aka buttons) to <strong>toggle</strong> or
+                            <strong>slide</strong> switches (which maintain their state) to switches that activate based
+                            on environmental conditions like a <strong>tilt switch</strong> or a <strong>reed
+                                switch</strong>.</p>
+                        <p class="fs-1"><img src="/physcomp/arduino/assets/images/DigitalInput_ExampleGallery.png"
+                                alt="Picture showing a variety of digital inputs, including tactile buttons, arcade buttons, SMD push buttons, slide switches, rocker switches, reed switches, and tilt switches" />
+                            Prices and pictures are from Sparkfun.com, Jan 2020; parts can be cheaper in bulk from
+                            suppliers like <a href="https://www.digikey.com/">Digi-Key</a> or <a
+                                href="https://www.mouser.com/">Mouser Electronics</a>.</p>
+                        <p>In this lesson, we are going to use a <strong>four-legged push button</strong> (momentary
+                            switch), which look like:</p>
+                        <p><img src="/physcomp/arduino/assets/images/FourLeggedButtonExamplesFromSparkfunAndAdafruit.png"
+                                alt="Examples of four-legged buttons from Sparkfun and Adafruit" />
+                            <!-- TODO: in future, make this into a table with links for improved accessibility -->
+                        </p>
+                        <p>If you want to learn more about switches in general, see these articles by <a
+                                href="https://learn.sparkfun.com/tutorials/switch-basics/all">Sparkfun</a> and <a
+                                href="https://itp.nyu.edu/physcomp/labs/labs-electronics/switches/">ITP NYU</a>.</p>
+                        <!-- TODO: show animation of a switch -->
+                        <!-- TODO: add in schematic icons? Also, different types like SPST, DPST? -->
+                        <h2 id="making-an-initial-button-circuit"> <a href="#making-an-initial-button-circuit"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Making an initial button circuit </h2>
+                        <p>We’ll first learn how to use a button <strong>without</strong> a microcontroller. This will
+                            strengthen our understanding of buttons, in general, before switching over to digital input.
+                        </p>
+                        <h3 id="materials"> <a href="#materials" class="anchor-heading"><svg viewBox="0 0 16 16"
+                                    aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Materials </h3>
+                        <p>We’ll need the following materials:</p>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center">Breadboard</th>
+                                        <th style="text-align: center">Arduino</th>
+                                        <th style="text-align: center">LED</th>
+                                        <th style="text-align: center">Resistor</th>
+                                        <th style="text-align: center">Button</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/assets/images/Breadboard_Half.png" alt="Breadboard" />
+                                        </td>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/assets/images/ArduinoUno_Fritzing.png"
+                                                alt="Arduino Uno" /></td>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/assets/images/RedLED_Fritzing_100h.png" alt="Red LED" />
+                                        </td>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/assets/images/Resistor220_Fritzing.png"
+                                                alt="220 Ohm Resistor" /></td>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/assets/images/Button_12mmX12mm_Adafruit_40w.png"
+                                                alt="Image of a Tactile Switch Buttons (12mm square, 6mm tall) ordered from Adafruit" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center">Breadboard</td>
+                                        <td style="text-align: center">Arduino Uno, Leonardo, or similar</td>
+                                        <td style="text-align: center">Red LED</td>
+                                        <td style="text-align: center">220Ω Resistor</td>
+                                        <td style="text-align: center"><a
+                                                href="https://www.adafruit.com/product/1119">12x12mm “Tactile Switch
+                                                Buttons”</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 id="four-legged-tactile-buttons"> <a href="#four-legged-tactile-buttons"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Four-legged tactile buttons </h3>
+                        <p>The four-leg push button is one of the most common button types for breadboarding circuits;
+                            however, it’s also a bit funky and non-intuitive at first. You might be wondering: why
+                            <strong>four legs</strong> instead of two? How does this button work? See the diagram below.
+                        </p>
+                        <p><img src="/physcomp/arduino/assets/images/FourLeggedTactileButtons_Overview.png"
+                                alt="Overview of four-legged tactile buttons showing which two sides are disconnected by default and how the connections are formed when the button is pressed" />
+                        </p>
+                        <p>The key thing to remember is that the two legs closest together (on the same side) are,
+                            somewhat unintuitively, <strong>not</strong> connected until you press the button. Upon
+                            button press, all four legs become connected. We created the following animation to help
+                            explain further. Observe the <em>orientation</em> of the button and how the legs are
+                            connected.</p>
+                        <p><img src="/physcomp/arduino/assets/movies/FourLeggedTactileButtons_Animation.gif"
+                                alt="Animation showing how two sides of the button are disconnected until the button is pressed, creating a connection" />
+                        </p>
+                        <!-- TODO: I like this simple picture by LadyAda, consider adding it? https://www.ladyada.net/images/arduino/pushbuttons.gif -->
+                        <p>And, of course, the best way to learn it is to try it yourself (and hopefully the animation
+                            will help). In general, if you’re confused about how to use a component, it’s a good idea to
+                            consult the <a
+                                href="https://cdn-shop.adafruit.com/datasheets/B3F-1000-Omron.pdf">datasheet</a>. You
+                            can also use a multimeter, if you have one, to check for continuity between the four legs.
+                        </p> <!-- TODO video of using a multimeter to figure out how the four legs are hooked up -->
+                        <h3 id="using-buttons-without-a-microcontroller"> <a
+                                href="#using-buttons-without-a-microcontroller" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Using buttons without a microcontroller </h3>
+                        <p>We’ll make a simple button-based circuit that turns on an LED when the button is pressed.
+                            This will give you experience understanding how the button connections work before hooking
+                            it up to an Arduino.</p>
+                        <p>Below, we’ve included two wiring diagrams: one using an external power source like a 9V
+                            battery with a snap connector and the other using Arduino’s 5V pin for power, just like we
+                            did in the <a href="/physcomp/arduino/led-on.html">LED on</a> lesson. We suggest the 9V
+                            battery approach just to avoid confusion—remember, this circuit is completely independent of
+                            Arduino!</p>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center">With 9V Battery</th>
+                                        <th style="text-align: center">With Arduino 5V Pin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/arduino/assets/images/FourLeggedButtonCircuit_WithArduino_5VPin.png"
+                                                alt="Four-legged button circuit with 5V pin" /></td>
+                                        <td style="text-align: center"><img
+                                                src="/physcomp/arduino/assets/images/FourLeggedButtonCircuit_With9VBattery.png"
+                                                alt="Four-legged button circuit with 9V battery" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center">Circuit powered by 9V battery</td>
+                                        <td style="text-align: center">Circuit powered by 5V Arduino pin</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="fs-1">If you build the 9V battery circuit, then we suggest a 680Ω or 1kΩ resistor
+                            rather than a 220Ω resistor.</p>
+                        <p>That’s it! Once you’ve created the circuit, give it a try by pushing the button and the LED
+                            should turn on. See the animation below.</p>
+                        <p><img src="/physcomp/arduino/assets/movies/FourLeggedTactileButton_LEDCircuitBreadboard_Animation.gif"
+                                alt="Animation showing both the 9V battery and Arduino 5V power LED circuits with four-legged button working" />
+                        </p> <!-- TODO: Consider a circuit simulation of how this is working here? -->
+                        <p>Now that we understand how this button works, let’s move on to using switches/buttons with a
+                            microcontroller.</p>
+                        <h2 id="intro-to-digital-input"> <a href="#intro-to-digital-input" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Intro to digital input </h2>
+                        <p>In our <a href="/physcomp/arduino/led-blink.html">Blink</a> lesson, we introduced <a
+                                href="/physcomp/arduino/led-blink.html#introducing-digital-output">digital I/O</a> with
+                            a specific focus on <strong>digital output</strong>. Here, we are going to talk about
+                            <strong>digital input</strong>, which is a bit more complicated.</p>
+                        <h3 id="digital-io-refresher"> <a href="#digital-io-refresher" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Digital I/O refresher </h3>
+                        <p>Recall that the Arduino Uno and Leonardo have 14 digital I/O pins that can be used either for
+                            input with <a
+                                href="https://www.arduino.cc/reference/en/language/functions/digital-io/digitalread/"><code
+                                    class="language-plaintext highlighter-rouge">digitalRead()</code></a> or output with
+                            <a href="https://www.arduino.cc/reference/en/language/functions/digital-io/digitalwrite/"><code
+                                    class="language-plaintext highlighter-rouge">digitalWrite()</code></a>,
+                            respectively.</p>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_CloseUp_DigitalIOPins.png"
+                                alt="Close-up image of the 14 digital I/O pins on the Arduino Uno" /></p>
+                        <p>As noted in our <a href="/physcomp/arduino/led-blink.html">Blink</a> lesson, you can control
+                            any of these 14 digital I/O pins with three functions:</p>
+                        <ol>
+                            <li><a href="https://www.arduino.cc/reference/en/language/functions/digital-io/pinmode/"><code
+                                        class="language-plaintext highlighter-rouge">pinMode(int pin, int mode)</code></a>
+                                configures a specified pin as either an <code
+                                    class="language-plaintext highlighter-rouge">INPUT</code> or <code
+                                    class="language-plaintext highlighter-rouge">OUTPUT</code>. For our buttons, we’ll
+                                be using <code class="language-plaintext highlighter-rouge">INPUT</code>—because a
+                                button is an input and not an output—and a variant of <code
+                                    class="language-plaintext highlighter-rouge">INPUT</code> called <code
+                                    class="language-plaintext highlighter-rouge">INPUT_PULLUP</code>.</li>
+                            <li><a
+                                    href="https://www.arduino.cc/reference/en/language/functions/digital-io/digitalread/"><code
+                                        class="language-plaintext highlighter-rouge">digitalRead(int pin)</code></a>
+                                reads digital input from the specified pin, either <code
+                                    class="language-plaintext highlighter-rouge">HIGH</code> or <code
+                                    class="language-plaintext highlighter-rouge">LOW</code>. This is what we need to
+                                read the button’s state (either pressed or not pressed)</li>
+                            <li><a
+                                    href="https://www.arduino.cc/reference/en/language/functions/digital-io/digitalwrite/"><code
+                                        class="language-plaintext highlighter-rouge">digitalWrite(int pin, int value)</code></a>
+                                writes digital output to the specified pin, either <code
+                                    class="language-plaintext highlighter-rouge">HIGH</code> or <code
+                                    class="language-plaintext highlighter-rouge">LOW</code>. This is not relevant to us
+                                here because we don’t write out data to a button.</li>
+                        </ol>
+                        <h3 id="what-is-digital-input"> <a href="#what-is-digital-input" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> What is digital input? </h3>
+                        <p>Digital input is any input that can be considered either <strong>on</strong> (typically,
+                            <code class="language-plaintext highlighter-rouge">HIGH</code> or 5V) or
+                            <strong>off</strong> (typically, <code
+                                class="language-plaintext highlighter-rouge">LOW</code> or 0V). Simple, right? However,
+                            using digital input with microcontrollers can be confusing, at least at first.</p>
+                        <p>The <strong>most critical</strong> concept to understand is that microcontrollers read
+                            voltage, not current. This directly (and dramatically) affects how we setup our input
+                            circuits.</p>
+                        <p>Indeed, the <a href="https://www.arduino.cc/en/Tutorial/DigitalPins">Arduino documentation
+                            </a> states that pins configured as digital input “<em>are in a high-impedance state</em>”
+                            equivalent to a 100,000,000Ω (100MΩ) resistor added to the front of the input pin. This
+                            means that once you configure a microcontroller pin as input, very little current will
+                            “seep” into the pin. More specifically, Section 26.2 of the <a
+                                href="/physcomp/assets/datasheets/ATMega328.pdf">ATMega328 datasheet</a> (entitled
+                            <em>DC Characteristics</em>) states that the input “leakage” current is 1 microamp (1 µA).
+                        </p> <!-- TODO: consider adding illustrative figure here. -->
+                        <h3 id="is-it-low-or-is-it-high"> <a href="#is-it-low-or-is-it-high" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Is it LOW or is it HIGH? </h3>
+                        <p>You might be wondering: what’s the precise voltage-related definition of <code
+                                class="language-plaintext highlighter-rouge">HIGH</code> and <code
+                                class="language-plaintext highlighter-rouge">LOW</code> from the microcontroller’s
+                            perspective? And what does <code
+                                class="language-plaintext highlighter-rouge">digitalRead</code> read if our voltage
+                            signal is not 0V and not 5V? Great questions!</p>
+                        <p>As Lee describes in <a
+                                href="https://web.stanford.edu/class/archive/engr/engr40m.1178/slides_sp17/arduino-io.pdf">his
+                                Arduino lecture notes</a>, “<em>the value returned from <code
+                                    class="language-plaintext highlighter-rouge">digitalRead()</code> is only
+                                well-defined when the input pin voltage is *close</em> to
+                            <script type="math/tex">V_{CC}</script> or
+                            <script type="math/tex">0V</script>. The precise meaning of “close” varies between
+                            microcontrollers*”</p>
+                        <p>For the ATmega328, the input voltage needs to be at least
+                            <script type="math/tex">0.6\cdot V_{CC}\to 0.6\cdot5 V=3V</script> to qualify as <code
+                                class="language-plaintext highlighter-rouge">HIGH</code> and between
+                            <script type="math/tex">0</script> and
+                            <script type="math/tex">0.3\cdot V_{CC}\to 0.3\cdot 5V=1.5V</script> to qualify as <code
+                                class="language-plaintext highlighter-rouge">LOW</code>. For the middle range
+                            <script type="math/tex">0.3\cdot V_{CC}</script> to
+                            <script type="math/tex">0.6\cdot V_{CC}</script>, the behavior of the pin is undefined.</p>
+                        <p>In general, this is unlikely to affect how you wire your digital input circuits with
+                            switches, buttons, or binary sensors (like reed switches)—because your two states will be 5V
+                            and 0V—but it may affect whether and how you hook up other sensors to a microcontroller, if
+                            you want to interpret them as digital input.</p>
+                        <h2 id="hooking-up-digital-input-with-microcontrollers"> <a
+                                href="#hooking-up-digital-input-with-microcontrollers" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Hooking up digital input with microcontrollers </h2>
+                        <p>Let’s walk through how one might try to hook up a button to a microcontroller. In doing so,
+                            we’ll learn about what <strong>not</strong> to do and <strong>why</strong> as well as
+                            <strong>what to do</strong> and the role of <strong>pull-down resistors</strong>.</p>
+                        <h3 id="the-floating-pin-problem"> <a href="#the-floating-pin-problem"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> The floating pin problem </h3>
+                        <p>You might initially think to hook up your button like the following:</p>
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/images/ArduinoUno_Button_SchematicAndDiagram_FloatingPin.png"
+                                alt="Initial digital input circuit with a button but there is a problem" /> This circuit
+                            will “sort of” work but has a problem related to a “floating pin” when the switch is open.
+                        </p>
+                        <p>However, if you do this, what will the digital input pin read when the switch is
+                            <strong>open</strong> (that is, when the button is <strong>not</strong> pressed)? Well, this
+                            is called a “floating pin” and it’s not good. A floating pin is susceptible to randomly
+                            oscillating between <code class="language-plaintext highlighter-rouge">HIGH</code> and <code
+                                class="language-plaintext highlighter-rouge">LOW</code>. See the animation below.
+                            <!-- TODO: add in reasons why pin could oscillate -->
+                        </p>
+                        <p><img src="/physcomp/arduino/assets/movies/Arduino_Button_SchematicsAndDiagrams_PullDownResistorWalkthrough_Animation-FloatingPin-Optimized.gif"
+                                alt="Animation showing a floating pin condition when a button is just hooked up to 5V without a pull-down resistor" />
+                        </p>
+                        <p>In fact, try wiring up this configuration yourself and running the following program with the
+                            Serial Console open. What happens when you press the button? Try touching the button legs
+                            but not actually pressing the button, what happens to the <code
+                                class="language-plaintext highlighter-rouge">digitalRead</code> value? Are you reliably
+                            tracking the button state?</p>
+                        <figure class="highlight">
+                            <pre><code class="language-c" data-lang="c"><span class="k">const</span> <span class="kt">int</span> <span class="n">INPUT_BUTTON_PIN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">pinMode</span><span class="p">(</span><span class="n">INPUT_BUTTON_PIN</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">)</span>
+      <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span> <span class="c1">// for printing values to console</span>
+    <span class="p">}</span>
+    
+    <span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">buttonVal</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">INPUT_BUTTON_PIN</span><span class="p">);</span> <span class="c1">// returns 0 (LOW) or 1 (HIGH)</span>
+      <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">buttonVal</span><span class="p">);</span>                     <span class="c1">// print value to Serial</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>                                      <span class="c1">// small delay</span>
+    <span class="p">}</span></code></pre>
+                        </figure>
+                        <!-- TODO: consider adding in video of floating pin and effect. Use external resistor + LED. Have current video so reshooting could be low priority -->
+                        <h3 id="an-incorrect-attempt-to-fix-the-floating-pin"> <a
+                                href="#an-incorrect-attempt-to-fix-the-floating-pin" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> An (incorrect) attempt to fix the floating pin </h3>
+                        <p>To solve the floating pin problem, we need to bias the digital input pin to a known voltage
+                            state when the circuit is open (the button is not pressed).</p>
+                        <p>You might try to do this by adding <code
+                                class="language-plaintext highlighter-rouge">GND</code> to the other leg of the button
+                            like this:</p>
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/images/ArduinoUno_Button_SchematicAndDiagram_ShortCircuit.png"
+                                alt="Circuit diagram showing an incorrect hookup which causes a short circuit when the button is pressed" />
+                            Warning: Do <strong>not</strong> do this. When the switch closes, a short circuit occurs,
+                            which could damage your microcontroller or Arduino.</p>
+                        <p>And you’re on the right track. Now, when the switch is open, the digital input pin is in a
+                            known voltage state—it reads 0V. But what happens when we actually press the button? Oh no,
+                            a short circuit occurs! This could damage your microcontroller and/or Arduino!</p>
+                        <!-- TODO: expand on why short circuits are bad? -->
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/movies/Arduino_Button_SchematicsAndDiagrams_PullDownResistorWalkthrough_Animation-ShortCircuit-Optimized.gif"
+                                alt="Animation showing a button circuit without a pull-down resistor causing a short when the button is pressed" />
+                            Animation showing the effect of adding <code
+                                class="language-plaintext highlighter-rouge">GND</code> without a resistor. A short
+                            circuit!</p>
+                        <p>So, what to do? <strong>Pull-down resistors</strong> to the rescue!</p>
+                        <h3 id="pull-down-resistors"> <a href="#pull-down-resistors" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Pull-down resistors </h3>
+                        <p>To solve this problem, we can add in what’s called a <strong>pull-down resistor</strong>
+                            before the GND connection, which prevents short circuits when the switch is closed while
+                            still biasing the pin to 0V when the switch is open.</p>
+                        <p>Typically, this pull-down resistor value is 10kΩ, which is also what the official <a
+                                href="https://www.arduino.cc/en/Tutorial/DigitalPins">Arduino docs</a> recommends. A
+                            small resistor is called a <strong>strong</strong> pull-down and a large resistor is called
+                            a <strong>weak</strong> pull-down. In a bit, we’ll talk about <strong>what</strong> factors
+                            influence the pull-down resistor value (hint: use a 10kΩ) but the primary tradeoff is in
+                            power efficiency (low resistor values “waste” more current) and function (a large resistor
+                            may not always work properly as a pull-down).</p>
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/images/ArduinoUno_Button_SchematicAndDiagram_PullDownResistor.png"
+                                alt="Circuit diagram showing a correct pull-down resistor circuit with the 5V connection then the digital input pin then a 10K resistor then GND" />
+                            The pull-down resistor is quite large: 10,000Ω (10kΩ)</p>
+                        <p>Here’s an animation showing how a pull-down resistor configuration works:</p>
+                        <p><img src="/physcomp/arduino/assets/movies/Arduino_Button_SchematicsAndDiagrams_PullDownResistorWalkthrough_Animation-PullDownResistor-Optimized.gif"
+                                alt="Animation showing the correct operation of digital input with a pull-down resistor configuration" />
+                        </p>
+                        <h3 id="pull-up-resistors"> <a href="#pull-up-resistors" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Pull-up resistors </h3>
+                        <p>So, what’s a <strong>pull-up resistor</strong> then? With a <strong>pull-down
+                                resistor</strong> configuration, the input pin is biased to GND when the circuit is in
+                            an open state. With a <strong>pull-up resistor</strong> configuration, the resistor moves
+                            from the GND side of the circuit to the 5V side and logic is flipped: the input pin is
+                            “pulled up” to
+                            <script type="math/tex">V_{CC}</script> when the switch is open and goes to GND when the
+                            switch is closed.</p> <!-- TODO: insert pull-up resistor animation -->
+                        <p>Pull-up resistor configurations can be confusing because the <code
+                                class="language-plaintext highlighter-rouge">HIGH</code> and <code
+                                class="language-plaintext highlighter-rouge">LOW</code> values are flipped. Now, when
+                            the switch is open, the digital input pin is <code
+                                class="language-plaintext highlighter-rouge">HIGH</code>. When the switch closes, the
+                            input pin goes <code class="language-plaintext highlighter-rouge">LOW</code>.</p>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Switch State</th>
+                                        <th>Input pin with pull-down</th>
+                                        <th>Input pin with pull-up</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Open</td>
+                                        <td><code class="language-plaintext highlighter-rouge">LOW</code></td>
+                                        <td><code class="language-plaintext highlighter-rouge">HIGH</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Closed</td>
+                                        <td><code class="language-plaintext highlighter-rouge">HIGH</code></td>
+                                        <td><code class="language-plaintext highlighter-rouge">LOW</code></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>For convenience, here are side-by-side diagrams of a pull-down <em>vs.</em> pull-up resistor
+                            configuration:</p>
+                        <p><img src="/physcomp/arduino/assets/images/Arduino_Button_PullDownVsPullUpResistor.png"
+                                alt="Difference between a pull-down vs. pull-up resistor" /></p>
+                        <h3 id="internal-pull-up-resistors"> <a href="#internal-pull-up-resistors"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Internal pull-up resistors </h3>
+                        <p>Finally, many microcontrollers include an internal pull-up resistor that can be activated
+                            with software. On the Arduino, we can configure an input pin to use its internal pull-up
+                            resistor with: <code
+                                class="language-plaintext highlighter-rouge">pinMode(&lt;pin&gt;, INPUT_PULLUP);</code>.
+                            This eliminates the need for any external resistors (thus simplifying your circuit).</p>
+                        <p><img src="/physcomp/arduino/assets/images/Arduino_Button_InternalPullUpResistor.png"
+                                alt="Difference between a pull-down, pull-up, and internal pull-up resistor" /></p>
+                        <p>Some microcontrollers have both internal pull-up <em>and</em> pull-down resistors. The
+                            popular ESP32 chip, for example, used in the <a
+                                href="https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/overview">Adafruit
+                                Huzzah32</a> has built-in pull-up and pull-down resistors on all GPIO pins except for
+                            GPIO34-GPIO39 (see <a
+                                href="https://github.com/espressif/arduino-esp32/issues/316">link</a>). These can be
+                            enabled with either <code
+                                class="language-plaintext highlighter-rouge">pinMode(&lt;pin&gt;, INPUT_PULLUP);</code>
+                            or <code
+                                class="language-plaintext highlighter-rouge">pinMode(&lt;pin&gt;, INPUT_PULLDOWN);</code>
+                        </p> <!-- TODO: fix syntax mistake in figure; have its instead of it's in the diagram above -->
+                        <!-- actual diagram of atmega328 with pull-up circled: https://electronics.stackexchange.com/a/296452 -->
+                        <h3 id="what-value-should-i-use-for-my-pull-down-or-pull-up-resistors"> <a
+                                href="#what-value-should-i-use-for-my-pull-down-or-pull-up-resistors"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> What value should I use for my pull-down or pull-up resistors? </h3>
+                        <p>The short answer: use a 10kΩ resistor. As mentioned above, the official <a
+                                href="https://www.arduino.cc/en/Tutorial/DigitalPins">Arduino docs</a> recommend a 10kΩ
+                            pull-down or pull-up resistor for digital input pins. On the ATmega microcontrollers (those
+                            on the Arduino Uno and Leonardo), the internal pull-up resistor is 20kΩ. On the Arduino Due,
+                            the internal pull-up is between 50kΩ and 150kΩ.</p>
+                        <h4 id="tradeoffs-in-selecting-a-pull-up-resistor"> <a
+                                href="#tradeoffs-in-selecting-a-pull-up-resistor" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Tradeoffs in selecting a pull-up resistor </h4>
+                        <p>The longer answer: there are multiple factors to consider, but the primary tradeoff is in
+                            selecting a resistor that is small enough to “pull-up” the voltage to <code
+                                class="language-plaintext highlighter-rouge">HIGH</code> when the switch is open but
+                            large enough to not “waste” power due to too much current through the resistor when the
+                            switch is closed. Remember, a “strong” pull-up is a low-resistance value while a “weak”
+                            pull-up is a high-resistance value. This will make more sense below.</p>
+                        <p><img src="/physcomp/arduino/assets/images/PullUpResistor_Schematics_CurrentLeakageAndPowerDissipation.png"
+                                alt="Two schematics showing pull-up resistor when switch is open and closed" /></p>
+                        <p>Above, we show two diagrams. On the left, a diagram of the leakage current
+                            <script type="math/tex">I_{IH}</script> into our input pin when the switch is open. This
+                            leakage current is specified in the ATmega328 datasheet as
+                            <script type="math/tex">0.000001A</script> or (
+                            <script type="math/tex">1µA</script>) (Section 26.2). We can thus calculate the voltage on
+                            the input pin (
+                            <script type="math/tex">V_{pin}</script>) using Ohm’s Law:
+                            <script type="math/tex">V_{pin} = V_{in} - I_{IH}R</script> where
+                            <script type="math/tex">V_{in}=5V</script>,
+                            <script type="math/tex">I_{IH}=1µA</script>, and
+                            <script type="math/tex">R</script> is our pull-up resistor value. Recall that on the
+                            ATmega328, the input voltage needs to be at least
+                            <script type="math/tex">0.6\cdot V_{CC}\to 0.6\cdot5 V=3V</script> to qualify as <code
+                                class="language-plaintext highlighter-rouge">HIGH</code>. So, we must ensure that our
+                            selection of
+                            <script type="math/tex">R</script> is not so high as to drop below this threshold. Using
+                            this formula alone to drive our decision, we can determine that
+                            <script type="math/tex">R</script> should not exceed ~400kΩ—which would be a very large
+                            (weak) pull-up resistor.</p>
+                        <p>The diagram on the right illustrates what happens when the switch is closed. Now, the leakage
+                            current of (
+                            <script type="math/tex">1µA</script>) can be ignored as the current is dominated by the
+                            <script type="math/tex">V_{in}</script> to
+                            <script type="math/tex">GND</script> branch. And here, the key factor is how much current is
+                            flowing when the switch is closed: from Ohm’s Law (
+                            <script type="math/tex">I=\frac{V}{R}</script>), we know that a small resistor will result
+                            in more current. We can characterize this as how much power is being dissipated by the
+                            resistor—ideally, we want to minimize this. The formula for power is
+                            <script type="math/tex">P = I \cdot V</script> (in watts), which, using Ohm’s Law to replace
+                            <script type="math/tex">I</script> with
+                            <script type="math/tex">\frac{V}{R}</script>, can be rewritten as
+                            <script type="math/tex">P = \frac{V^2}{R}</script>. Given the exponential, when
+                            <script type="math/tex">R</script> is small, power dissipation is quite large.</p>
+                        <p>Using the two formulas above, we can graph the tradeoff in selecting a resistance value for
+                            the pull-up resistor
+                            <script type="math/tex">R</script> (calculated with
+                            <script type="math/tex">V_{in}=5V</script>) and the effect on
+                            <script type="math/tex">V_{pin}</script> and power dissipation. For convenience, we’ve also
+                            marked the ATmega328 <code class="language-plaintext highlighter-rouge">HIGH</code>
+                            threshold for
+                            <script type="math/tex">V_{pin}</script> and the 10kΩ
+                            <script type="math/tex">R</script> value.</p>
+                        <p class="fs-1"><img
+                                src="/physcomp/arduino/assets/images/PullUpResistor_VpinAndPowerDissipationGraph.png"
+                                alt="A graph of the tradeoff in selecting a resistance value for pull-up resistor" />
+                            Calculated using
+                            <script type="math/tex">V_{in}=5V</script>
+                        </p>
+                        <p>With a pull-up resistor of
+                            <script type="math/tex">R=100Ω</script> (an unnecessarily strong pull-up), when the switch
+                            is closed, we are using 50mA (and 250 milliwatts)—a non-trivial amount for a battery-powered
+                            circuit (<em>e.g.,</em> for a mobile or wearable). In contrast, with a 10kΩ pull-up, we
+                            would use
+                            <script type="math/tex">I=0.5mA</script> (and 2.5 mwatts).</p>
+                        <p>There are other factors to consider as well—for example, including line capacitance and
+                            capacitive coupling. For the former, the input line will have some “stray capacitance” to
+                            ground, which creates an “RC circuit” that has associated rise and fall times. Larger
+                            resistors can slow down the responsiveness of the circuit. But these factors are beyond the
+                            scope of our class. See these forum posts for more details: <a
+                                href="https://www.avrfreaks.net/forum/input-impedance-digital-ios-atmega328p">AVR
+                                Freaks</a> and (<a
+                                href="https://electronics.stackexchange.com/questions/23645/how-do-i-calculate-the-required-value-for-a-pull-up-resistor">EE
+                                StackExchange</a>).</p>
+                        <h4 id="tradeoffs-in-selecting-a-pull-down-resistor"> <a
+                                href="#tradeoffs-in-selecting-a-pull-down-resistor" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Tradeoffs in selecting a pull-down resistor </h4>
+                        <p>What about pull-down resistors? The same tradeoffs and factors apply here. But instead of
+                            <script type="math/tex">I_{IH}</script>, we need to know the leakage current
+                            <script type="math/tex">I_{IL}</script> from an input pin to ground. The ATmega328 datasheet
+                            specifies the same leakage current for
+                            <script type="math/tex">I_{IH}</script> and
+                            <script type="math/tex">I_{IL}</script> as
+                            <script type="math/tex">1µA</script>.</p>
+                        <p><img src="/physcomp/arduino/assets/images/PullDownResistor_Schematics_CurrentLeakageAndPowerDissipation.png"
+                                alt="Two schematics showing a pull-down resistor when switch is open and closed and the amount of current and power" />
+                        </p>
+                        <p>The above sub-sections were strongly informed by Section 12.6.9 entitled “Pullup and Pulldown
+                            Resistors” of Scherz and Monk’s <a
+                                href="https://learning.oreilly.com/library/view/practical-electronics-for/9781259587559">Practical
+                                Electronics for Inventors</a>.</p>
+                        <h3 id="want-to-dive-deeper"> <a href="#want-to-dive-deeper" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Want to dive deeper? </h3>
+                        <p>Still feeling confused or want to learn more about pull-up and pull-down resistors? Try
+                            watching this <a href="https://youtu.be/wxjerCHCEMg">video</a> by AddOhms:</p> <iframe
+                            width="736" height="414" src="https://www.youtube.com/embed/wxjerCHCEMg" frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen=""></iframe>
+                        <p class="fs-1"><a href="https://youtu.be/wxjerCHCEMg">Video</a> by AddOhms demonstrating
+                            floating pins and why pull-up resistors are necessary for digital input with
+                            microcontrollers.</p>
+                        <p>Or this video by NYU ITP’s Jeff Feddersen:</p>
+                        <div style="padding:56.25% 0 0 0;position:relative;"><iframe
+                                src="https://player.vimeo.com/video/241209240?title=0&amp;byline=0&amp;portrait=0"
+                                style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0"
+                                allow="autoplay; fullscreen" allowfullscreen=""></iframe></div>
+                        <script src="https://player.vimeo.com/api/player.js"></script>
+                        <p class="fs-1"><a href="https://vimeo.com/241209240">Video</a> by NYU ITP’s Jeff Feddersen on
+                            pull-up and pull-down resistors.</p>
+                        <p>See also:</p>
+                        <ul>
+                            <li><a href="https://learn.sparkfun.com/tutorials/pull-up-resistors/all">Sparkfun’s tutorial
+                                    on Pull-up Resistors</a></li>
+                            <li><a href="https://www.arduino.cc/en/Tutorial/InputPullupSerial">Arduino’s official <code
+                                        class="language-plaintext highlighter-rouge">INPUT_PULLUP</code> tutorial</a>
+                            </li>
+                            <li><a href="https://www.electronics-tutorials.ws/logic/pull-up-resistor.html">Electronics
+                                    Tutorials’ Pull-up Resistors</a></li>
+                        </ul>
+                        <h2 id="lets-make-stuff"> <a href="#lets-make-stuff" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Let’s make stuff! </h2>
+                        <p>Whew, OK. We’ve now explained how to use four-legged tactile buttons, how to use pull-down,
+                            pull-up, and internal pull-up resistors and their purpose, and provided a general overview
+                            of digital input.</p>
+                        <p>It’s time to make stuff. We’re going to start with a button in a pull-down configuration
+                            before making circuits with external pull-up and internal pull-up configurations. Then, in
+                            the <a href="/physcomp/arduino/piano.html">next lesson</a>, we’ll make a simple “piano”
+                            synthesizer that puts our skills to the test!</p>
+                        <h2 id="pull-down-resistor-configuration"> <a href="#pull-down-resistor-configuration"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Pull-down resistor configuration </h2>
+                        <p>Let’s begin with a pull-down resistor configuration.</p>
+                        <h3 id="pull-down-resistor-wiring-diagram"> <a href="#pull-down-resistor-wiring-diagram"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Pull-down resistor wiring diagram </h3>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_Button_PullDownResistor_WiringDiagram.png"
+                                alt="Wiring diagram and schematic for a button with a pull-down resistor wired to digital I/O Pin 2" />
+                        </p>
+                        <p>As with any circuit, there are many ways to wire up a button with a pull-down resistor
+                            configuration. Here are some examples—all are functionally equivalent. I tend to use the
+                            wiring shown on the far left, which is the same one shown above.</p>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_Button_PullDownResistor_WiringDiagramGallery.png"
+                                alt="Five separate wiring diagrams of a pull-down resistor configuration with a button wired to Pin 2 on the Arduino Uno" />
+                        </p>
+                        <p class="fs-1">To zoom in on this image, right-click and select ‘Open image in a new tab.’</p>
+                        <h3 id="code-to-turn-on-led-with-button-press"> <a href="#code-to-turn-on-led-with-button-press"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Code to turn on LED with button press </h3>
+                        <figure class="highlight">
+                            <pre><code class="language-c" data-lang="c"><span class="k">const</span> <span class="kt">int</span> <span class="n">INPUT_BUTTON_PIN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">OUTPUT_LED_PIN</span> <span class="o">=</span> <span class="n">LED_BUILTIN</span><span class="p">;</span>
+    
+    <span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">pinMode</span><span class="p">(</span><span class="n">INPUT_BUTTON_PIN</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+      <span class="n">pinMode</span><span class="p">(</span><span class="n">OUTPUT_LED_PIN</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="c1">// read the state of the pushbutton value</span>
+      <span class="kt">int</span> <span class="n">buttonState</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">INPUT_BUTTON_PIN</span><span class="p">);</span>
+      <span class="n">digitalWrite</span><span class="p">(</span><span class="n">OUTPUT_LED_PIN</span><span class="p">,</span> <span class="n">buttonState</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+    <span class="p">}</span></code></pre>
+                        </figure>
+                        <!-- TODO: show video of this and then also modify code and include serial.print for button state -->
+                        <h2 id="pull-up-resistor-configuration"> <a href="#pull-up-resistor-configuration"
+                                class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Pull-up resistor configuration </h2>
+                        <p>Here’s the wiring for a pull-up resistor configuration. Modify the code above to turn on the
+                            LED when the button is pressed.</p>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_Button_PullUpResistor_WiringDiagram.png"
+                                alt="Wiring diagram and schematic for a button with a pull-up resistor wired to digital I/O Pin 2" />
+                        </p>
+                        <h2 id="internal-pull-up-resistor-configuration"> <a
+                                href="#internal-pull-up-resistor-configuration" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Internal pull-up resistor configuration </h2>
+                        <p>Now try it with the internal pull-up resistor.</p>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_Button_InternalPullUpResistor_WiringDiagram.png"
+                                alt="Wiring diagram and schematic for a button with an internal pull-up resistor wired to digital I/O Pin 2" />
+                        </p>
+                        <p class="fs-1">The schematic is for illustrative purposes. The internal software controlled
+                            switch is a transistor so the actual circuit looks something like <a
+                                href="/physcomp/arduino/assets/images/Arduino_InputPinWithPullUpResistor_Schematic.png">this</a>
+                            (from <a
+                                href="https://web.stanford.edu/class/archive/engr/engr40m.1178/slides_sp17/arduino-io.pdf">Lee,
+                                Input/output pins on Arduino, Stanford ENGR40M</a>)</p>
+                        <h2 id="putting-it-all-together"> <a href="#putting-it-all-together" class="anchor-heading"><svg
+                                    viewBox="0 0 16 16" aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Putting it all together </h2>
+                        <p>Make a circuit that has three buttons wired to digital input and three corresponding
+                            (external) LEDs wired to digital output. Use a different pull-down or pull-up configuration
+                            for each button. Then write code to respond accordingly.</p>
+                        <p><img src="/physcomp/arduino/assets/images/ArduinoUno_ThreeButtonsWithDifferentResistorConfigurations_WorkbenchPhoto.png"
+                                alt="Workbench photo of three buttons with different pull-up and pull-down configurations" />
+                        </p> <!-- TODO: add code for this and a workbench video showing it working -->
+                        <h2 id="next-lesson"> <a href="#next-lesson" class="anchor-heading"><svg viewBox="0 0 16 16"
+                                    aria-hidden="true">
+                                    <use xlink:href="#link"></use>
+                                </svg></a> Next Lesson </h2>
+                        <p>In the <a href="/physcomp/arduino/piano.html">next lesson</a>, we’ll get to apply our
+                            newfound digital input skills to build a simple interactive piano with tactile buttons and a
+                            piezo buzzer.</p>
+                        <p><span class="fs-6"> <a href="/physcomp/arduino/piano.html" class="btn btn-outline">Next: Make
+                                    a simple piano</a> </span></p>
+                        <!-- ## TODO/Outline - The button is funky: why four legs? what's connected. Maybe show multimeter? - We are going to cover three separate circuit designs: pull-down resistor, pull-up resistor, internal pull-up resistor - Why do we need these resistors. Explain. - Make pull-down circuit + code - Make pull-up circuit + code - Show using internal pull-up + code ## Notes: Things to remember: - [done] include Jeff Feddersen video of pull-up and pull-down - [done] ITP has some good content on switches that we should link to - show calculation about pull-down and pull-up resistors (and the fact that they should be high to not waste current) - Talk about super high impedance on input pin? ## References - [Arduino Internal Pull-up Resistor Tutorial](https://www.baldengineer.com/arduino-internal-pull-up-resistor-tutorial.html), James Lewis ## Tinkercad circuits - https://www.tinkercad.com/things/9skzhTypQRh-button-with-breadboard/ - https://www.tinkercad.com/things/hlkxqsvSz2E-button-no-breadboard -->
+                        <div id="disqus_thread"></div>
+                        <script> /** * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC * VALUES FROM YOUR PLATFORM OR CMS. * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: * https://disqus.com/admin/universalcode/#configuration-variables */ var disqus_config = function () { this.page.url = document.location.href; /* Replace PAGE_URL with your page's canonical URL variable */ this.page.identifier = document.location.pathname; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */ }; (function () { /* DON'T EDIT BELOW THIS LINE */ var d = document, s = d.createElement('script'); s.src = 'https://physical-computing.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })(); </script>
+                        <noscript>Please enable JavaScript to view the <a
+                                href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                    </div>
+                    <hr>
+                    <footer role="contentinfo">
+                        <p class="text-small text-grey-dk-000 mb-0">Found an error? Make a comment below or file a <a
+                                href="https://github.com/makeabilitylab/physcomp">GitHub issue</a>. Content by the <a
+                                href="https://makeabilitylab.cs.washington.edu">Makeability Lab</a> and Professor <a
+                                href="https://github.com/jonfroehlich">Jon E. Froehlich</a>.</p>
+                    </footer>
+                </div>
+            </div>
+        </div> <!-- tocbot is an awesome table of contents generator, see: https://tscanlin.github.io/tocbot/ -->
+        <script> tocbot.init({ /* Where to render the table of contents. */ tocSelector: '.js-toc', /* Where to grab the headings to build the table of contents. */ contentSelector: '.js-toc-content', /* Which headings to grab inside of the contentSelector element. */ headingSelector: 'h2, h3, h4', /* For headings inside relative or absolute positioned containers within content. */ hasInnerContainers: true, positionFixedSelector: '.js-toc', includeHtml: true, onClick: (e) => { console.log('you clicked a link', e) } }); </script>
+</body>
+
+</html>
