@@ -6,3 +6,7 @@ html, body {
 canvas {
   display: block;
 }
+
+.w3-bar-block{
+  margin-left: 5px;
+}
