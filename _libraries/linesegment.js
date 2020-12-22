@@ -82,7 +82,7 @@ class LineSegment {
   }
 
   /**
-   * Returns the heading of the line segment in radians
+   * Returns the heading of the line segment in radians between 0 and TWO_PI
    */
   getHeading() {
     let diffVector = p5.Vector.sub(this.pt2, this.pt1);
