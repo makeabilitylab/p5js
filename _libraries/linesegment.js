@@ -16,19 +16,41 @@ class LineSegment {
       this.pt2 = createVector(x2, y2);
     }
 
-    this.fontSize = 12;
+    this.fontSize = 10;
     this.strokeColor = color(0);
     this.isDashedLine = false;
-    this.turnOnTextLabels = true;
+    this.drawTextLabels = true;
+    this.drawTextMagnitude = true;
+    this.drawTextAngle = true;
     this.strokeWeight = 2;
   }
 
+  /**
+   * Returns x1
+   */
   get x1() {
     return this.pt1.x;
   }
 
+  /**
+   * Set x1
+   */
+  set x1(val){
+    this.pt1.x = val;
+  }
+
+  /**
+   * Returns y1
+   */
   get y1() {
     return this.pt1.y;
+  }
+
+  /**
+   * Set y1
+   */
+  set y1(val){
+    this.pt1.y = val;
   }
 
   /**
@@ -39,6 +61,13 @@ class LineSegment {
   }
 
   /**
+   * Set x2
+   */
+  set x2(val){
+    this.pt2.x = val;
+  }
+
+  /**
    * Returns y2
    */
   get y2() {
@@ -46,11 +75,23 @@ class LineSegment {
   }
 
   /**
+   * Set y2
+   */
+  set y2(val){
+    this.pt2.y = val;
+  }
+
+  /**
    * Returns the heading of the line segment in radians
    */
   getHeading() {
     let diffVector = p5.Vector.sub(this.pt2, this.pt1);
-    return diffVector.heading();
+    let heading = diffVector.heading();
+    
+    if(heading < 0){
+      heading += TWO_PI;
+    }
+    return heading;
   }
 
   /**
@@ -77,17 +118,38 @@ class LineSegment {
   }
 
   /**
+   * Gets the angle between this line segment and the given vector or line segment.
+   * Returns the angle in radians between 0 and TWO_PI
+   * 
+   * @param {p5.Vector or LineSegment} vectorOrLineSegment 
+   */
+  getAngleBetween(vectorOrLineSegment){
+    let v1 = this.getVectorAtOrigin();
+    let v2 = vectorOrLineSegment;
+
+    if(vectorOrLineSegment instanceof LineSegment){
+      v2 = vectorOrLineSegment.getVectorAtOrigin();
+    }
+    
+    let angleBetweenRadians = v1.angleBetween(v2);
+    if(angleBetweenRadians < 0){
+      angleBetweenRadians += TWO_PI;
+    }
+    return angleBetweenRadians;
+  }
+
+  /**
    * Calculates the orthogonal projection of vector p to this line segment
    * @param {p5.Vector} p a p5.Vector
    */
   getOrthogonalProjection(p) {
-  
+
     const d1 = p5.Vector.sub(this.pt2, this.pt1);
     const d2 = p5.Vector.sub(p, this.pt1);
     const l1 = d1.mag();
-    
+
     const dotp = constrain(d2.dot(d1.normalize()), 0, l1);
-        
+
     return p5.Vector.add(this.pt1, d1.mult(dotp));
   }
 
@@ -95,7 +157,7 @@ class LineSegment {
    * Returns the minimum distance between this line segment and the given point p
    * @param {p5.Vector} p a p5.Vector
    */
-  getDistance(p){
+  getDistance(p) {
     const op = this.getOrthogonalProjection(p);
     return p5.Vector.dist(p, op);
   }
@@ -135,13 +197,32 @@ class LineSegment {
     // calculate heading in radians and degrees
     // and also print out magnitude
     //print(degrees(this.velocity.heading()));
-    noStroke();
-    //rotate(-vec.heading());
-    textSize(this.fontSize);
-    angleMode(RADIANS);
-    let lbl = nfc(degrees(vec.heading()), 1) + "°" + ", " + nfc(vec.mag(), 1);
-    let lblWidth = textWidth(lbl);
-    text(lbl, -lblWidth, 12);
+
+    if (this.drawTextLabels) {
+      noStroke();
+      //rotate(-vec.heading());
+      textSize(this.fontSize);
+      angleMode(RADIANS);
+      let lbl = "";
+      if(this.drawTextAngle){
+        let angleDegrees = degrees(vec.heading());
+        if(angleDegrees < 0){
+          angleDegrees += degrees(TWO_PI);
+        }
+        lbl += nfc(angleDegrees, 1) + "°"
+      }
+
+      if(this.drawTextAngle && this.drawTextMagnitude){
+        lbl +=  " ";
+      }
+
+      if(this.drawTextMagnitude){
+        lbl += "|" + nfc(vec.mag(), 1) + "|";
+      }
+    
+      let lblWidth = textWidth(lbl);
+      text(lbl, -lblWidth - 3, 12);
+    }
 
     pop();
   }
