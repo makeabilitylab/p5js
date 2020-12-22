@@ -34,6 +34,9 @@
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 //
+//
+// TOOD: add in optional hand wave emoji when hand wave detected
+//
 
 let HandWaveStateEnum = {
   INITIAL: 1,
@@ -73,9 +76,9 @@ class Hand {
     this.events = new Map();
 
     this.knownEvents = new Set([Hand.EVENT_ENTERED_HAND_WAVE_POSITION,
-      Hand.EVENT_EXITED_HAND_WAVE_POSITION,
-      Hand.EVENT_NEW_HAND_WAVE_ANGLE,
-      Hand.EVENT_NEW_HAND_WAVE_DETECTED]);
+    Hand.EVENT_EXITED_HAND_WAVE_POSITION,
+    Hand.EVENT_NEW_HAND_WAVE_ANGLE,
+    Hand.EVENT_NEW_HAND_WAVE_DETECTED]);
   }
 
   get hasHandPose() {
@@ -88,7 +91,7 @@ class Hand {
         this.events.set(label, []);
       }
       this.events.get(label).push(callback);
-    }else{
+    } else {
       console.log(`Could not create event subscription for ${label}. Event unknown.`);
     }
   }
@@ -109,8 +112,9 @@ class Hand {
       const palmBaseVector = createVector(a.palmBase[0][0], a.palmBase[0][1]);
       const middleFingerVector = createVector(a.middleFinger[a.middleFinger.length - 1][0], a.middleFinger[a.middleFinger.length - 1][1]);
       this.palmToMiddleFingerLineSegment = new LineSegment(palmBaseVector, middleFingerVector);
-      this.palmToMiddleFingerLineSegment.strokeColor = color(0, 0, 255, 200);
-      handWaveAngle = degrees(this.palmToMiddleFingerLineSegment.getHeading());
+      this.palmToMiddleFingerLineSegment.strokeColor = color(255);
+
+      handWaveAngle = degrees(this.palmToMiddleFingerLineSegment.getHeading() - TWO_PI);
 
       // Basic tracking
       if (this.contiguousHandPoseDetections == 0) {
@@ -159,28 +163,28 @@ class Hand {
       switch (eventName) {
         case Hand.EVENT_ENTERED_HAND_WAVE_POSITION:
           if (!prevIsHandWavePosition && this.isInHandWavePosition) {
-            for(const callback of callbackFunctions){
+            for (const callback of callbackFunctions) {
               callback();
             }
           }
           break;
         case Hand.EVENT_EXITED_HAND_WAVE_POSITION:
           if (prevIsHandWavePosition && !this.isInHandWavePosition) {
-            for(const callback of callbackFunctions){
+            for (const callback of callbackFunctions) {
               callback();
             }
           }
           break;
         case Hand.EVENT_NEW_HAND_WAVE_ANGLE:
           if (this.isInHandWavePosition) {
-            for(const callback of callbackFunctions){
+            for (const callback of callbackFunctions) {
               callback(handWaveAngle);
             }
           }
           break;
         case Hand.EVENT_NEW_HAND_WAVE_DETECTED:
           if (prevOverallHandWaveCount != this.overallHandWaveCount) {
-            for(const callback of callbackFunctions){
+            for (const callback of callbackFunctions) {
               callback(this.contiguousHandWaveCount, this.overallHandWaveCount);
             }
           }
@@ -311,11 +315,24 @@ class Hand {
       // Draw palm to middle finger segment
       this.palmToMiddleFingerLineSegment.draw();
 
+      const bb = this.tightBoundingBox;
+      let lineSegmentXAxis = new LineSegment(this.palmToMiddleFingerLineSegment.x1,
+        this.palmToMiddleFingerLineSegment.y1, bb.furthestRightPoint.x, this.palmToMiddleFingerLineSegment.y1);
+      
+      lineSegmentXAxis.strokeColor = color(255);
+
+      lineSegmentXAxis.draw();
+      LineSegment.drawAngleArcs(lineSegmentXAxis, this.palmToMiddleFingerLineSegment, color(255), 100, 80);
+
+      // lineSegmentXAxis.strokeColor = color(120, 120, 120, 50);
+      // lineSegmentXAxis.isDashedLine = true;
+      // lineSegmentXAxis.drawTextMagnitude = false;
+
       // Draw tiny circles where the max extent finger points are
       stroke(255);
       fill(255);
       const maxFingerPtSize = 3;
-      const bb = this.tightBoundingBox;
+
       ellipse(bb.furthestLeftPoint.x, bb.furthestLeftPoint.y, maxFingerPtSize);
       ellipse(bb.furthestRightPoint.x, bb.furthestRightPoint.y, maxFingerPtSize);
       ellipse(bb.mostTopPoint.x, bb.mostTopPoint.y, maxFingerPtSize);
