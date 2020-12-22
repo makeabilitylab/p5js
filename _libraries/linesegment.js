@@ -252,7 +252,8 @@ class LineSegment {
     let posAngleDegreesLabel = nfc(posAngleBetweenDegrees, 1) + "°";
 
     textAlign(CENTER);
-    positiveArcMiddleV.mult(1.2);
+    // positiveArcMiddleV.mult(1.2);
+    positiveArcMiddleV.setMag(positiveArcMiddleV.mag() + 15);
     text(posAngleDegreesLabel, positiveArcMiddleV.x, positiveArcMiddleV.y);
 
 
@@ -273,7 +274,8 @@ class LineSegment {
     let negAngleDegreesLabel = nfc(negAngleBetweenDegrees, 1) + "°";
 
     textAlign(CENTER);
-    negativeArcMiddleV.mult(1.2);
+    //negativeArcMiddleV.mult(1.2);
+    negativeArcMiddleV.setMag(negativeArcMiddleV.mag() + 15);
     text(negAngleDegreesLabel, negativeArcMiddleV.x, negativeArcMiddleV.y);
 
     pop();
