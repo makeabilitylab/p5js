@@ -10,12 +10,17 @@
 let randomGraph;
 
 let noiseGraph;
-let noiseSlider;
+let sliderNoiseStep;
+let sliderNoiseOctaves = 4; // noise detail octave default is 4
+let sliderNoiseFalloff = 0.5; // needs to be between 0 and 1, default is 0.5
+
 let xNoiseInputVal = 0;
-let xNoiseStep = 0.01;
 
 const numGraphs = 2;
 let graphHeight = -1;
+
+const xSliderPos = 90;
+const ySliderBuffer = 4;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -25,15 +30,28 @@ function setup() {
   randomGraph = new Graph(0, yGraph, width, graphHeight);
   yGraph += graphHeight;
   noiseGraph = new Graph(0, yGraph, width, graphHeight);
-  noiseSlider = createSlider(0, 2, xNoiseStep, 0.001);
-  noiseSlider.position(5, noiseGraph.getTop() + 15);
-  noiseSlider.style('width', '90px');
-  noiseSlider.input(onNewNoiseSliderValue);
-}
 
-function onNewNoiseSliderValue(){
-  xNoiseStep = noiseSlider.value();
-  print("onNewNoiseSliderValue", xNoiseStep);
+  // Setup sliders
+  sliderNoiseStep = createSlider(0, 2, 0.01, 0.001);
+  sliderNoiseStep.position(xSliderPos, noiseGraph.getTop() + 15);
+  sliderNoiseStep.style('width', '90px');
+
+  sliderNoiseOctaves = createSlider(0, 10, 4, 1);
+  sliderNoiseOctaves.position(xSliderPos, sliderNoiseStep.y + sliderNoiseStep.height + ySliderBuffer);
+  sliderNoiseOctaves.style('width', '90px');
+  sliderNoiseOctaves.input(function(){
+    noiseDetail(sliderNoiseOctaves.value());
+    print("New sliderNoiseOctaves", sliderNoiseOctaves.value());
+  });
+
+  sliderNoiseFalloff = createSlider(0, 1, 0.5, 0.01);
+  sliderNoiseFalloff.position(xSliderPos, sliderNoiseOctaves.y + sliderNoiseOctaves.height + ySliderBuffer);
+  sliderNoiseFalloff.style('width', '90px');
+  sliderNoiseFalloff.input(function(){
+    noiseDetail(sliderNoiseOctaves.value(), sliderNoiseFalloff.value());
+    print("New sliderNoiseFalloff", sliderNoiseFalloff.value());
+  });
+
 }
 
 function draw() {
@@ -45,16 +63,39 @@ function draw() {
   noiseGraph.addItem(perlinNoiseVal);
   noiseGraph.draw();
 
-  xNoiseInputVal += xNoiseStep;
+  xNoiseInputVal += sliderNoiseStep.value();
 
   // separator
   stroke(100);
   line(0, randomGraph.getBottom(), width, randomGraph.getBottom());
 
-  // draw noise step value
+  // draw slider and noise values
+  const textScalar = 0.8;
+  const asc =  textAscent() * textScalar;
+  const desc = textDescent() * textScalar;
+
   noStroke();
   fill(240);
-  text(nfc(xNoiseStep, 3), noiseSlider.x + noiseSlider.width + 7, noiseSlider.y + 14)
+  
+  let yTextPos = sliderNoiseStep.y + sliderNoiseStep.height - 2;
+  const xSliderValTextPos = sliderNoiseStep.x + sliderNoiseStep.width + 7; 
+  const xSliderLabelTextPos = sliderNoiseStep.x - 4;
+  textAlign(RIGHT);
+  text("Noise step:", xSliderLabelTextPos, yTextPos);
+  textAlign(LEFT);
+  text(nfc(sliderNoiseStep.value(), 3), xSliderValTextPos, yTextPos);
+
+  yTextPos = sliderNoiseOctaves.y + sliderNoiseOctaves.height - 2;
+  textAlign(RIGHT);
+  text("Noise octaves:", xSliderLabelTextPos, yTextPos);
+  textAlign(LEFT);
+  text(sliderNoiseOctaves.value(), xSliderValTextPos, yTextPos);
+
+  yTextPos = sliderNoiseFalloff.y + sliderNoiseFalloff.height - 2;
+  textAlign(RIGHT);
+  text("Noise falloff:", xSliderLabelTextPos, yTextPos);
+  textAlign(LEFT);
+  text(sliderNoiseFalloff.value(), xSliderValTextPos, yTextPos);
 }
 
 function windowResized() {
@@ -66,6 +107,11 @@ function windowResized() {
   randomGraph.moveAndResize(0, yGraph, width, graphHeight);
   yGraph += graphHeight;
   noiseGraph.moveAndResize(0, yGraph, width, graphHeight);
+
+  // move the slider
+  sliderNoiseStep.position(xSliderPos, noiseGraph.getTop() + 15);
+  sliderNoiseOctaves.position(xSliderPos, sliderNoiseStep.y + sliderNoiseStep.height + ySliderBuffer);
+  sliderNoiseFalloff.position(xSliderPos, sliderNoiseOctaves.y + sliderNoiseOctaves.height + ySliderBuffer);
 }
 
 /**
@@ -138,7 +184,7 @@ class Graph {
     if (this.data.length >= this.width) {
       let removedItem = this.data.shift();
     }
-    val = constrain(val, 0, 1);
+    val = constrain(val, 0, 1); // make sure val is indeed between 0 and 1
     this.data.push(val);
   }
 
