@@ -27,9 +27,9 @@ function setup() {
 
   graphHeight = height / numGraphs;
   let yGraph = 0;
-  randomGraph = new Graph(0, yGraph, width, graphHeight);
+  randomGraph = new Graph(0, yGraph, width, graphHeight, "random");
   yGraph += graphHeight;
-  noiseGraph = new Graph(0, yGraph, width, graphHeight);
+  noiseGraph = new Graph(0, yGraph, width, graphHeight, "perlin noise");
 
   // Setup sliders
   sliderNoiseStep = createSlider(0, 2, 0.01, 0.001);
@@ -56,6 +56,8 @@ function setup() {
 
 function draw() {
   background(220);
+
+  // add random or noise values to the graphs
   randomGraph.addItem(random());
   randomGraph.draw();
 
@@ -70,10 +72,6 @@ function draw() {
   line(0, randomGraph.getBottom(), width, randomGraph.getBottom());
 
   // draw slider and noise values
-  const textScalar = 0.8;
-  const asc =  textAscent() * textScalar;
-  const desc = textDescent() * textScalar;
-
   noStroke();
   fill(240);
   
@@ -118,7 +116,7 @@ function windowResized() {
  * Simple graph class to plot random/noise data
  */
 class Graph {
-  constructor(x, y, width, height, backgroundColor = color(90), strokeColor = color(230)) {
+  constructor(x, y, width, height, title = "title", backgroundColor = color(90), strokeColor = color(230)) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -127,6 +125,8 @@ class Graph {
     this.strokeColor = strokeColor;
 
     this.data = new Array();
+    this.title = title;
+    this.titleSize = 32;
   }
 
   /**
@@ -196,7 +196,13 @@ class Graph {
     noStroke();
     rect(this.x, this.y, this.width, this.height);
 
+    // draw title
+    fill(100);
+    textSize(this.titleSize);
+    text(this.title, 5, this.getBottom() - 10);
+
     // draw graph
+    noFill();
     stroke(this.strokeColor);
     beginShape();
     for (let x = 0; x < this.data.length; x++) {
