@@ -35,7 +35,7 @@ class LineSegment {
   /**
    * Set x1
    */
-  set x1(val){
+  set x1(val) {
     this.pt1.x = val;
   }
 
@@ -49,7 +49,7 @@ class LineSegment {
   /**
    * Set y1
    */
-  set y1(val){
+  set y1(val) {
     this.pt1.y = val;
   }
 
@@ -63,7 +63,7 @@ class LineSegment {
   /**
    * Set x2
    */
-  set x2(val){
+  set x2(val) {
     this.pt2.x = val;
   }
 
@@ -77,7 +77,7 @@ class LineSegment {
   /**
    * Set y2
    */
-  set y2(val){
+  set y2(val) {
     this.pt2.y = val;
   }
 
@@ -87,8 +87,8 @@ class LineSegment {
   getHeading() {
     let diffVector = p5.Vector.sub(this.pt2, this.pt1);
     let heading = diffVector.heading();
-    
-    if(heading < 0){
+
+    if (heading < 0) {
       heading += TWO_PI;
     }
     return heading;
@@ -123,16 +123,16 @@ class LineSegment {
    * 
    * @param {p5.Vector or LineSegment} vectorOrLineSegment 
    */
-  getAngleBetween(vectorOrLineSegment){
+  getAngleBetween(vectorOrLineSegment) {
     let v1 = this.getVectorAtOrigin();
     let v2 = vectorOrLineSegment;
 
-    if(vectorOrLineSegment instanceof LineSegment){
+    if (vectorOrLineSegment instanceof LineSegment) {
       v2 = vectorOrLineSegment.getVectorAtOrigin();
     }
-    
+
     let angleBetweenRadians = v1.angleBetween(v2);
-    if(angleBetweenRadians < 0){
+    if (angleBetweenRadians < 0) {
       angleBetweenRadians += TWO_PI;
     }
     return angleBetweenRadians;
@@ -204,25 +204,77 @@ class LineSegment {
       textSize(this.fontSize);
       angleMode(RADIANS);
       let lbl = "";
-      if(this.drawTextAngle){
+      if (this.drawTextAngle) {
         let angleDegrees = degrees(vec.heading());
-        if(angleDegrees < 0){
+        if (angleDegrees < 0) {
           angleDegrees += degrees(TWO_PI);
         }
         lbl += nfc(angleDegrees, 1) + "°"
       }
 
-      if(this.drawTextAngle && this.drawTextMagnitude){
-        lbl +=  " ";
+      if (this.drawTextAngle && this.drawTextMagnitude) {
+        lbl += " ";
       }
 
-      if(this.drawTextMagnitude){
+      if (this.drawTextMagnitude) {
         lbl += "|" + nfc(vec.mag(), 1) + "|";
       }
-    
+
       let lblWidth = textWidth(lbl);
       text(lbl, -lblWidth - 3, 12);
     }
+
+    pop();
+  }
+
+  static drawAngleArcs(lineSegment1, lineSegment2, arcColor, arcSizePositiveAngle = 50, arcSizeNegativeAngle = 30) {
+    let lineSeg1AngleRadians = lineSegment1.getHeading();
+    let angleBetweenRadians = lineSegment1.getAngleBetween(lineSegment2);
+
+    push();
+    noFill();
+    stroke(arcColor);
+
+    translate(lineSegment1.x1, lineSegment1.y1);
+
+    // Draw the arc of size arcSize from the angle of the first line segment
+    // to the beginning of the next line segment
+    arc(0, 0, arcSizePositiveAngle, arcSizePositiveAngle, lineSeg1AngleRadians, lineSeg1AngleRadians + angleBetweenRadians);
+
+    // Get the middle of this angle (which is where we will draw the angle text)
+    let positiveArcMiddleV = p5.Vector.fromAngle(lineSeg1AngleRadians + (angleBetweenRadians / 2), arcSizePositiveAngle * 0.55);
+    line(0, 0, positiveArcMiddleV.x, positiveArcMiddleV.y); //uncomment to see where text drawn
+
+    noStroke();
+    textSize(8);
+    fill(arcColor);
+    let posAngleBetweenDegrees = degrees(angleBetweenRadians);
+    let posAngleDegreesLabel = nfc(posAngleBetweenDegrees, 1) + "°";
+
+    textAlign(CENTER);
+    positiveArcMiddleV.mult(1.2);
+    text(posAngleDegreesLabel, positiveArcMiddleV.x, positiveArcMiddleV.y);
+
+
+    // Now draw negative angle
+    let negativeReadAngle = -(TWO_PI - angleBetweenRadians);
+    let negativeArcMiddleV = p5.Vector.fromAngle(lineSeg1AngleRadians + negativeReadAngle / 2, arcSizeNegativeAngle * 0.55);
+
+    drawingContext.setLineDash([2, 5]);
+    // line(0, 0, negativeArcMiddleV.x, negativeArcMiddleV.y); //uncomment to see where text drawn
+    noFill();
+    stroke(arcColor);
+    arc(0, 0, arcSizeNegativeAngle, arcSizeNegativeAngle, lineSeg1AngleRadians + angleBetweenRadians, lineSeg1AngleRadians);
+    line(0, 0, negativeArcMiddleV.x, negativeArcMiddleV.y); //uncomment to see where text drawn
+
+    noStroke();
+    fill(arcColor);
+    let negAngleBetweenDegrees = degrees(negativeReadAngle);
+    let negAngleDegreesLabel = nfc(negAngleBetweenDegrees, 1) + "°";
+
+    textAlign(CENTER);
+    negativeArcMiddleV.mult(1.2);
+    text(negAngleDegreesLabel, negativeArcMiddleV.x, negativeArcMiddleV.y);
 
     pop();
   }
