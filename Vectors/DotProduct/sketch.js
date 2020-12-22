@@ -16,7 +16,7 @@ function setup() {
   let centerY = height / 2;
   lineSegmentRed = new LineSegment(centerX, centerY, mouseX, mouseY);
   lineSegmentRed.strokeColor = color(200, 0, 0);
-  lineSegmentRed.drawTextAngle = false;
+  // lineSegmentRed.drawTextAngle = false;
 
   lineSegmentXAxis = new LineSegment(centerX, centerY, width * 0.9, centerY);
 
