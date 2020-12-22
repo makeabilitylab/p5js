@@ -4,173 +4,214 @@
 //   https://youtu.be/_ENEsV_kNx8
 //
 
-let lineSegment;
-let xAxisLineSegment;
-let mouseLineSegment;
+
+let lineSegmentXAxis;
+
+let lineSegmentRed;
+let lineSegmentBlue = null;
 
 function setup() {
   createCanvas(400, 400);
-  lineSegment = new LineSegment(width / 2, height / 2,
-                         random(0, width), random(0, height));
-  lineSegment.strokeColor = color(200, 0, 0);
-  
-  xAxisLineSegment = new LineSegment(width / 2, height / 2,
-                                     width * 0.8, height / 2);
-  
-  xAxisLineSegment.strokeColor = color(120);
-  xAxisLineSegment.isDashedLine = true;
+  let centerX = width / 2;
+  let centerY = height / 2;
+  lineSegmentRed = new LineSegment(centerX, centerY, mouseX, mouseY);
+  lineSegmentRed.strokeColor = color(200, 0, 0);
+  lineSegmentRed.drawTextAngle = false;
+
+  lineSegmentXAxis = new LineSegment(centerX, centerY, width * 0.9, centerY);
+
+  lineSegmentXAxis.strokeColor = color(120, 120, 120, 50);
+  lineSegmentXAxis.isDashedLine = true;
+  lineSegmentXAxis.drawTextMagnitude = false;
 }
 
 function draw() {
   background(220);
-  
-  xAxisLineSegment.draw();
-  
-  lineSegment.draw();
-  if(mouseLineSegment){
-    mouseLineSegment.draw(); 
-    
-    // draw arc between x-axis and mouse line segment
-    push();
-    noFill();
-    stroke(mouseLineSegment.strokeColor);
-    drawingContext.setLineDash([1, 2]);
-    translate(mouseLineSegment.x1, mouseLineSegment.y1);
-    arc(0, 0, 30, 30, 0, mouseLineSegment.heading);  
-    pop();
-    
-    // draw arc between mouse line and red segment
-    push();
-    noFill();
-    stroke(0);
-    drawingContext.setLineDash([1, 2]);
-    translate(lineSegment.x1, lineSegment.y1);
-    
-    arc(0, 0, 70, 70, lineSegment.heading, mouseLineSegment.heading);  
-    pop();
-    
-    // draw text angles
-    push();
-    textSize(10);
-    //text("Angle Between X-Axis and Blue Vector: ");
-    //text("Angle Between X-Axis and Red Vector: ");
-    //text("Angle Between Red and Blue Vector: ");
-    //noStroke();
-    fill(0);
-    
-    // TODO: fix this
-    stroke(0);
-    let v1 = createVector(lineSegment.x2 - lineSegment.x1, lineSegment.y2 - lineSegment.y1);
-    let v2 = createVector(mouseLineSegment.x2 - mouseLineSegment.x1, mouseLineSegment.y2 - mouseLineSegment.y1);
-    
-    //for debugging
-    //line(0, 0, v1.x, v1.y);
-    //line(0, 0, v2.x, v2.y);
-    
-    noStroke();
-    let angleBetweenVectors = v1.angleBetween(v2);
-    let angleInDegrees = degrees(angleBetweenVectors);
-    fill(155);
-    text("Legend: each vector measured in terms of degrees, magnitude", 5, 15);
-    fill(0);
-    let angle2InDegrees = 0;
-    if(angleInDegrees < 0){
-      angle2InDegrees = 360 + angleInDegrees;
-    }else{
-      angle2InDegrees = 360 - angleInDegrees;
-    }
-    text("Angle Between Red & Blue: " + nfc(angleInDegrees, 1) + "° or " + nfc(angle2InDegrees, 1) + "°", 5, 30);
-    pop();
-    //noLoop();
+
+  lineSegmentXAxis.draw();
+
+  if (lineSegmentBlue == null) {
+    lineSegmentRed.x2 = mouseX;
+    lineSegmentRed.y2 = mouseY;
+  } else if (lineSegmentBlue.frozen != true) {
+    lineSegmentBlue.x2 = mouseX;
+    lineSegmentBlue.y2 = mouseY;
+
   }
-  
-  // draw arc between x-axis and red segment
+
+  lineSegmentRed.draw();
+
+  if (lineSegmentBlue) {
+    lineSegmentBlue.draw();
+  }
+
   push();
   noFill();
-  stroke(lineSegment.strokeColor);
-  drawingContext.setLineDash([1, 2]);
-  translate(lineSegment.x1, lineSegment.y1);
-  arc(0, 0, 50, 50, 0, lineSegment.heading);  
+  stroke(lineSegmentRed.strokeColor);
+  // drawingContext.setLineDash([1, 2]);
+  translate(lineSegmentRed.x1, lineSegmentRed.y1);
+
+  let redAngle = lineSegmentRed.getHeading();
+
+  const arcSizePositiveAngle = 50;
+  arc(0, 0, arcSizePositiveAngle, arcSizePositiveAngle, 0, redAngle);
+  let arcMiddleV = p5.Vector.fromAngle(redAngle / 2, arcSizePositiveAngle * 0.6);
+
+  //line(0, 0, arcMiddleV.x, arcMiddleV.y); //uncomment to see where text drawn
+  noStroke();
+  textSize(8);
+  fill(lineSegmentRed.strokeColor);
+  let redAngleDegrees = degrees(redAngle);
+  let redAngleDegreesLabel = nfc(redAngleDegrees, 1) + "°";
+  let labelWidth = textWidth(redAngleDegreesLabel);
+  let xLabelOffset = labelWidth * redAngle / TWO_PI; // not needed with center align
+  let yLabelOffset = (textSize() * 0.8) / 2;
+
+  if (redAngle > PI) {
+    yLabelOffset += yLabelOffset * (TWO_PI - redAngle) / PI;
+  } else {
+    yLabelOffset += yLabelOffset * redAngle / PI;
+  }
+
+  text(redAngleDegreesLabel, arcMiddleV.x - xLabelOffset, arcMiddleV.y + yLabelOffset);
+
+  // another way to draw text with center align
+  //textAlign(CENTER);
+  //fill(0);
+  //text(redAngleDegreesLabel, arcMiddleV.x, arcMiddleV.y  + yLabelOffset);
+
+  // draw opposite arc
+  const arcSizeNegativeAngle = 30;
+  let negativeReadAngle = -(TWO_PI - redAngle);
+  let negativeArcMiddleV = p5.Vector.fromAngle(negativeReadAngle / 2, arcSizeNegativeAngle * 0.7);
+
+  let negativeArcColor = color(red(lineSegmentRed.strokeColor), green(lineSegmentRed.strokeColor), blue(lineSegmentRed.strokeColor));
+  negativeArcColor.setAlpha(128);
+  stroke(negativeArcColor);
+
+
+  //drawingContext.setLineDash([]);
+  //line(0, 0, negativeArcMiddleV.x, negativeArcMiddleV.y); //uncomment to see where text drawn
+  noFill();
+  drawingContext.setLineDash([2, 5]);
+  arc(0, 0, arcSizeNegativeAngle, arcSizeNegativeAngle, redAngle, 0);
+
+  // draw negative arc text
+  noStroke();
+  fill(negativeArcColor);
+  let negativeRedAngleDegrees = degrees(negativeReadAngle);
+  let negativeRedAngleDegreesLabel = nfc(negativeRedAngleDegrees, 1) + "°";
+  labelWidth = textWidth(negativeRedAngleDegreesLabel);
+
+  xLabelOffset = labelWidth * negativeReadAngle / TWO_PI; // not needed with center align
+  yLabelOffset = (textSize() * 0.8) / 2;
+  //print(negativeReadAngle);
+  if (redAngle > PI) {
+    yLabelOffset -= yLabelOffset * (TWO_PI - redAngle) / PI;
+  } else {
+    yLabelOffset -= yLabelOffset * redAngle / PI;
+  }
+
+  text(negativeRedAngleDegreesLabel, negativeArcMiddleV.x + xLabelOffset, negativeArcMiddleV.y + yLabelOffset);
+
   pop();
-  
-  
+
+  if (lineSegmentBlue != null) {
+    let angleBetweenRedAndBlueLineSegments = lineSegmentRed.getAngleBetween(lineSegmentBlue);
+    print(degrees(angleBetweenRedAndBlueLineSegments));
+  }
+
+  // lineSegmentRed.draw();
+  // if (lineSegmentBlue) {
+  //   lineSegmentBlue.draw();
+
+  //   // draw arc between x-axis and mouse line segment
+  //   push();
+  //   noFill();
+  //   stroke(lineSegmentBlue.strokeColor);
+  //   drawingContext.setLineDash([1, 2]);
+  //   translate(lineSegmentBlue.x1, lineSegmentBlue.y1);
+  //   arc(0, 0, 30, 30, 0, lineSegmentBlue.heading);
+  //   pop();
+
+  //   // draw arc between mouse line and red segment
+  //   push();
+  //   noFill();
+  //   stroke(0);
+  //   drawingContext.setLineDash([1, 2]);
+  //   translate(lineSegmentRed.x1, lineSegmentRed.y1);
+
+  //   arc(0, 0, 70, 70, lineSegmentRed.heading, lineSegmentBlue.heading);
+  //   pop();
+
+  //   // draw text angles
+  //   push();
+  //   textSize(10);
+  //   //text("Angle Between X-Axis and Blue Vector: ");
+  //   //text("Angle Between X-Axis and Red Vector: ");
+  //   //text("Angle Between Red and Blue Vector: ");
+  //   //noStroke();
+  //   fill(0);
+
+  //   // TODO: fix this
+  //   stroke(0);
+  //   let v1 = createVector(lineSegmentRed.x2 - lineSegmentRed.x1, lineSegmentRed.y2 - lineSegmentRed.y1);
+  //   let v2 = createVector(lineSegmentBlue.x2 - lineSegmentBlue.x1, lineSegmentBlue.y2 - lineSegmentBlue.y1);
+
+  //   //for debugging
+  //   //line(0, 0, v1.x, v1.y);
+  //   //line(0, 0, v2.x, v2.y);
+
+  //   noStroke();
+  //   let angleBetweenVectors = v1.angleBetween(v2);
+  //   let angleInDegrees = degrees(angleBetweenVectors);
+  //   fill(155);
+  //   text("Legend: each vector measured in terms of degrees, magnitude", 5, 15);
+  //   fill(0);
+  //   let angle2InDegrees = 0;
+  //   if (angleInDegrees < 0) {
+  //     angle2InDegrees = 360 + angleInDegrees;
+  //   } else {
+  //     angle2InDegrees = 360 - angleInDegrees;
+  //   }
+  //   text("Angle Between Red & Blue: " + nfc(angleInDegrees, 1) + "° or " + nfc(angle2InDegrees, 1) + "°", 5, 30);
+  //   pop();
+  //   //noLoop();
+  // }
+
+  // // draw arc between x-axis and red segment
+  // push();
+  // noFill();
+  // stroke(lineSegmentRed.strokeColor);
+  // drawingContext.setLineDash([1, 2]);
+  // translate(lineSegmentRed.x1, lineSegmentRed.y1);
+  // arc(0, 0, 50, 50, 0, lineSegmentRed.heading);
+  // pop();
+
+
 }
 
 function mouseClicked() {
-  mouseLineSegment = new LineSegment(lineSegment.x1, lineSegment.y1,
-                                     mouseX, mouseY);
-  mouseLineSegment.strokeColor = color(0, 0, 240);
+  if (lineSegmentRed.frozen != true) {
+    lineSegmentRed.frozen = true;
+    lineSegmentBlue = new LineSegment(lineSegmentRed.x1, lineSegmentRed.y1,
+      mouseX, mouseY);
+    lineSegmentBlue.strokeColor = color(0, 0, 240);
+  } else if (lineSegmentBlue.frozen != true) {
+    lineSegmentBlue.frozen = true;
+  }
 }
 
-class LineSegment{
-  constructor(x1, y1, x2, y2){
-    this.pt1 = createVector(x1, y1);
-    this.pt2 = createVector(x2, y2);
-    this.strokeColor = color(0);
-    this.isDashedLine = false;
-    this.turnOnTextLabels = true;
-    this.strokeWeight = 2;
+function mousePressed(event) {
+  // Reset with right mouse click
+  if (mouseButton === RIGHT) {
+    lineSegmentBlue = null;
+    lineSegmentRed.frozen = false;
   }
-  
-  get x1(){
-    return this.pt1.x; 
-  }
-  
-  get y1(){
-    return this.pt1.y; 
-  }
-  
-  get x2(){
-    return this.pt2.x; 
-  }
-  
-  get y2(){
-    return this.pt2.y; 
-  }
-  
-  get heading(){
-    let diffVector = p5.Vector.sub(this.pt2, this.pt1);
-    return diffVector.heading();
-  }
-  
-  draw(){
-    push();
-    stroke(this.strokeColor);
-    //line(this.pt1.x, this.pt1.y, this.pt2.x, this.pt2.y);
-    let diffVector = p5.Vector.sub(this.pt2, this.pt1);
-    this.drawArrow(this.pt1, diffVector, this.strokeColor);
-    pop();
-  }
-  
-  drawArrow(base, vec, myColor) {
-    push();
-    stroke(myColor);
-    strokeWeight(this.strokeWeight);
-    fill(myColor);
-    translate(base);
-    push();
-    if(this.isDashedLine){
-      drawingContext.setLineDash([5, 15]);
-    }
-    line(0, 0, vec.x, vec.y);
-    pop();
-    rotate(vec.heading());
-    let arrowSize = 7;
-    translate(vec.mag() - arrowSize, 0);
-    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-    
-    // calculate heading in radians and degrees
-    // and also print out magnitude
-    //print(degrees(this.velocity.heading()));
-    noStroke();
-    //rotate(-vec.heading());
-    textSize(8);
-    let lbl = nfc(degrees(vec.heading()), 1)+ "°" + 
-              ", " + nfc(vec.mag(), 1);
-    let lblWidth = textWidth(lbl);
-    text(lbl, -lblWidth, 12);
-    
-    pop();
-  }
-  
 }
+
+// disable right click
+document.oncontextmenu = function () {
+  return false;
+}
+
