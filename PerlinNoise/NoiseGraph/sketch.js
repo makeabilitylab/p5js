@@ -4,7 +4,6 @@
  * For more on Perlin Noise and p5js, see the Coding Train's "Introduction to Perlin Noise":
  * https://www.youtube.com/playlist?list=PLRqwX-V7Uu6bgPNQAdxQZpJuJCjeOr7VD
  * 
- * TODO: add graph titles?
  */
 
 let randomGraph;
