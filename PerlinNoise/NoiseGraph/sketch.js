@@ -10,8 +10,8 @@ let randomGraph;
 
 let noiseGraph;
 let sliderNoiseStep;
-let sliderNoiseOctaves = 4; // noise detail octave default is 4
-let sliderNoiseFalloff = 0.5; // needs to be between 0 and 1, default is 0.5
+let sliderNoiseOctaves; 
+let sliderNoiseFalloff; 
 
 let xNoiseInputVal = 0;
 
@@ -35,7 +35,7 @@ function setup() {
   sliderNoiseStep.position(xSliderPos, noiseGraph.getTop() + 15);
   sliderNoiseStep.style('width', '90px');
 
-  sliderNoiseOctaves = createSlider(0, 10, 4, 1);
+  sliderNoiseOctaves = createSlider(0, 10, 4, 1); // noise detail octave default is 4
   sliderNoiseOctaves.position(xSliderPos, sliderNoiseStep.y + sliderNoiseStep.height + ySliderBuffer);
   sliderNoiseOctaves.style('width', '90px');
   sliderNoiseOctaves.input(function(){
@@ -43,7 +43,7 @@ function setup() {
     print("New sliderNoiseOctaves", sliderNoiseOctaves.value());
   });
 
-  sliderNoiseFalloff = createSlider(0, 1, 0.5, 0.01);
+  sliderNoiseFalloff = createSlider(0, 1, 0.5, 0.01); // needs to be between 0 and 1, default is 0.5
   sliderNoiseFalloff.position(xSliderPos, sliderNoiseOctaves.y + sliderNoiseOctaves.height + ySliderBuffer);
   sliderNoiseFalloff.style('width', '90px');
   sliderNoiseFalloff.input(function(){
