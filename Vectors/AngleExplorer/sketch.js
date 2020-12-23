@@ -1,12 +1,15 @@
-// TODO: write description
-// Based on:
-// - Coding Train "Dot Product and Scalar Projection": 
-//   https://youtu.be/_ENEsV_kNx8
+// A sketch that demonstrates how to calculate angles between vectors 
+//
+// For more on vectors, see the Coding Train's "Dot Product and Scalar Projection": 
+// https://youtu.be/_ENEsV_kNx8
+//
+// By Jon E. Froehlich
+// UW CSE Professor
+// http://makeabilitylab.cs.uw.edu
+//
 //
 
-
 let lineSegmentXAxis;
-
 let lineSegmentRed;
 let lineSegmentBlue = null;
 
@@ -23,10 +26,18 @@ function setup() {
   lineSegmentXAxis.strokeColor = color(120, 120, 120, 50);
   lineSegmentXAxis.isDashedLine = true;
   lineSegmentXAxis.drawTextMagnitude = false;
+
+  createP('Right-click to reset.');
 }
 
 function draw() {
   background(220);
+
+  // Draw title and info
+  // textSize(18);
+  noStroke();
+  fill(150);
+  text("Angle Explorer", 10, 20);
 
   // Draw the light gray x-axis line segment
   lineSegmentXAxis.draw();
