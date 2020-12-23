@@ -49,12 +49,6 @@ function draw() {
     textSize(14);
     text(nfc(angleInDegrees,2) + "°", 5, 15);
     
-    //for debugging--draws the lines for the vectors
-    //will only show up if vectors in bottom-right quadrant
-    stroke(0);
-    line(0, 0, v1.x, v1.y);
-    line(0, 0, v2.x, v2.y);
-    
     // more debugging stuff, draws light versions of vectors                                    
     let middleScreen = createVector(width/2, height/2);
     v1.add(middleScreen);
@@ -68,6 +62,8 @@ function draw() {
     tmpLineSegment2.strokeColor = color(mouseLineSegment2.strokeColor);
     tmpLineSegment2.strokeColor.setAlpha(50);
     tmpLineSegment2.draw();
+
+    LineSegment.drawAngleArcs(tmpLineSegment1, tmpLineSegment2, tmpLineSegment1.strokeColor);
     
     pop();
   }
