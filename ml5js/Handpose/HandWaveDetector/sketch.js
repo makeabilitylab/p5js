@@ -5,7 +5,8 @@
 // for machine learning. See: https://ml5js.org/
 // 
 // By Jon E. Froehlich
-// http://makeabilitylab.io/
+// UW CSE Professor
+// http://makeabilitylab.cs.uw.edu
 //
 // TODO: 
 //  - [done] calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
