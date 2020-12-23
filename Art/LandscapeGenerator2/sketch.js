@@ -20,6 +20,8 @@
 // - add rain or snow fall?
 // - add motion? (parallax side scrolling)
 // - [done] add in santa flying by with his sleigh?
+// - add water on left or right side
+// - add ET or santa animated across moon. Maybe tie fighters too?
 
 let topColor;
 let bottomColor;
