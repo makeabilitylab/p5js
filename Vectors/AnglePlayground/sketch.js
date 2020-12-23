@@ -57,13 +57,13 @@ function draw() {
     v1.add(middleScreen);
     let tmpLineSegment1 = new LineSegment(middleScreen, v1);
     tmpLineSegment1.strokeColor = color(mouseLineSegment1.strokeColor);
-    tmpLineSegment1.strokeColor.setAlpha(50);
+    tmpLineSegment1.strokeColor.setAlpha(80);
     tmpLineSegment1.draw();
     
     v2.add(middleScreen);
     let tmpLineSegment2 = new LineSegment(middleScreen, v2);
     tmpLineSegment2.strokeColor = color(mouseLineSegment2.strokeColor);
-    tmpLineSegment2.strokeColor.setAlpha(50);
+    tmpLineSegment2.strokeColor.setAlpha(80);
     tmpLineSegment2.draw();
 
     LineSegment.drawAngleArcs(tmpLineSegment1, tmpLineSegment2, tmpLineSegment1.strokeColor);
