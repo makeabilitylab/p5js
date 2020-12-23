@@ -38,18 +38,21 @@ function draw() {
   }
   
   if(mouseLineSegment1 && mouseLineSegment2){
-    let v1 = mouseLineSegment1.getVectorAtOrigin();
-    let v2 = mouseLineSegment2.getVectorAtOrigin();
     
     push();
     noStroke();
     fill(0);
+
+    // Could also just do mouseLineSegment1.getAngleBetween(mouseLineSegment2) but we'll need the v1
+    // and v2 vectors later
+    let v1 = mouseLineSegment1.getVectorAtOrigin();
+    let v2 = mouseLineSegment2.getVectorAtOrigin();
     let angleInRadians = v1.angleBetween(v2);
     let angleInDegrees = degrees(angleInRadians);
     textSize(14);
     text(nfc(angleInDegrees,2) + "°", 5, 15);
     
-    // more debugging stuff, draws light versions of vectors                                    
+    // Now draw light versions of these line segments in the center of screen                                    
     let middleScreen = createVector(width/2, height/2);
     v1.add(middleScreen);
     let tmpLineSegment1 = new LineSegment(middleScreen, v1);
