@@ -2,6 +2,7 @@
 // and vector operations
 //
 // By Jon E. Froehlich
+// UW CSE Professor
 // http://makeabilitylab.io/
 //
 class LineSegment {

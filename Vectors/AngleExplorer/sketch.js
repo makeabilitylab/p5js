@@ -28,27 +28,29 @@ function setup() {
 function draw() {
   background(220);
 
+  // Draw the light gray x-axis line segment
   lineSegmentXAxis.draw();
 
+  // We use whether lineSegmentBlue is null for state tracking
+  // If null, then use mouseX and mouseY for lineSegmentRed
+  // Otherwise, use for lineSegmentBlue
   if (lineSegmentBlue == null) {
     lineSegmentRed.x2 = mouseX;
     lineSegmentRed.y2 = mouseY;
   } else if (lineSegmentBlue.frozen != true) {
     lineSegmentBlue.x2 = mouseX;
     lineSegmentBlue.y2 = mouseY;
-
   }
 
+  // Draw red line segment and angle arcs
   lineSegmentRed.draw();
-
   LineSegment.drawAngleArcs(lineSegmentXAxis, lineSegmentRed, lineSegmentRed.strokeColor, 80, 50);
 
+  // Draw blue line segment and angle arcs (if not null)
   if (lineSegmentBlue) {
     lineSegmentBlue.draw();
     LineSegment.drawAngleArcs(lineSegmentRed, lineSegmentBlue, lineSegmentBlue.strokeColor, 150, 120);
   }
-
-
 }
 
 function mouseClicked() {
