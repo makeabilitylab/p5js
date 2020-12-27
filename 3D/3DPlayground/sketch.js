@@ -11,7 +11,7 @@ let boxSize = 10;
 let boxMargin = 2;
 
 const maxColor = 255;
-const numCols = 5;
+const numCols = 7;
 let colorStep = maxColor / numCols;
 
 let pFrameRate;
@@ -48,7 +48,7 @@ function draw() {
   pop();
 
   drawAxes();
-  //draw3DColorGrid();
+  draw3DColorGrid();
 
 
   orbitControl();
@@ -98,8 +98,9 @@ function drawAxes(){
     for (let b = 0; b < maxColor; b += colorStep) {
       
       stroke(0, g, b);
-      let x = -boxSize - (g / colorStep) * (boxSize + boxMargin);
-      let y = -boxSize - (b / colorStep) * (boxSize + boxMargin);
+      let x = -boxSize - (b / colorStep) * (boxSize + boxMargin);
+      let y = -boxSize - (g / colorStep) * (boxSize + boxMargin);
+      
       rect(x, y, boxSize);
     }
   }
@@ -179,9 +180,9 @@ function draw3DColorGrid() {
         let z = (b / colorStep) * (boxSize + boxMargin);
         push();
         translate(x, y, z);
-        noFill();
-        // fill(r, g, b);
-        stroke(r, g, b);
+        //noFill();
+        fill(r, g, b);
+        //stroke(r, g, b);
         box(boxSize);
         pop();
       }
