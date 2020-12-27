@@ -1,3 +1,7 @@
+// TODO:
+// - Use perlin noise to make cloud-like textures. But perhaps this needs to be it's own
+//   layer so can go in front of sun
+
 class SkyBackground extends Shape{
 
     constructor(x, y, width, height) {

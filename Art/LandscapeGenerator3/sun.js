@@ -13,7 +13,6 @@ class Sun extends Circle {
   }
 
   draw() {
-    // TODO: maybe make the sun a slight gradient in future too?
     if (this.useGradient) {
       let ctx = drawingContext;
       let grd = ctx.createLinearGradient(0, 0, 0, this.width);
