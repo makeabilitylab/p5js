@@ -11,10 +11,13 @@ let boxSize = 10;
 let boxMargin = 2;
 
 const maxColor = 255;
-let colorStep = maxColor / 5;
+const numCols = 5;
+let colorStep = maxColor / numCols;
 
 let pFrameRate;
 let myFont;
+
+let selectedColor;
 
 function preload(){
   //font = textFont("Inconsolata");
@@ -23,7 +26,7 @@ function preload(){
 
 function setup() {
   createCanvas(500, 400, WEBGL);
-  debugMode();
+  //debugMode();
   pFrameRate = createP('Framerate');
   textFont(myFont);
 }
@@ -45,7 +48,7 @@ function draw() {
   pop();
 
   drawAxes();
-  draw3DColorGrid();
+  //draw3DColorGrid();
 
 
   orbitControl();
@@ -62,9 +65,48 @@ function drawAxes(){
   push();
   
   // put axes right on the edges of the boxes (rather than through center)
-  translate(-boxSize / 2, -boxSize / 2, -boxSize / 2);
-  
-  
+  translate(-boxSize / 2, boxSize / 2, -boxSize / 2);
+
+  noFill();
+  // draw green (y) and red (x) outline grid
+  for (let r = 0; r < maxColor; r += colorStep) {
+    for (let g = 0; g < maxColor; g += colorStep) {
+      // fill(r, g, 0);
+      stroke(r, g, 0);
+      let x = (r / colorStep) * (boxSize + boxMargin);
+      let y = -boxSize - (g / colorStep) * (boxSize + boxMargin);
+      rect(x, y, boxSize);
+    }
+  }
+
+  push();
+  rotateX(HALF_PI);
+  for (let r = 0; r < maxColor; r += colorStep) {
+    for (let b = 0; b < maxColor; b += colorStep) {
+      // fill(r, 0, b);
+      stroke(r, 0, b);
+      let x = (r / colorStep) * (boxSize + boxMargin);
+      let y = (b / colorStep) * (boxSize + boxMargin);
+      rect(x, y, boxSize);
+    }
+  }
+  pop();
+
+  push();
+  rotateY(HALF_PI);
+  for (let g = 0; g < maxColor; g += colorStep) {
+    for (let b = 0; b < maxColor; b += colorStep) {
+      
+      stroke(0, g, b);
+      let x = -boxSize - (g / colorStep) * (boxSize + boxMargin);
+      let y = -boxSize - (b / colorStep) * (boxSize + boxMargin);
+      rect(x, y, boxSize);
+    }
+  }
+  pop();
+ 
+ 
+  noStroke();
   push();
   fill(0, 255, 0);
   rotateX(PI);
@@ -75,6 +117,7 @@ function drawAxes(){
   //let lbl = "RGB(0, 255, 0)";
   
   //text(lbl, 0, textSize() + 4);
+  
   pop();
 
   push();
@@ -132,16 +175,29 @@ function draw3DColorGrid() {
     for (let g = 0; g < maxColor; g += colorStep) {
       for (let b = 0; b < maxColor; b += colorStep) {
         let x = (r / colorStep) * (boxSize + boxMargin);
-        let y = (g / colorStep) * (boxSize + boxMargin);
+        let y = -(g / colorStep) * (boxSize + boxMargin);
         let z = (b / colorStep) * (boxSize + boxMargin);
         push();
-        translate(x, -y, z);
-
-        fill(r, g, b);
+        translate(x, y, z);
+        noFill();
+        // fill(r, g, b);
+        stroke(r, g, b);
         box(boxSize);
         pop();
       }
     }
+  }
+}
+
+function calcSelectedCubeFromColor(col){
+  let x = (red(col) / colorStep) * (boxSize + boxMargin);
+  let y = (green(col) / colorStep) * (boxSize + boxMargin);
+  let z = (blue(col) / colorStep) * (boxSize + boxMargin);
+
+  return {
+    "x" : x,
+    "y" : y,
+    "z" : z 
   }
 }
 
