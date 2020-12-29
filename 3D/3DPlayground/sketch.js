@@ -1,12 +1,13 @@
 /**
  * 
  * TODO:
- * - [] Draw grid (for debugging)
- * - [] Draw axes
- * - [] Draw axes ticks and tick labels
- * - [] Allow cube selection (via brushing)
+ * - [done] Draw grid (for debugging)
+ * - [done] Draw axes
+ * - [done] Draw axes ticks and tick labels
+ * - [done] Allow cube selection (via keyboard)
  * - [] Show 2D slices (allow those to be interactive), which will change cursor in cube
  * - [] When a cube is selected, highlight axis point as well (in white?)
+ * - [] Show selected color in text (somewhere... maybe overlay as div)
  */
 
 let angle = 0;
