@@ -24,6 +24,13 @@ class ColorCube3D {
     return this.maxColor / this.colorStep * (this.boxSize + this.boxMargin);
   }
 
+  /**
+   * Returns true if the selected color matches r, g, b. If allColors is false, checks if any of those colors match
+   * @param {*} r 
+   * @param {*} g 
+   * @param {*} b 
+   * @param {*} allColors 
+   */
   matchesSelectedColor(r, g, b, allColors = true) {
     if (allColors) {
       return r === red(this.selectedColor) &&

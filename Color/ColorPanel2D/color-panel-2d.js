@@ -122,10 +122,9 @@ class ColorPanel2D extends Panel {
       // - Coding Train: https://youtu.be/nMUMZ5YRxHI
       // - https://compform.net/pixels/
       let pDensity = pixelDensity();
-      print("pDensity", pDensity);
+     
       this.offscreenBuffer.loadPixels();
       if (pDensity === 1) {
-        print("here");
         for (let y = 0; y < this.height; y++) {
           for (let x = 0; x < this.width; x++) {
             let c = this.getColorForPixel(x, y);
@@ -171,7 +170,7 @@ class ColorPanel2D extends Panel {
       this.offscreenBuffer.pop();
     }
 
-    print("updateOffscreenBuffer took", millis() - startT, "ms");
+    //print("updateOffscreenBuffer took", millis() - startT, "ms");
   }
 
 

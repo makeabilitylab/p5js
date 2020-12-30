@@ -10,16 +10,36 @@
 </head>
 
 <body>
-  <script src="color-picker-panel.js"></script>
-  <script src="color-panel-2d.js"></script>
+  <script src="../ColorPanel2D/color-picker-panel.js"></script>
+  <script src="../ColorPanel2D/color-panel-2d.js"></script>
   <script src="../ColorCube3D/color-cube-3d.js"></script>
   <script src="../ColorCube3D/color-axes-3d.js"></script>
-  <script src="sketch.js"></script>
+
+  <iframe src="color-cube.html" width="500px" height="400px"></iframe>
+  <iframe src="color-panel.html" width="500px" height="100px"></iframe>
+
 
   <!-- <div style="position: absolute; left: 10px; top: 5px; width: 90px;">
     Hello!
     <input type="range" min="0" max="2" step="0.001" >
   </div> -->
+  <script>
+    var selectedColor = 0;
+    function setSelectedColor(c) {
+      selectedColor = c;
+    }
+
+    function areColorLevelsEqual(c1, c2, includeAlpha = true) {
+      let areEqual = c1.levels[0] === c2.levels[0] &&
+        c1.levels[1] === c2.levels[1] &&
+        c1.levels[2] === c2.levels[2];
+
+      if (includeAlpha) {
+        areEqual &= c1.levels[3] === c2.levels[3];
+      }
+      return areEqual;
+    }
+  </script>
 </body>
 
 </html>
