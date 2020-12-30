@@ -25,6 +25,7 @@ function preload() {
 
 function setup() {
   createCanvas(500, 100);
+  // pixelDensity(1);
   //debugMode();
   pFrameRate = createP('Framerate');
   textFont(myFont);

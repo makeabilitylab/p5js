@@ -68,8 +68,8 @@ class RgbColorPickerPanel extends Panel {
     let xColorPanel = 0;
     let yColorPanel = 0;
     const numPanels = 4;
-    const spaceBetweenPanels = 3;
-    let wColorPanel = (width / numPanels) - spaceBetweenPanels;
+    const spaceBetweenPanels = 2;
+    let wColorPanel = (width / numPanels) - spaceBetweenPanels;// + spaceBetweenPanels / numPanels;
     this.redGreenColorPanel = new ColorPanel2D(xColorPanel, yColorPanel, wColorPanel, height, ColorAxes2D.RED_GREEN);
 
     xColorPanel += wColorPanel + spaceBetweenPanels;
@@ -80,8 +80,10 @@ class RgbColorPickerPanel extends Panel {
 
     this.colorPanels.push(this.redGreenColorPanel, this.redBlueColorPanel, this.greenBlueColorPanel);
 
+    const numSolidColorPanels = 3;
     xColorPanel += wColorPanel + spaceBetweenPanels;
-    let hSolidColorPanel = (height / 3) - spaceBetweenPanels;
+    wColorPanel = (width / numPanels)
+    let hSolidColorPanel = (height / 3) - spaceBetweenPanels + spaceBetweenPanels / numSolidColorPanels;
     this.prevColorPanel = new SolidColorPanel(xColorPanel, yColorPanel, wColorPanel, hSolidColorPanel, "Previous");
 
     yColorPanel += hSolidColorPanel + spaceBetweenPanels;

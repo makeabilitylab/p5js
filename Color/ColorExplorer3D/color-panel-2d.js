@@ -13,7 +13,7 @@ class ColorPanel2D extends Panel {
 
   constructor(x, y, width, height, colorAxes2D) {
     super(x, y, width, height)
-  
+
 
     this.colorAxes = colorAxes2D;
     this.selectedColor = color(0);
@@ -121,15 +121,39 @@ class ColorPanel2D extends Panel {
       // To learn more about directly manipulating pixels, see:
       // - Coding Train: https://youtu.be/nMUMZ5YRxHI
       // - https://compform.net/pixels/
+      let pDensity = pixelDensity();
+      print("pDensity", pDensity);
       this.offscreenBuffer.loadPixels();
-      for (let y = 0; y < this.height; y++) {
-        for (let x = 0; x < this.width; x++) {
-          let c = this.getColorForPixel(x, y);
-          let i = ((y * this.width) + x) * 4;
-          this.offscreenBuffer.pixels[i] = red(c);
-          this.offscreenBuffer.pixels[i + 1] = green(c);
-          this.offscreenBuffer.pixels[i + 2] = blue(c);
-          this.offscreenBuffer.pixels[i + 3] = 255;
+      if (pDensity === 1) {
+        print("here");
+        for (let y = 0; y < this.height; y++) {
+          for (let x = 0; x < this.width; x++) {
+            let c = this.getColorForPixel(x, y);
+
+            let pixelIndex = ((y * this.width) + x) * 4;
+            this.offscreenBuffer.pixels[pixelIndex] = red(c);
+            this.offscreenBuffer.pixels[pixelIndex + 1] = green(c);
+            this.offscreenBuffer.pixels[pixelIndex + 2] = blue(c);
+            this.offscreenBuffer.pixels[pixelIndex + 3] = 255;
+          }
+        }
+      } else {
+        for (let y = 0; y < this.height; y++) {
+          for (let x = 0; x < this.width; x++) {
+            for (let pDensityX = 0; pDensityX < pDensity; pDensityX++) {
+              for (let pDensityY = 0; pDensityY < pDensity; pDensityY++) {
+                let c = this.getColorForPixel(x, y);
+
+                // pixel ref with density equation from: https://p5js.org/reference/#/p5/pixels
+                let pixelIndex = 4 * ((y * pDensity + pDensityY) * this.width * pDensity + (x * pDensity + pDensityX));
+                this.offscreenBuffer.pixels[pixelIndex] = red(c);
+                this.offscreenBuffer.pixels[pixelIndex + 1] = green(c);
+                this.offscreenBuffer.pixels[pixelIndex + 2] = blue(c);
+                this.offscreenBuffer.pixels[pixelIndex + 3] = 255;
+              }
+            }
+
+          }
         }
       }
       this.offscreenBuffer.updatePixels();
@@ -165,7 +189,7 @@ class ColorPanel2D extends Panel {
       ellipse(selColorCoords.x, selColorCoords.y, 4);
     }
 
-    if(this.hoverColor){
+    if (this.hoverColor) {
       noFill();
       stroke(255);
       let selColorCoords = this.getPixelForColor(this.hoverColor);
