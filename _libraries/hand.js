@@ -45,6 +45,7 @@ let HandWaveStateEnum = {
 };
 
 class Hand {
+  // for event handling info, see: https://stackoverflow.com/a/56612753
   static EVENT_ENTERED_HAND_WAVE_POSITION = "enteredHandWavePosition";
   static EVENT_EXITED_HAND_WAVE_POSITION = "exitedHandWavePosition";
   static EVENT_NEW_HAND_WAVE_ANGLE = "newHandWaveAngle"; // only called when in hand wave position
