@@ -1,0 +1,24 @@
+<!--
+How to embed p5js with iframe
+ - http://cmuems.com/2018/60212f/resources/embedding-p5js/ 
+ - http://www.geneticmoo.com/embedding-p5js-into-wordpress/ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="css\style.css">
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <!-- You can set the iframe style="border:none" to get rid of border -->
+  <iframe src="sketch1.html" width="320px" height="220px" ></iframe>
+  <iframe src="sketch2.html" width="320px" height="220px"></iframe>
+
+  <script>
+    // if you change this var (e.g., in console), it will change the size of both sketches
+    var ellipseSize = 40;
+  </script>
+</body>
+
+</html>
