@@ -64,6 +64,7 @@ class RgbColorPickerPanel extends Panel {
 
     //TODO: fix so no space on right side?
     //TODO: fix so no space below hover panel?
+    //TODO: if mouse moved outside of RgbColorPickerPanel, then switch off hover? Otherwise, weird lingering hover.
     let xColorPanel = 0;
     let yColorPanel = 0;
     const numPanels = 4;
