@@ -11,9 +11,10 @@ class ColorPanel2D extends ColorPanel {
     super(x, y, width, height)
 
     this.colorAxes = colorAxes2D;
-
+    this.title = ColorPanel2D.getDefaultTitle(this.colorAxes);
     this.offscreenBuffer = createGraphics(width, height);
     this.updateOffscreenBuffer();
+    
   }
 
   mousePressed() {
@@ -158,7 +159,6 @@ class ColorPanel2D extends ColorPanel {
     } else {
       this.offscreenBuffer.push();
       this.offscreenBuffer.strokeWeight(1);
-      // TODO: to speed this up, consider accessing pixels directly via getPixels()?
       for (let x = 0; x < this.width; x++) {
         for (let y = 0; y < this.height; y++) {
           let c = this.getColorForPixel(x, y);
@@ -169,6 +169,52 @@ class ColorPanel2D extends ColorPanel {
       this.offscreenBuffer.pop();
     }
 
+    // draw axes
+    this.offscreenBuffer.push();
+
+    this.offscreenBuffer.noStroke();
+    this.offscreenBuffer.fill(255);
+    this.offscreenBuffer.textSize(8);
+    print(this.title);
+    this.offscreenBuffer.text(this.title, 2, this.offscreenBuffer.textSize() + 1);
+
+    const numTicks = 4;
+    const tickLength = 2;
+    
+    this.offscreenBuffer.textSize(5);
+    const offSet = 0;
+
+    for(let tick = 1; tick < numTicks; tick++){
+      let xTick = map(tick, 0, numTicks, offSet, this.width + offSet);
+      let val = map(xTick, 0, this.width, 0, 255);
+      this.offscreenBuffer.noFill();
+      this.offscreenBuffer.strokeWeight(1);
+      this.offscreenBuffer.stroke(255);
+      this.offscreenBuffer.line(xTick, this.height - tickLength, xTick, this.height);
+
+      this.offscreenBuffer.noStroke();
+      this.offscreenBuffer.fill(255);
+      let lbl = nfc(val, 0);
+      let lblWidth = this.offscreenBuffer.textWidth(lbl);
+      this.offscreenBuffer.text(lbl, xTick - lblWidth/2, this.height - this.offscreenBuffer.textSize());
+    }
+
+    for(let tick = 1; tick < numTicks; tick++){
+      let yTick = map(tick, 0, numTicks, offSet, this.height + offSet);
+      let val = map(yTick, 0, this.height, 255, 0);
+      this.offscreenBuffer.noFill();
+      this.offscreenBuffer.strokeWeight(1);
+      this.offscreenBuffer.stroke(255);
+      this.offscreenBuffer.line(0, yTick, tickLength, yTick);
+
+      this.offscreenBuffer.noStroke();
+      this.offscreenBuffer.fill(255);
+      let lbl = nfc(val, 0);
+      let lblHeight = this.offscreenBuffer.textSize();
+      this.offscreenBuffer.text(lbl, tickLength + 1, yTick + lblHeight * 0.4);
+    }
+
+    this.offscreenBuffer.pop();
     //print("updateOffscreenBuffer took", millis() - startT, "ms");
   }
 
@@ -189,10 +235,8 @@ class ColorPanel2D extends ColorPanel {
       noFill();
       stroke(255);
       let selColorCoords = this.getPixelForColor(this.hoverColor);
-      
-      // ellipse(selColorCoords.x, selColorCoords.y, 4);
 
-      // draw cross hair
+      // draw cross hair for hover color
       const chLength = 2;
       strokeWeight(1);
       line(selColorCoords.x - chLength - 1, selColorCoords.y, selColorCoords.x - 1, selColorCoords.y);
@@ -200,6 +244,7 @@ class ColorPanel2D extends ColorPanel {
       line(selColorCoords.x, selColorCoords.y - chLength - 1, selColorCoords.x, selColorCoords.y - 1);
       line(selColorCoords.x, selColorCoords.y + chLength + 1, selColorCoords.x, selColorCoords.y + 1);
 
+      // draw text for hover color
       noStroke();
       fill(255);
       textSize(7);
@@ -208,5 +253,16 @@ class ColorPanel2D extends ColorPanel {
 
     pop();
  
+  }
+
+  static getDefaultTitle(colorAxes){
+    switch (colorAxes) {
+      case ColorAxes2D.RED_GREEN:
+        return "Red vs. Green";
+      case ColorAxes2D.RED_BLUE:
+        return "Red vs. Blue";
+      case ColorAxes2D.GREEN_BLUE:
+        return "Green vs. Blue";
+    }
   }
 }

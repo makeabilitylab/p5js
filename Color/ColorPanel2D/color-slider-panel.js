@@ -65,7 +65,7 @@ class ColorSliderPanel extends ColorPanel {
     this.sliderColorType = sliderColorType;
 
     //this.selectedColor = color(5);
-    this.backgroundColor = color(100);
+    this.backgroundColor = color(80);
 
     const thumbRadius = 5;
 

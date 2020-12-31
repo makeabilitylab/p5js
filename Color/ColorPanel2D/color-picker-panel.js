@@ -158,21 +158,13 @@ class SolidColorPanel extends Panel {
 
     textSize(7);
     textStyle(NORMAL);
-    let rgbStr = this.getRgbString();
-    let rgbHexStr = this.getRgbHexString();
+    let rgbStr = ColorPanel.getRgbString(this.fillColor);
+    let rgbHexStr = ColorPanel.getRgbHexString(this.fillColor);
     yText += textSize() + yTextSpacing;
     text(rgbStr, xText, yText);
 
     yText += textSize() + yTextSpacing;
     text(rgbHexStr, xText, yText);
     pop();
-  }
-
-  getRgbString(){
-    return nfc(red(this.fillColor), 1) + ", " + nfc(green(this.fillColor), 1) + ", " + nfc(blue(this.fillColor), 1);
-  }
-
-  getRgbHexString(){
-    return "#" + hex(red(this.fillColor), 2) + hex(green(this.fillColor), 2) + hex(blue(this.fillColor), 2);
   }
 }
