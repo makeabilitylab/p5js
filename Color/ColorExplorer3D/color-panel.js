@@ -10,38 +10,39 @@ function setup() {
 function draw() {
   background(0);
 
-  if(parent.selectedColor && !parent.areColorLevelsEqual(selectedColor, parent.selectedColor)){
-    print("new selected color from parent!", parent.selectedColor);
+  if (parent.selectedColor && !parent.areColorLevelsEqual(selectedColor, parent.selectedColor)) {
+    print("color-panel: new selected color from parent!", parent.selectedColor);
     let c = color(parent.selectedColor.levels[0],
-        parent.selectedColor.levels[1],
-        parent.selectedColor.levels[2],
-        parent.selectedColor.levels[3]);
+      parent.selectedColor.levels[1],
+      parent.selectedColor.levels[2],
+      parent.selectedColor.levels[3]);
     setSelectedColor(c);
   }
 
   rgbColorPickerPanel.draw();
 }
 
-function setSelectedColor(c, callParent = false){
+function setSelectedColor(c, callParent = false) {
   selectedColor = c;
   rgbColorPickerPanel.setSelectedColor(c);
 
-  if(callParent){
-      parent.setSelectedColor(c);
+  if (callParent) {
+    print("color-panel: sending new color", c)
+    parent.setSelectedColor(c);
   }
 }
 
-function mousePressed(){
+function mousePressed() {
   let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
-  if(colorPanelAtMouse){
+  if (colorPanelAtMouse) {
     let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
     setSelectedColor(c, true);
   }
 }
 
-function mouseMoved(){
+function mouseMoved() {
   let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
-  if(colorPanelAtMouse){
+  if (colorPanelAtMouse) {
     let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
     //setHoverColor(c);
     rgbColorPickerPanel.setHoverColor(c);

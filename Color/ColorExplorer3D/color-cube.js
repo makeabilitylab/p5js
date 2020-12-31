@@ -10,6 +10,7 @@
  * - [] When a cube is selected, highlight axis point as well (in white?)
  * - [] Show selected color in text (somewhere... maybe overlay as div)
  * - [] Convert library to instance mode? https://discourse.processing.org/t/how-to-adapt-a-library-for-instance-mode-p5js/11775
+ * - [] Add hover support
  */
 
 let angle = 0;
@@ -17,7 +18,7 @@ let boxSize = 10;
 let boxMargin = 2;
 
 const maxColor = 255;
-const numCols = 20;
+const numCols = 12;
 let colorStep = maxColor / numCols;
 
 let myFont;
@@ -26,6 +27,8 @@ let selectedColor;
 
 let colorAxes3D;
 let colorCube3D;
+
+let keepParentInSyncWithClosestColor = false;
 
 function preload() {
   //font = textFont("Inconsolata");
@@ -38,8 +41,10 @@ function setup() {
   textFont(myFont);
 
   colorCube3D = new ColorCube3D(boxSize, boxMargin, maxColor, colorStep);
+  colorCube3D.selectedColorBehavior = SelectedColorBehavior.SHOW_RGB_COLUMNS_BEFORE;
   colorAxes3D = new ColorAxes3D(colorCube3D.calcSize() * 1.2, boxSize, boxMargin, maxColor, colorStep);
   selectedColor = color(0);
+  print("numCols", numCols, "colorStep", colorStep);
 }
 
 function draw() {
@@ -48,13 +53,20 @@ function draw() {
   colorAxes3D.draw();
   colorCube3D.draw();
 
-  if(parent.selectedColor && !parent.areColorLevelsEqual(selectedColor, parent.selectedColor)){
-    print("colorcube: new selected color from parent!", parent.selectedColor);
+  if (parent.selectedColor && !parent.areColorLevelsEqual(selectedColor, parent.selectedColor)) {
+    
     let c = color(parent.selectedColor.levels[0],
-        parent.selectedColor.levels[1],
-        parent.selectedColor.levels[2],
-        parent.selectedColor.levels[3]);
-    setSelectedColor(c);
+      parent.selectedColor.levels[1],
+      parent.selectedColor.levels[2],
+      parent.selectedColor.levels[3]);
+
+    let closestC = colorCube3D.getClosestColor(c);
+
+    if(!parent.areColorLevelsEqual(selectedColor, closestC)){
+      // if keepParentInSyncWithClosestColor is true, then we'll create a new event
+      // for the closest color
+      setSelectedColor(closestC, keepParentInSyncWithClosestColor);
+    }
   }
 
   //draw3DColorGrid();
@@ -74,12 +86,15 @@ function calcSelectedCubeFromColor(col) {
   }
 }
 
-function setSelectedColor(c, callParent = false){
+function setSelectedColor(c, callParent = false) {
+
+
   selectedColor = c;
   colorCube3D.selectedColor = c;
 
-  if(callParent){
-      parent.setSelectedColor(c);
+  if (callParent) {
+    print("color-cube: sending new color", c)
+    parent.setSelectedColor(c);
   }
 
 }
@@ -105,10 +120,11 @@ function keyPressed() {
       break;
   }
 
-  if(key === ' '){
-    b = blue(selectedColor) + colorStep;
-    if (b > maxColor){
-      b = 0;
+  if (key === ' ') {
+    if(keyIsDown(SHIFT)){
+      b = max(0, blue(selectedColor) - colorStep);
+    }else{
+      b = min(maxColor, blue(selectedColor) + colorStep);
     }
   }
 
