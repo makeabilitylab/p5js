@@ -24,18 +24,28 @@ function setSelectedColor(c){
 }
 
 function mousePressed(){
-  let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
-  if(colorPanelAtMouse){
-    let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
-    setSelectedColor(c);
-  }
+  // let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
+  // if(colorPanelAtMouse && colorPanelAtMouse instanceof ColorPanel2D){
+  //   let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
+  //   setSelectedColor(c);
+  // }
+  rgbColorPickerPanel.mousePressed();
+}
+
+function mouseReleased(){
+  rgbColorPickerPanel.mouseReleased();
+}
+
+function mouseDragged(){
+  rgbColorPickerPanel.mouseDragged();
 }
 
 function mouseMoved(){
-  let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
-  if(colorPanelAtMouse){
-    let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
-    //setHoverColor(c);
-    rgbColorPickerPanel.setHoverColor(c);
-  }
+  // let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);
+  // if(colorPanelAtMouse && colorPanelAtMouse instanceof ColorPanel2D){
+  //   let c = colorPanelAtMouse.getColorForPixel(mouseX, mouseY, true);
+  //   //setHoverColor(c);
+  //   rgbColorPickerPanel.setHoverColor(c);
+  // }
+  rgbColorPickerPanel.mouseMoved();
 }

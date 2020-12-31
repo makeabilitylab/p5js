@@ -133,6 +133,7 @@ class ColorCube3D {
               break;
 
             case SelectedColorBehavior.SHOW_RGB_PLANES_BEFORE:
+              // TODO: still need to fix this
               let rDist = abs(red(this.selectedColor) - r);
               let gDist = abs(green(this.selectedColor) - g);
               let bDist = abs(green(this.selectedColor) - b);
@@ -144,10 +145,9 @@ class ColorCube3D {
                   fill(r, g, b, this.selectedBoxOpacity);
                   stroke(0);
                 }
+                
+                box(boxSize);
 
-                if (rDist < this.colorStep && g <= 10) {
-                  box(boxSize);
-                }
               }
               break;
             case SelectedColorBehavior.SHOW_RGB_COLUMNS:

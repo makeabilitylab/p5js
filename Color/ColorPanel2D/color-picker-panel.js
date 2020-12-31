@@ -1,57 +1,3 @@
-class Panel {
-
-  constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-  }
-
-  /**
-   * Returns the left side of the panel
-   * @return {Number} the left side of the panel
-   */
-  getLeft() {
-    return this.x;
-  }
-
-  /**
-   * Returns the right side of the panel
-   * @return {Number} the right side of the panel
-   */
-  getRight() {
-    return this.x + this.width;
-  }
-
-  /**
-   * Returns the top of the panel
-   * @return {Number} the top of the panel
-   */
-  getTop() {
-    return this.y;
-  }
-
-  /**
-   * Returns the bottom of the panel
-   * @return {Number} the bottom of the panel
-   */
-  getBottom() {
-    return this.y + this.height;
-  }
-
-  /**
-   * Returns true if this panel contains the x,y. Assumes global coordinates
-   * @param {Number} x 
-   * @param {Number} y 
-   */
-  contains(x, y) {
-    return x >= this.x && // check within left edge
-      x <= (this.x + this.width) && // check within right edge
-      y >= this.y && // check within top edge
-      y <= (this.y + this.height); // check within bottom edge
-  }
-}
-
 class RgbColorPickerPanel extends Panel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
@@ -62,14 +8,24 @@ class RgbColorPickerPanel extends Panel {
 
     this.colorPanels = [];
 
-    //TODO: fix so no space on right side?
-    //TODO: fix so no space below hover panel?
     //TODO: if mouse moved outside of RgbColorPickerPanel, then switch off hover? Otherwise, weird lingering hover.
     let xColorPanel = 0;
     let yColorPanel = 0;
-    const numPanels = 4;
+    const numPanels = 5;
     const spaceBetweenPanels = 2;
     let wColorPanel = (width / numPanels) - spaceBetweenPanels;// + spaceBetweenPanels / numPanels;
+
+    const numSliderPanels = 3;
+    let hSliderColorPanel = (height / 3) - spaceBetweenPanels + spaceBetweenPanels / numSliderPanels;
+    this.redColorSliderPanel = new ColorSliderPanel(xColorPanel, yColorPanel, wColorPanel, hSliderColorPanel, SliderColorType.RED);
+    yColorPanel += hSliderColorPanel + spaceBetweenPanels;
+    this.greenColorSliderPanel = new ColorSliderPanel(xColorPanel, yColorPanel, wColorPanel, hSliderColorPanel, SliderColorType.GREEN);
+    yColorPanel += hSliderColorPanel + spaceBetweenPanels;
+    this.blueColorSliderPanel = new ColorSliderPanel(xColorPanel, yColorPanel, wColorPanel, hSliderColorPanel, SliderColorType.BLUE);
+    this.colorPanels.push(this.redColorSliderPanel, this.greenColorSliderPanel, this.blueColorSliderPanel)
+
+    yColorPanel = 0;
+    xColorPanel += wColorPanel + spaceBetweenPanels;
     this.redGreenColorPanel = new ColorPanel2D(xColorPanel, yColorPanel, wColorPanel, height, ColorAxes2D.RED_GREEN);
 
     xColorPanel += wColorPanel + spaceBetweenPanels;
@@ -91,12 +47,45 @@ class RgbColorPickerPanel extends Panel {
 
     yColorPanel += hSolidColorPanel + spaceBetweenPanels;
     this.hoverColorPanel = new SolidColorPanel(xColorPanel, yColorPanel, wColorPanel, hSolidColorPanel, "Hover");
+    this.colorPanels.push(this.prevColorPanel, this.curColorPanel, this.hoverColorPanel);
+
+    for (let colorPanel of this.colorPanels) {
+      colorPanel.parentPanel = this;
+      if (colorPanel instanceof ColorPanel) {
+        colorPanel.on(ColorEvents.NEW_HOVER_COLOR, this.onNewHoverColorEvent);
+        colorPanel.on(ColorEvents.NEW_SELECTED_COLOR, this.onNewSelectedColorEvent);
+      }
+    }
   }
 
-  setHoverColor(c){
+  onNewHoverColorEvent(sender, newHoverColor) {
+    //print("onNewHoverColorEvent", sender, newHoverColor);
+    if (sender.parentPanel) {
+      for (let colorPanel of sender.parentPanel.colorPanels) {
+        if (colorPanel instanceof ColorPanel && colorPanel != sender) {
+          colorPanel.setHoverColor(newHoverColor);
+        }
+      }
+    }
+  }
+
+  onNewSelectedColorEvent(sender, newSelectedColor) {
+    // print("onNewSelectedColorEvent", sender, newSelectedColor);
+    if (sender.parentPanel) {
+      for (let colorPanel of sender.parentPanel.colorPanels) {
+        if (colorPanel instanceof ColorPanel && colorPanel != sender) {
+          colorPanel.setSelectedColor(newSelectedColor);
+        }
+      }
+    }
+  }
+
+  setHoverColor(c) {
     this.hoverColor = c;
     for (let colorPanel of this.colorPanels) {
-      colorPanel.hoverColor = c;
+      if ('hoverColor' in colorPanel) {
+        colorPanel.hoverColor = c;
+      }
     }
     this.hoverColorPanel.fillColor = c;
   }
@@ -117,6 +106,34 @@ class RgbColorPickerPanel extends Panel {
     this.greenBlueColorPanel.updateOffscreenBuffer();
   }
 
+  mousePressed() {
+    let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
+    if (colorPanelAtMouse) {
+      colorPanelAtMouse.mousePressed();
+    }
+  }
+
+  mouseDragged() {
+    let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
+    if (colorPanelAtMouse) {
+      colorPanelAtMouse.mouseDragged();
+    }
+  }
+
+  mouseReleased() {
+    let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
+    if (colorPanelAtMouse) {
+      colorPanelAtMouse.mouseReleased();
+    }
+  }
+
+  mouseMoved() {
+    let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
+    if (colorPanelAtMouse) {
+      colorPanelAtMouse.mouseMoved();
+    }
+  }
+
   getColorPanelAtCoords(x, y) {
     for (let colorPanel of this.colorPanels) {
       if (colorPanel.contains(x, y)) {
@@ -127,13 +144,9 @@ class RgbColorPickerPanel extends Panel {
   }
 
   draw() {
-    this.redGreenColorPanel.draw();
-    this.redBlueColorPanel.draw();
-    this.greenBlueColorPanel.draw();
-
-    this.prevColorPanel.draw();
-    this.curColorPanel.draw();
-    this.hoverColorPanel.draw();
+    for (let colorPanel of this.colorPanels) {
+      colorPanel.draw();
+    }
   }
 }
 

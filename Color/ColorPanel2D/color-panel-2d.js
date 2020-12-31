@@ -5,15 +5,10 @@ const ColorAxes2D = Object.freeze({
   GREEN_BLUE: Symbol("Green-blue")
 });
 
-const ColorPanel2DEvents = Object.freeze({
-  NEW_MOUSE_HOVER_COLOR: Symbol("New mouse hover color event")
-});
-
-class ColorPanel2D extends Panel {
+class ColorPanel2D extends ColorPanel {
 
   constructor(x, y, width, height, colorAxes2D) {
     super(x, y, width, height)
-
 
     this.colorAxes = colorAxes2D;
     this.selectedColor = color(0);
@@ -21,28 +16,36 @@ class ColorPanel2D extends Panel {
 
     this.offscreenBuffer = createGraphics(width, height);
     this.updateOffscreenBuffer();
-
-    // event handling https://stackoverflow.com/a/56612753
-    this.events = new Map();
-
-    this.knownEvents = new Set([ColorPanel2DEvents.NEW_MOUSE_HOVER_COLOR]);
   }
 
-  /**
-   * Subscribe to events
-   * 
-   * @param {String} label 
-   * @param {function} callback 
-   */
-  on(label, callback) {
-    if (this.knownEvents.has(label)) {
-      if (!this.events.has(label)) {
-        this.events.set(label, []);
-      }
-      this.events.get(label).push(callback);
-    } else {
-      console.log(`Could not create event subscription for ${label}. Event unknown.`);
-    }
+  mousePressed() {
+    this.selectedColor = this.getColorForPixel(mouseX, mouseY, true);
+    this.fireNewSelectedColorEvent(this.selectedColor);
+    super.mousePressed();
+  }
+
+  // mouseDragged() {
+  //   this.thumbMain.x = constrain(mouseX, this.track.x, this.track.getRight());
+  //   this.thumbMain.value = map(this.thumbMain.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
+  //   this.thumbMain.color = ColorSliderPanel.getSliderColor(this.sliderColorType, this.thumbMain.value);
+  //   this.fireNewSelectedColorEvent(this.thumbMain.color);
+  // }
+
+  mouseMoved() {
+    this.hoverColor = this.getColorForPixel(mouseX, mouseY, true);
+    this.fireNewHoverColorEvent(this.hoverColor);
+    super.mouseMoved();
+  }
+
+  setSelectedColor(selectedColor){
+    this.selectedColor = selectedColor;
+    this.updateOffscreenBuffer();
+    super.setSelectedColor(selectedColor);
+  }
+
+  setHoverColor(hoverColor){
+    this.hoverColor = hoverColor;
+    super.setSelectedColor(hoverColor);
   }
 
   /**
