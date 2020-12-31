@@ -123,5 +123,13 @@ class ColorPanel extends Panel {
   setSelectedColor(selectedColor){
     this.selectedColor = selectedColor;
   }
+
+  static getRgbString(c, rightDigits=1){
+    return nfc(red(c), rightDigits) + ", " + nfc(green(c), rightDigits) + ", " + nfc(blue(c), rightDigits);
+  }
+
+  static getRgbHexString(c){
+    return "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
+  }
 }
 

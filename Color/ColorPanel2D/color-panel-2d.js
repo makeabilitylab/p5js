@@ -11,15 +11,13 @@ class ColorPanel2D extends ColorPanel {
     super(x, y, width, height)
 
     this.colorAxes = colorAxes2D;
-    this.selectedColor = color(0);
-    this.hoverColor = color(0);
 
     this.offscreenBuffer = createGraphics(width, height);
     this.updateOffscreenBuffer();
   }
 
   mousePressed() {
-    this.selectedColor = this.getColorForPixel(mouseX, mouseY, true);
+    super.setSelectedColor(this.getColorForPixel(mouseX, mouseY, true));
     this.fireNewSelectedColorEvent(this.selectedColor);
     super.mousePressed();
   }
@@ -38,14 +36,12 @@ class ColorPanel2D extends ColorPanel {
   }
 
   setSelectedColor(selectedColor){
-    this.selectedColor = selectedColor;
-    this.updateOffscreenBuffer();
     super.setSelectedColor(selectedColor);
+    this.updateOffscreenBuffer();
   }
 
   setHoverColor(hoverColor){
-    this.hoverColor = hoverColor;
-    super.setSelectedColor(hoverColor);
+    super.setHoverColor(hoverColor);
   }
 
   /**
@@ -176,10 +172,8 @@ class ColorPanel2D extends ColorPanel {
     //print("updateOffscreenBuffer took", millis() - startT, "ms");
   }
 
-
-
   draw() {
-
+   
     push();
     translate(this.x, this.y);
     image(this.offscreenBuffer, 0, 0);
@@ -195,15 +189,24 @@ class ColorPanel2D extends ColorPanel {
       noFill();
       stroke(255);
       let selColorCoords = this.getPixelForColor(this.hoverColor);
-      ellipse(selColorCoords.x, selColorCoords.y, 4);
+      
+      // ellipse(selColorCoords.x, selColorCoords.y, 4);
+
+      // draw cross hair
+      const chLength = 2;
+      strokeWeight(1);
+      line(selColorCoords.x - chLength - 1, selColorCoords.y, selColorCoords.x - 1, selColorCoords.y);
+      line(selColorCoords.x + 1, selColorCoords.y, selColorCoords.x + chLength + 1, selColorCoords.y);
+      line(selColorCoords.x, selColorCoords.y - chLength - 1, selColorCoords.x, selColorCoords.y - 1);
+      line(selColorCoords.x, selColorCoords.y + chLength + 1, selColorCoords.x, selColorCoords.y + 1);
+
+      noStroke();
+      fill(255);
+      textSize(7);
+      text(ColorPanel.getRgbString(this.hoverColor, 0), selColorCoords.x + chLength + 1, selColorCoords.y - chLength);
     }
 
     pop();
-
-    if (this.contains(mouseX, mouseY)) {
-      // trigger mouse over color event
-      let c = this.getColorForPixel(mouseX, mouseY, true);
-      text(c, mouseX, mouseY);
-    }
+ 
   }
 }

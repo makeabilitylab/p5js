@@ -66,6 +66,8 @@ class RgbColorPickerPanel extends Panel {
           colorPanel.setHoverColor(newHoverColor);
         }
       }
+
+      sender.parentPanel.hoverColorPanel.fillColor = newHoverColor;
     }
   }
 
@@ -77,33 +79,13 @@ class RgbColorPickerPanel extends Panel {
           colorPanel.setSelectedColor(newSelectedColor);
         }
       }
+
+      sender.parentPanel.prevColor = color(sender.parentPanel.selectedColor);
+      sender.parentPanel.prevColorPanel.fillColor = sender.parentPanel.prevColor;
+
+      sender.parentPanel.selectedColor = newSelectedColor;
+      sender.parentPanel.curColorPanel.fillColor = newSelectedColor;
     }
-  }
-
-  setHoverColor(c) {
-    this.hoverColor = c;
-    for (let colorPanel of this.colorPanels) {
-      if ('hoverColor' in colorPanel) {
-        colorPanel.hoverColor = c;
-      }
-    }
-    this.hoverColorPanel.fillColor = c;
-  }
-
-  setSelectedColor(c) {
-    this.prevColor = color(this.selectedColor);
-    this.prevColorPanel.fillColor = this.prevColor;
-
-    this.selectedColor = c;
-    this.curColorPanel.fillColor = c;
-
-    this.redGreenColorPanel.selectedColor = c;
-    this.redBlueColorPanel.selectedColor = c;
-    this.greenBlueColorPanel.selectedColor = c;
-
-    this.redGreenColorPanel.updateOffscreenBuffer();
-    this.redBlueColorPanel.updateOffscreenBuffer();
-    this.greenBlueColorPanel.updateOffscreenBuffer();
   }
 
   mousePressed() {
@@ -166,8 +148,31 @@ class SolidColorPanel extends Panel {
     rect(0, 0, this.width, this.height);
 
     fill(255);
-    textSize(8);
-    text(this.title, 2, 10);
+    textSize(10);
+
+    let xText = 2;
+    let yText = 10;
+    let yTextSpacing = 1;
+    textStyle(BOLD);
+    text(this.title, xText, yText);
+
+    textSize(7);
+    textStyle(NORMAL);
+    let rgbStr = this.getRgbString();
+    let rgbHexStr = this.getRgbHexString();
+    yText += textSize() + yTextSpacing;
+    text(rgbStr, xText, yText);
+
+    yText += textSize() + yTextSpacing;
+    text(rgbHexStr, xText, yText);
     pop();
+  }
+
+  getRgbString(){
+    return nfc(red(this.fillColor), 1) + ", " + nfc(green(this.fillColor), 1) + ", " + nfc(blue(this.fillColor), 1);
+  }
+
+  getRgbHexString(){
+    return "#" + hex(red(this.fillColor), 2) + hex(green(this.fillColor), 2) + hex(blue(this.fillColor), 2);
   }
 }
