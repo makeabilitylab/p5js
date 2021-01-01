@@ -54,7 +54,7 @@ class Panel {
 
   }
 
-  mouseReleased(){
+  mouseReleased() {
 
   }
 
@@ -116,20 +116,53 @@ class ColorPanel extends Panel {
     }
   }
 
-  setHoverColor(hoverColor){
+  setHoverColor(hoverColor) {
+    if (!(hoverColor instanceof p5.Color)) {
+      print("hoverColor not instanceof p5.Color", hoverColor);
+      hoverColor = ColorPanel.parseColor(hoverColor);
+    }
     this.hoverColor = hoverColor;
   }
 
-  setSelectedColor(selectedColor){
+  setSelectedColor(selectedColor) {
+    if (!(selectedColor instanceof p5.Color)) {
+      print("selectedColor not instanceof p5.Color", selectedColor);
+      selectedColor = ColorPanel.parseColor(selectedColor);
+    }
     this.selectedColor = selectedColor;
   }
 
-  static getRgbString(c, rightDigits=1){
+  static getRgbString(c, rightDigits = 1) {
     return nfc(red(c), rightDigits) + ", " + nfc(green(c), rightDigits) + ", " + nfc(blue(c), rightDigits);
   }
 
-  static getRgbHexString(c){
+  static getRgbHexString(c) {
     return "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
+  }
+
+  static parseColor(possibleColor) {
+    print("possibleColor type", typeof possibleColor);
+    if ('levels' in possibleColor) {
+      print("levels is in possibleColor", typeof possibleColor.levels);
+      print("Array.isArray", Array.isArray(possibleColor.levels));
+      print(possibleColor.levels);
+      let c = color(possibleColor.levels[0],
+        possibleColor.levels[1],
+        possibleColor.levels[2],
+        possibleColor.levels[3]);
+      return c;
+    } else if (Array.isArray(possibleColor) && possibleColor.length >= 3) {
+      let r = possibleColor[0];
+      let g = possibleColor[1];
+      let b = possibleColor[2];
+      let a = 255;
+      if (possibleColor.length >= 4) {
+        a = possibleColor[3];
+      }
+      return color(r, g, b, a);
+    }else{
+      throw "The object " + possibleColor + "could not be parsed for a color";
+    }
   }
 }
 

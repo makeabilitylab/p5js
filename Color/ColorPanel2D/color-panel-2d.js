@@ -175,7 +175,6 @@ class ColorPanel2D extends ColorPanel {
     this.offscreenBuffer.noStroke();
     this.offscreenBuffer.fill(255);
     this.offscreenBuffer.textSize(8);
-    print(this.title);
     this.offscreenBuffer.text(this.title, 2, this.offscreenBuffer.textSize() + 1);
 
     const numTicks = 4;

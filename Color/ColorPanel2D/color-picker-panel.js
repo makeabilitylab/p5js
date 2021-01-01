@@ -1,10 +1,9 @@
-class RgbColorPickerPanel extends Panel {
+class RgbColorPickerPanel extends ColorPanel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
-    this.selectedColor = color(0);
+
     this.prevColor = color(0);
-    this.hoverColor = color(0);
 
     this.colorPanels = [];
 
@@ -58,33 +57,30 @@ class RgbColorPickerPanel extends Panel {
     }
   }
 
+  setSelectedColor(newSelectedColor) {
+    super.setSelectedColor(newSelectedColor);
+    RgbColorPickerPanel.setSelectedColorOfChildren(this, this.selectedColor);
+  }
+
   onNewHoverColorEvent(sender, newHoverColor) {
     //print("onNewHoverColorEvent", sender, newHoverColor);
     if (sender.parentPanel) {
-      for (let colorPanel of sender.parentPanel.colorPanels) {
-        if (colorPanel instanceof ColorPanel && colorPanel != sender) {
-          colorPanel.setHoverColor(newHoverColor);
-        }
-      }
-
-      sender.parentPanel.hoverColorPanel.fillColor = newHoverColor;
+      // the parent panel points to this RgbColorPickerPanel class
+      let rgbPanel = sender.parentPanel;
+      RgbColorPickerPanel.setHoverColorOfChildren(rgbPanel, newHoverColor, sender);
+      rgbPanel.fireNewHoverColorEvent(newHoverColor);
     }
   }
 
   onNewSelectedColorEvent(sender, newSelectedColor) {
     // print("onNewSelectedColorEvent", sender, newSelectedColor);
     if (sender.parentPanel) {
-      for (let colorPanel of sender.parentPanel.colorPanels) {
-        if (colorPanel instanceof ColorPanel && colorPanel != sender) {
-          colorPanel.setSelectedColor(newSelectedColor);
-        }
-      }
+      // the parent panel points to this RgbColorPickerPanel class
+      let rgbPanel = sender.parentPanel;
 
-      sender.parentPanel.prevColor = color(sender.parentPanel.selectedColor);
-      sender.parentPanel.prevColorPanel.fillColor = sender.parentPanel.prevColor;
+      RgbColorPickerPanel.setSelectedColorOfChildren(rgbPanel, newSelectedColor, sender);
 
-      sender.parentPanel.selectedColor = newSelectedColor;
-      sender.parentPanel.curColorPanel.fillColor = newSelectedColor;
+      rgbPanel.fireNewSelectedColorEvent(newSelectedColor);
     }
   }
 
@@ -129,6 +125,32 @@ class RgbColorPickerPanel extends Panel {
     for (let colorPanel of this.colorPanels) {
       colorPanel.draw();
     }
+  }
+
+  static setHoverColorOfChildren(rgbPanel, newHoverColor, exceptPanel = null) {
+    
+
+    for (let colorPanel of rgbPanel.colorPanels) {
+      if (colorPanel instanceof ColorPanel && colorPanel != exceptPanel) {
+        colorPanel.setHoverColor(newHoverColor);
+      }
+    }
+
+    rgbPanel.hoverColorPanel.fillColor = newHoverColor;
+  }
+
+  static setSelectedColorOfChildren(rgbPanel, newSelectedColor, exceptPanel = null) {
+    for (let colorPanel of rgbPanel.colorPanels) {
+      if (colorPanel instanceof ColorPanel && colorPanel != exceptPanel) {
+        colorPanel.setSelectedColor(newSelectedColor);
+      }
+    }
+
+    rgbPanel.prevColor = color(rgbPanel.selectedColor);
+    rgbPanel.prevColorPanel.fillColor = rgbPanel.prevColor;
+
+    rgbPanel.selectedColor = newSelectedColor;
+    rgbPanel.curColorPanel.fillColor = newSelectedColor;
   }
 }
 

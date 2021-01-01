@@ -9,30 +9,59 @@ const SelectedColorBehavior = Object.freeze({
   SHOW_ALL: Symbol("Show all cubes")
 });
 
-class ColorCube3D {
-  constructor(boxSize, boxMargin, maxColor, colorStep) {
+class ColorPanel3D extends ColorPanel{
+  constructor(x, y, z, width, height, depth){
+    super(x, y, width, height);
+    this.depth = depth;
+    this.z = z;
+  }
+}
+
+class ColorCube3D extends ColorPanel3D{
+  constructor(x, y, z, numCols = 10, boxSize = 10, boxMargin = 2) {
+  
+    let cubeSize = ColorCube3D.calcCubeSize(numCols, boxSize, boxMargin);
+    super(x, y, z, cubeSize, cubeSize, cubeSize);
+
     this.boxSize = boxSize;
     this.boxMargin = boxMargin;
-    this.maxColor = maxColor;
-    this.colorStep = colorStep;
-    this.selectedColor = color(0);
-
+    this.numCols = numCols;
+    this.maxColor = 255;
+ 
     this.defaultBoxOpacity = 255;
     this.selectedBoxOpacity = 255;
 
-    this.selectedColorBehavior = SelectedColorBehavior.SHOW_RGB_PLANES;
+    this.selectedColorBehavior = SelectedColorBehavior.SHOW_RGB_COLUMNS_BEFORE;
+    this.hoverColorBehavior = SelectedColorBehavior.SHOW_RGB_COLUMNS_BEFORE; 
+
+    this.forceSelectedColorsToClosestMatch = true;
   }
 
-  calcSize() {
-    return this.maxColor / this.colorStep * (this.boxSize + this.boxMargin);
+  getColorStep(){
+    return this.maxColor / this.numCols;
   }
 
+  /**
+   * Calculates the closest color on the 3D cube (since the cube is discretized)
+   * @param {p5.Color} c 
+   */
   getClosestColor(c) {
-    let numGradations = this.maxColor / this.colorStep;
+    let numGradations = this.numCols;
+    let colorStep = this.getColorStep();
     let r = floor(map(red(c), 0, 255, 0, numGradations));
     let g = floor(map(green(c), 0, 255, 0, numGradations));
     let b = floor(map(blue(c), 0, 255, 0, numGradations));
-    return color(r * this.colorStep, g * this.colorStep, b * this.colorStep, alpha(c));
+    return color(r * colorStep, g * colorStep, b * colorStep, alpha(c));
+  }
+  
+  setSelectedColor(selectedColor){
+    // the super call parses different forms of colors
+    super.setSelectedColor(selectedColor);
+
+    if(this.forceSelectedColorsToClosestMatch){
+      let closestColor = this.getClosestColor(this.selectedColor);
+      super.setSelectedColor(closestColor);
+    }
   }
 
   /**
@@ -49,13 +78,13 @@ class ColorCube3D {
     // let bDist = abs(b - blue(this.selectedColor));
 
     // if (allColors) {
-    //   return rDist <= this.colorStep &&
-    //     gDist <= this.colorStep &&
-    //     bDist <= this.colorStep;
+    //   return rDist <= colorStep &&
+    //     gDist <= colorStep &&
+    //     bDist <= colorStep;
     // } else {
-    //   return rDist <= this.colorStep ||
-    //     gDist <= this.colorStep ||
-    //     bDist <= this.colorStep;
+    //   return rDist <= colorStep ||
+    //     gDist <= colorStep ||
+    //     bDist <= colorStep;
     // }
 
     // exact matches
@@ -98,15 +127,15 @@ class ColorCube3D {
 
     // Note: box(x, y, z) expects the center x, center y, and center z
     // It's like drawing rect with rectMode(CENTER) in 2D
+    let colorStep = this.getColorStep();
 
     // draw the giant rgb 3d color grid
-
-    for (let r = 0; r <= maxColor; r += colorStep) {
-      for (let g = 0; g <= maxColor; g += colorStep) {
-        for (let b = 0; b <= maxColor; b += colorStep) {
-          let x = (r / colorStep) * (boxSize + boxMargin);
-          let y = -(g / colorStep) * (boxSize + boxMargin); // green axis goes up
-          let z = (b / colorStep) * (boxSize + boxMargin);
+    for (let r = 0; r <= this.maxColor; r += colorStep) {
+      for (let g = 0; g <= this.maxColor; g += colorStep) {
+        for (let b = 0; b <= this.maxColor; b += colorStep) {
+          let x = (r / colorStep) * (this.boxSize + this.boxMargin);
+          let y = -(g / colorStep) * (this.boxSize + this.boxMargin); // green axis goes up
+          let z = (b / colorStep) * (this.boxSize + this.boxMargin);
 
           push();
           translate(x, y, z);
@@ -116,7 +145,6 @@ class ColorCube3D {
           //stroke(r, g, b, this.defaultBoxOpacity);
           //noFill();
           //box(boxSize);
-
 
           switch (this.selectedColorBehavior) {
             case SelectedColorBehavior.SHOW_RGB_PLANES:
@@ -128,7 +156,7 @@ class ColorCube3D {
                   stroke(0);
                 }
 
-                box(boxSize);
+                box(this.boxSize);
               }
               break;
 
@@ -145,8 +173,8 @@ class ColorCube3D {
                   fill(r, g, b, this.selectedBoxOpacity);
                   stroke(0);
                 }
-                
-                box(boxSize);
+
+                box(this.boxSize);
 
               }
               break;
@@ -160,7 +188,7 @@ class ColorCube3D {
                   stroke(0);
                 }
 
-                box(boxSize);
+                box(this.boxSize);
               }
               break;
             case SelectedColorBehavior.SHOW_RGB_COLUMNS_BEFORE:
@@ -174,7 +202,7 @@ class ColorCube3D {
                   stroke(0);
                 }
 
-                box(boxSize);
+                box(this.boxSize);
               }
               break;
             case SelectedColorBehavior.SHOW_CUBE_BEFORE:
@@ -187,7 +215,7 @@ class ColorCube3D {
                   stroke(0);
                 }
 
-                box(boxSize);
+                box(this.boxSize);
               }
               break;
             case SelectedColorBehavior.SHOW_ALL:
@@ -197,24 +225,60 @@ class ColorCube3D {
               } else {
                 fill(r, g, b, this.defaultBoxOpacity);
               }
-              box(boxSize);
+              box(this.boxSize);
               break;
             case SelectedColorBehavior.SHOW_JUST_CUBE:
             default:
               if (this.matchesSelectedColor(r, g, b)) {
                 fill(r, g, b, this.selectedBoxOpacity);
                 stroke(0);
-                box(boxSize);
+                box(this.boxSize);
               }
               break;
-
-
           }
-
 
           pop();
         }
       }
     }
+  }
+
+  keyPressed() {
+    let colorStep = this.getColorStep();
+    let r = red(this.selectedColor);
+    let g = green(this.selectedColor);
+    let b = blue(this.selectedColor);
+
+    switch (keyCode) {
+      case LEFT_ARROW:
+        r = max(0, red(this.selectedColor) - colorStep);
+        break;
+      case RIGHT_ARROW:
+        r = min(this.maxColor, red(this.selectedColor) + colorStep);
+        break;
+      case UP_ARROW:
+        g = min(this.maxColor, green(this.selectedColor) + colorStep);
+        break;
+      case DOWN_ARROW:
+        g = max(0, green(this.selectedColor) - colorStep);
+        break;
+    }
+
+    if (key === ' ') {
+      if (keyIsDown(SHIFT)) {
+        b = max(0, blue(this.selectedColor) - colorStep);
+      } else {
+        b = min(this.maxColor, blue(this.selectedColor) + colorStep);
+      }
+    }
+
+    let newSelectedColor = color(r, g, b);
+    //print("newSelectedColor", newSelectedColor);
+    this.setSelectedColor(newSelectedColor);
+    this.fireNewSelectedColorEvent(newSelectedColor);
+  }
+
+  static calcCubeSize(numCols, boxSize, boxMargin){
+    return numCols * (boxSize + boxMargin);
   }
 }

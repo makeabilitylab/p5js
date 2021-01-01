@@ -1,24 +1,28 @@
 class ColorAxes3D {
 
 
-  constructor(axisLength, boxSize, boxMargin, maxColor, colorStep){
+  constructor(axisLength, numCols, boxSize, boxMargin){
     this.axisLength = axisLength;
     this.axisRadius = 2;
     this.coneRadius = 4; // used for axis arrows
     this.coneLength = 10;
 
+    this.numCols = numCols;
     this.boxSize = boxSize;
     this.boxMargin = boxMargin;
-    this.maxColor = maxColor;
-    this.colorStep = colorStep;
+    this.maxColor = 255;
 
     this.tickFontSize = 10;
     this.tickMarkLength = 10;
     this.tickMarkMargin = 2;
   }
 
+  getColorStep(){
+    return this.maxColor / this.numCols;
+  }
+
   draw() {
-    
+    let colorStep = this.getColorStep();
     push();
 
     // put axes right on the edges of the boxes (rather than through center)
@@ -27,12 +31,12 @@ class ColorAxes3D {
     // draw green (y) and red (x) outline grid
     push();
     noFill();
-    for (let r = 0; r <= this.maxColor; r += this.colorStep) {
-      for (let g = 0; g <= this.maxColor; g += this.colorStep) {
+    for (let r = 0; r <= this.maxColor; r += colorStep) {
+      for (let g = 0; g <= this.maxColor; g += colorStep) {
         // fill(r, g, 0);
         stroke(r, g, 0);
-        let x = (r / this.colorStep) * (this.boxSize + this.boxMargin);
-        let y = -this.boxSize - (g / this.colorStep) * (this.boxSize + this.boxMargin);
+        let x = (r / colorStep) * (this.boxSize + this.boxMargin);
+        let y = -this.boxSize - (g / colorStep) * (this.boxSize + this.boxMargin);
         rect(x, y, this.boxSize);
       }
     }
@@ -42,12 +46,12 @@ class ColorAxes3D {
     push();
     noFill();
     rotateX(HALF_PI);
-    for (let r = 0; r <= this.maxColor; r += this.colorStep) {
-      for (let b = 0; b <= this.maxColor; b += this.colorStep) {
+    for (let r = 0; r <= this.maxColor; r += colorStep) {
+      for (let b = 0; b <= this.maxColor; b += colorStep) {
         // fill(r, 0, b);
         stroke(r, 0, b);
-        let x = (r / this.colorStep) * (this.boxSize + this.boxMargin);
-        let y = (b / this.colorStep) * (this.boxSize + this.boxMargin);
+        let x = (r / colorStep) * (this.boxSize + this.boxMargin);
+        let y = (b / colorStep) * (this.boxSize + this.boxMargin);
         rect(x, y, this.boxSize);
       }
     }
@@ -57,12 +61,12 @@ class ColorAxes3D {
     push();
     noFill();
     rotateY(HALF_PI);
-    for (let g = 0; g <= this.maxColor; g += this.colorStep) {
-      for (let b = 0; b <= this.maxColor; b += this.colorStep) {
+    for (let g = 0; g <= this.maxColor; g += colorStep) {
+      for (let b = 0; b <= this.maxColor; b += colorStep) {
         // fill(0, g, b);
         stroke(0, g, b);
-        let x = -this.boxSize - (b / this.colorStep) * (this.boxSize + this.boxMargin);
-        let y = -this.boxSize - (g / this.colorStep) * (this.boxSize + this.boxMargin);
+        let x = -this.boxSize - (b / colorStep) * (this.boxSize + this.boxMargin);
+        let y = -this.boxSize - (g / colorStep) * (this.boxSize + this.boxMargin);
         rect(x, y, this.boxSize);
       }
     }
@@ -93,10 +97,10 @@ class ColorAxes3D {
     // draw y-axis (green) ticks and tick labels
     push();
     textSize(this.tickFontSize);
-    for (let g = 0; g <= this.maxColor; g += this.colorStep) {
+    for (let g = 0; g <= this.maxColor; g += colorStep) {
       stroke(0, g, 0);
       let x = -this.boxSize / 2 - this.tickMarkLength;
-      let y = -this.boxSize / 2 - (g / this.colorStep) * (this.boxSize + this.boxMargin);
+      let y = -this.boxSize / 2 - (g / colorStep) * (this.boxSize + this.boxMargin);
       rect(x, y, this.tickMarkLength, 1);
 
       noStroke();
@@ -126,10 +130,10 @@ class ColorAxes3D {
     push();
     textSize(this.tickFontSize);
     rotateX(HALF_PI);
-    for (let b = 0; b <= this.maxColor; b += this.colorStep) {
+    for (let b = 0; b <= this.maxColor; b += colorStep) {
       stroke(0, 0, b);
       let x = -this.boxSize / 2 - this.tickMarkLength;
-      let y = this.boxSize / 2 + (b / this.colorStep) * (this.boxSize + this.boxMargin);
+      let y = this.boxSize / 2 + (b / colorStep) * (this.boxSize + this.boxMargin);
       rect(x, y, this.tickMarkLength, 1);
 
       noStroke();
@@ -163,10 +167,10 @@ class ColorAxes3D {
     // draw x-axis ticks and labels
     push();
     rotateZ(-HALF_PI);
-    for (let r = 0; r <= this.maxColor; r += this.colorStep) {
+    for (let r = 0; r <= this.maxColor; r += colorStep) {
       stroke(r, 0, 0);
       let x = -this.boxSize / 2 - this.tickMarkLength;
-      let y = this.boxSize / 2 + (r / this.colorStep) * (this.boxSize + this.boxMargin);
+      let y = this.boxSize / 2 + (r / colorStep) * (this.boxSize + this.boxMargin);
       rect(x, y, this.tickMarkLength, 1);
 
       noStroke();
