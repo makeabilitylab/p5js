@@ -14,7 +14,8 @@ class ColorPanel2D extends ColorPanel {
     this.title = ColorPanel2D.getDefaultTitle(this.colorAxes);
     this.offscreenBuffer = createGraphics(width, height);
     this.updateOffscreenBuffer();
-    
+    this.xTitle = "x title";
+    this.yTitle = "y title";
   }
 
   mousePressed() {
@@ -179,8 +180,9 @@ class ColorPanel2D extends ColorPanel {
 
     const numTicks = 4;
     const tickLength = 2;
-    
-    this.offscreenBuffer.textSize(5);
+    const tickTextSize = 7;
+
+    this.offscreenBuffer.textSize(tickTextSize);
     const offSet = 0;
 
     for(let tick = 1; tick < numTicks; tick++){

@@ -52,6 +52,7 @@ function onNewSelectedColorEvent(sender, newSelectedColor){
 
 function draw() {
   background(100);
+  fill(255);
 
   colorAxes3D.draw();
   colorCube3D.draw();

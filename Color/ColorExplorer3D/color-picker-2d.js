@@ -1,7 +1,7 @@
 var rgbColorPickerPanel;
 
 function setup() {
-  createCanvas(500, 100);
+  createCanvas(600, 120);
 
   rgbColorPickerPanel = new RgbColorPickerPanel(0, 0, width, height);
   rgbColorPickerPanel.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);

@@ -16,12 +16,8 @@
 
 let myFont;
 
-let selectedColor;
-
 let colorAxes3D;
 var colorCube3D;
-
-let keepParentInSyncWithClosestColor = false;
 
 function preload() {
   //font = textFont("Inconsolata");
@@ -29,7 +25,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(500, 400, WEBGL);
+  createCanvas(600, 400, WEBGL);
   //debugMode();
   textFont(myFont);
 
@@ -50,8 +46,6 @@ function onNewHoverColorEvent(sender, newHoverColor) {
 function onNewSelectedColorEvent(sender, newSelectedColor) {
   print("color-cube onNewSelectedColorEvent", sender, newSelectedColor);
   parent.broadcastNewSelectedColor(sender, newSelectedColor);
-  //parent.broadcastNewSelectedColor(sender, newSelectedColor);
-  //parent.broadcastNewSelectedColor(sender, newSelectedColor);
 }
 
 function draw() {
