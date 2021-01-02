@@ -128,8 +128,6 @@ class RgbColorPickerPanel extends ColorPanel {
   }
 
   static setHoverColorOfChildren(rgbPanel, newHoverColor, exceptPanel = null) {
-    
-
     for (let colorPanel of rgbPanel.colorPanels) {
       if (colorPanel instanceof ColorPanel && colorPanel != exceptPanel) {
         colorPanel.setHoverColor(newHoverColor);
@@ -180,7 +178,7 @@ class SolidColorPanel extends Panel {
 
     textSize(7);
     textStyle(NORMAL);
-    let rgbStr = ColorPanel.getRgbString(this.fillColor);
+    let rgbStr = ColorPanel.getRgbString(this.fillColor, 0);
     let rgbHexStr = ColorPanel.getRgbHexString(this.fillColor);
     yText += textSize() + yTextSpacing;
     text(rgbStr, xText, yText);

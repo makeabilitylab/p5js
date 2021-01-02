@@ -21,6 +21,10 @@
   <div id="frame-rates">
     <span id="color-cube-frame-rate">fps</span>
   </div>
+  <div id="colors">
+    Selected color: <span id="selected-color">0, 0, 0</span><br />
+    Hover color: <span id="hover-color">0, 0, 0</span>
+  </div>
 
   <!--
     TODO:
@@ -35,29 +39,53 @@
     - [done] add in ticks on color panel? and axes?
     - [] add in outer ticks in color panel 2d? Or, actually, maybe compactly fit in red and green on axis?
     - [] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
+    - [] is there a bug in printing out the hex color?
+    - [] add hover and selected color to html?
   -->
   <script>
     setInterval(outputFrameRate, 500);
 
     function outputFrameRate() {
-      let colorCubeFrameRate = document.getElementById('color-cube-iframe').contentWindow.frameRate();
-      document.getElementById("color-cube-frame-rate").innerHTML = colorCubeFrameRate.toFixed(1) + " fps";
+      let colorCubeWindow = document.getElementById('color-cube-iframe').contentWindow;
+      if (typeof colorCubeWindow.frameRate === 'function') {
+        let colorCubeFrameRate = colorCubeWindow.frameRate();
+        document.getElementById("color-cube-frame-rate").innerHTML = colorCubeFrameRate.toFixed(1) + " fps";
+      }
 
       //let colorPanelFrameRate = document.getElementById('color-picker-2d-iframe').contentWindow.frameRate();
       //document.getElementById("color-panel-frame-rate").innerHTML = colorPanelFrameRate.toFixed(1) + " fps";
 
     }
 
-    function broadcastNewSelectedColor(sender, newSelectedColor) {
-      console.log("broadcastNewSelectedColor", sender, newSelectedColor);
+    function broadcastNewHoverColor(sender, newHoverColor) {
+      console.log("broadcastNewHoverColor", sender, newHoverColor);
+
+      document.getElementById("hover-color").innerHTML = newHoverColor;
+
       // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
       let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
-      'rgbColorPickerPanel'];
+        'rgbColorPickerPanel'];
+      let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
+      if (sender === rgbColorPickerPanel2d) {
+        colorCube.setHoverColor(newHoverColor);
+      } else if (sender === colorCube) {
+        rgbColorPickerPanel2d.setHoverColor(newHoverColor);
+      }
+    }
+
+    function broadcastNewSelectedColor(sender, newSelectedColor) {
+      console.log("broadcastNewSelectedColor", sender, newSelectedColor);
+
+
+      document.getElementById("selected-color").innerHTML = newSelectedColor;
+
+      // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
+      let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
+        'rgbColorPickerPanel'];
       let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
       if (sender === rgbColorPickerPanel2d) {
         colorCube.setSelectedColor(newSelectedColor);
       } else if (sender === colorCube) {
-        console.log("calling set selected color on ", rgbColorPickerPanel2d);
         rgbColorPickerPanel2d.setSelectedColor(newSelectedColor);
       }
     }

@@ -118,7 +118,7 @@ class ColorPanel extends Panel {
 
   setHoverColor(hoverColor) {
     if (!(hoverColor instanceof p5.Color)) {
-      print("hoverColor not instanceof p5.Color", hoverColor);
+      //print("hoverColor not instanceof p5.Color", hoverColor);
       hoverColor = ColorPanel.parseColor(hoverColor);
     }
     this.hoverColor = hoverColor;
@@ -126,7 +126,7 @@ class ColorPanel extends Panel {
 
   setSelectedColor(selectedColor) {
     if (!(selectedColor instanceof p5.Color)) {
-      print("selectedColor not instanceof p5.Color", selectedColor);
+      //print("selectedColor not instanceof p5.Color", selectedColor);
       selectedColor = ColorPanel.parseColor(selectedColor);
     }
     this.selectedColor = selectedColor;
@@ -141,11 +141,11 @@ class ColorPanel extends Panel {
   }
 
   static parseColor(possibleColor) {
-    print("possibleColor type", typeof possibleColor);
+    //print("possibleColor type", typeof possibleColor);
     if ('levels' in possibleColor) {
-      print("levels is in possibleColor", typeof possibleColor.levels);
-      print("Array.isArray", Array.isArray(possibleColor.levels));
-      print(possibleColor.levels);
+      //print("levels is in possibleColor", typeof possibleColor.levels);
+      //print("Array.isArray", Array.isArray(possibleColor.levels));
+      //print(possibleColor.levels);
       let c = color(possibleColor.levels[0],
         possibleColor.levels[1],
         possibleColor.levels[2],
