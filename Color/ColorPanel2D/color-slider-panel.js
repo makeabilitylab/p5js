@@ -107,7 +107,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.value = map(this.thumbMain.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
     let sliderColors = ColorSliderPanel.getSliderColor(this.sliderColorType, this.thumbMain.value, this.selectedColor);
     this.thumbMain.color = sliderColors.thumbColor;
-    super.setSelectedColor(sliderColors.thumbColor);
+    super.setSelectedColor(sliderColors.fullColor);
     this.fireNewSelectedColorEvent(sliderColors.fullColor);
   }
 
@@ -116,7 +116,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.value = map(this.thumbMain.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
     let sliderColors = ColorSliderPanel.getSliderColor(this.sliderColorType, this.thumbMain.value, this.selectedColor);
     this.thumbMain.color = sliderColors.thumbColor;
-    super.setSelectedColor(sliderColors.thumbColor);
+    super.setSelectedColor(sliderColors.fullColor);
     this.fireNewSelectedColorEvent(sliderColors.fullColor);
   }
 
@@ -125,7 +125,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbHover.value = map(this.thumbHover.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
     let sliderColors = ColorSliderPanel.getSliderColor(this.sliderColorType, this.thumbHover.value, this.hoverColor);
     this.thumbHover.color = sliderColors.thumbColor;
-    super.setHoverColor(sliderColors.thumbColor);
+    super.setHoverColor(sliderColors.fullColor);
     this.fireNewHoverColorEvent(sliderColors.fullColor);
   }
 
