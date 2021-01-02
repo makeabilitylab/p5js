@@ -28,19 +28,19 @@
 
   <!--
     TODO:
-    - add in hover support to cube
+    - [done] add in hover support to cube
     - [done] visualize text on previous, current, and hover panels
     - [done] add event system to cube 3d
-    - fix the show columns mode in cube 3d
+    - [done] fix the show columns mode in cube 3d
     - combine the cube 3d axis into the cube 3d class
     - add in intro anim where cube starts full and then crumbles away? 
     - setup better default camera view?
     - [] pick random default color
     - [done] add in ticks on color panel? and axes?
     - [] add in outer ticks in color panel 2d? Or, actually, maybe compactly fit in red and green on axis?
-    - [] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
+    - [fixed] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
     - [] is there a bug in printing out the hex color?
-    - [] add hover and selected color to html?
+    - [done] add hover and selected color to html?
   -->
   <script>
     setInterval(outputFrameRate, 500);
@@ -58,7 +58,7 @@
     }
 
     function broadcastNewHoverColor(sender, newHoverColor) {
-      console.log("broadcastNewHoverColor", sender, newHoverColor);
+      //console.log("broadcastNewHoverColor", sender, newHoverColor);
 
       document.getElementById("hover-color").innerHTML = newHoverColor;
 
@@ -74,8 +74,7 @@
     }
 
     function broadcastNewSelectedColor(sender, newSelectedColor) {
-      console.log("broadcastNewSelectedColor", sender, newSelectedColor);
-
+      //console.log("broadcastNewSelectedColor", sender, newSelectedColor);
 
       document.getElementById("selected-color").innerHTML = newSelectedColor;
 
