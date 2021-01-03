@@ -443,7 +443,7 @@ class ColorAxes3D {
 
   constructor(colorCube3D){
     this.colorCube3D = colorCube3D;
-    this.axisLength = colorCube3D.width * 1.2;
+    this.axisLength = colorCube3D.width * 1.1;
     this.axisRadius = 2;
     this.coneRadius = 4; // used for axis arrows
     this.coneLength = 10;
