@@ -31,11 +31,13 @@
 //     ...
 // }
 //
-// By Jon E. Froehlich
-// http://makeabilitylab.io/
+// By Professor Jon E. Froehlich
+// https://jonfroehlich.github.io/
+// http://makeabilitylab.cs.washington.edu
 //
 //
-// TOOD: add in optional hand wave emoji when hand wave detected
+// TOOD: 
+// - [] add in optional hand wave emoji when hand wave detected
 //
 
 let HandWaveStateEnum = {

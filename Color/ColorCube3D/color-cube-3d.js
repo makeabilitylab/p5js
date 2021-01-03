@@ -1,4 +1,17 @@
 /**
+ * Shows an interactive view of the RGB color space: https://en.wikipedia.org/wiki/RGB_color_space
+ * I created this visualization for two reasons: first, to help students better understand the
+ * RGB color space. Second, as an initial learning foray into p5js 3D rendering.
+ * 
+ * You can control the viewpoint using the mouse (drag to change view) and the keyboard
+ * to change colors. See also the following example, which combines the Color Cube with
+ * 2D controls and visuals:
+ * https://makeabilitylab.github.io/p5js/Color/ColorExplorer3D
+ * 
+ * By Professor Jon E. Froehlich
+ * https://jonfroehlich.github.io/
+ * http://makeabilitylab.cs.washington.edu
+ *
  * TODO:
  * - [done] Draw grid (for debugging)
  * - [done] Draw axes
@@ -485,7 +498,7 @@ class ColorAxes3D {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
-        rect(markX, y, hoverMarkSize, 1);
+        line(markX, y, markX + hoverMarkSize, y);
       }
       
       if(yCol === cubeForSelColor[1]){
@@ -524,7 +537,7 @@ class ColorAxes3D {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
-        rect(markX, y, hoverMarkSize, 1);
+        line(markX, y, markX + hoverMarkSize, y);
       }
       
       if(zCol === cubeForSelColor[2]){
@@ -562,7 +575,7 @@ class ColorAxes3D {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
-        rect(markX, y, hoverMarkSize, 1);
+        line(markX, y, markX + hoverMarkSize, y);
       }
       
       if(xCol === cubeForSelColor[0]){

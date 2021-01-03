@@ -1,3 +1,35 @@
+<!--
+  ColorExplorer3D was designed to increase understanding of the RGB color space
+  via interactive visualizations. ColorExplorer3D visualizes both the 3D color space
+  as well as 2D visualizations both via mouseover hovers (for interactive brushing
+  effects) as well as selections (keyboard, mouse click).
+
+  This was my first foray into p5js 3D graphics. It's also my first attempt in combining
+  two p5js sketches via iFrames—and I played around with a simple event system to synchronize
+  the two sketches.
+
+  I'm a JavaScript newb, so always experimenting and learning. Hope this is helpful to someone!
+
+  By Professor Jon E. Froehlich
+  https://jonfroehlich.github.io/
+  http://makeabilitylab.cs.washington.edu
+
+  TODO:
+  - [done] add in hover support to cube
+  - [done] visualize text on previous, current, and hover panels
+  - [done] add event system to cube 3d
+  - [done] fix the show columns mode in cube 3d
+  - [done] combine the cube 3d axis into the cube 3d class
+  - [ ] add in intro anim where cube starts full and then crumbles away? 
+  - [ ] setup better default camera view?
+  - [] pick random default color?
+  - [done] add in ticks on color panel? and axes?
+  - [] add in outer ticks in color panel 2d? Or, actually, maybe compactly fit in red and green on axis?
+  - [fixed] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
+  - [fixed] is there a bug in printing out the hex color?
+  - [done] add hover and selected color to html?
+  - [] add keyboard support to color slider?
+-->
 <!DOCTYPE html>
 <html>
 
@@ -11,11 +43,6 @@
 
 <body>
 
-  <!-- <script src="../ColorPanel2D/color-picker-panel.js"></script>
-  <script src="../ColorPanel2D/color-panel-2d.js"></script>
-  <script src="../ColorCube3D/color-cube-3d.js"></script>
-  <script src="../ColorCube3D/color-axes-3d.js"></script> -->
-
   <iframe id="color-cube-iframe" src="color-cube.html" width="600px" height="400px"></iframe>
   <iframe id="color-picker-2d-iframe" src="color-picker-2d.html" width="600px" height="150px"></iframe>
   <div id="frame-rates">
@@ -26,23 +53,6 @@
     Hover color: <span id="hover-color">0, 0, 0</span>
   </div>
 
-  <!--
-    TODO:
-    - [done] add in hover support to cube
-    - [done] visualize text on previous, current, and hover panels
-    - [done] add event system to cube 3d
-    - [done] fix the show columns mode in cube 3d
-    - combine the cube 3d axis into the cube 3d class
-    - add in intro anim where cube starts full and then crumbles away? 
-    - setup better default camera view?
-    - [] pick random default color
-    - [done] add in ticks on color panel? and axes?
-    - [] add in outer ticks in color panel 2d? Or, actually, maybe compactly fit in red and green on axis?
-    - [fixed] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
-    - [] is there a bug in printing out the hex color?
-    - [done] add hover and selected color to html?
-    - [] add keyboard support to color slider
-  -->
   <script>
     setInterval(outputFrameRate, 500);
 
@@ -52,10 +62,6 @@
         let colorCubeFrameRate = colorCubeWindow.frameRate();
         document.getElementById("color-cube-frame-rate").innerHTML = colorCubeFrameRate.toFixed(1) + " fps";
       }
-
-      //let colorPanelFrameRate = document.getElementById('color-picker-2d-iframe').contentWindow.frameRate();
-      //document.getElementById("color-panel-frame-rate").innerHTML = colorPanelFrameRate.toFixed(1) + " fps";
-
     }
 
     function broadcastNewHoverColor(sender, newHoverColor) {
