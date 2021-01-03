@@ -136,15 +136,29 @@ class ColorPanel extends Panel {
     return nfc(red(c), rightDigits) + ", " + nfc(green(c), rightDigits) + ", " + nfc(blue(c), rightDigits);
   }
 
-  static getRgbHexString(c) {
-    return "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
+  static getRgbHexString(c, includeAlpha = true) {
+    // code from https://stackoverflow.com/a/24390910
+    hex = [0, 1, 2].map(
+      function (idx) { return ColorPanel.byteToHex(c.levels[idx]); }
+    ).join('');
+
+    if(includeAlpha){
+      hex += ColorPanel.byteToHex(alpha(c));
+    }
+    return "#" + hex;
+    //return "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
+  }
+
+  static byteToHex(num) {
+    // Turns a number (0-255) into a 2-character hex number (00-ff)
+    return ('0' + num.toString(16)).slice(-2);
   }
 
   static parseColor(possibleColor) {
     //print("possibleColor type", typeof possibleColor);
-    if (possibleColor instanceof p5.Color){
+    if (possibleColor instanceof p5.Color) {
       return possibleColor;
-    }else if ('levels' in possibleColor) {
+    } else if ('levels' in possibleColor) {
       //print("levels is in possibleColor", typeof possibleColor.levels);
       //print("Array.isArray", Array.isArray(possibleColor.levels));
       //print(possibleColor.levels);
@@ -162,7 +176,7 @@ class ColorPanel extends Panel {
         a = possibleColor[3];
       }
       return color(r, g, b, a);
-    }else{
+    } else {
       throw "The object " + possibleColor + "could not be parsed for a color";
     }
   }
