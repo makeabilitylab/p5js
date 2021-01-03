@@ -146,11 +146,7 @@ class RgbColorPickerPanel extends ColorPanel {
       }
     }
 
-    // TODO update this
-    let prevColor = newSelectedColor;
-    print(rgbPanel.prevColor);
     rgbPanel.prevColorPanel.fillColor = rgbPanel.curColorPanel.fillColor
-
     rgbPanel.curColorPanel.fillColor = newSelectedColor;
   }
 }

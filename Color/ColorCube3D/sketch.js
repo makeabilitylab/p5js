@@ -1,18 +1,4 @@
-/**
- * 
- * TODO:
- * - [done] Draw grid (for debugging)
- * - [done] Draw axes
- * - [done] Draw axes ticks and tick labels
- * - [done] Allow cube selection (via keyboard)
- * - [done] Show 2D slices (allow those to be interactive), which will change cursor in cube
- *      - Will need to run multiple p5 sketches though? With 2D slices rendered elsewhere? And immune to orbit control camera?
- * - [] When a cube is selected, highlight axis point as well (in white?) Maybe with tick or arrow?
- * - [] Show selected color in text (somewhere... maybe overlay as div)
- * - [] Convert library to instance mode? https://discourse.processing.org/t/how-to-adapt-a-library-for-instance-mode-p5js/11775
- * - [] Try texture mapped version where we draw just one large cube where the faces are textured based
- *      on current selected color and slice?
- */
+
 
 let pFrameRate;
 let myFont;
