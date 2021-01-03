@@ -16,7 +16,6 @@
 
 let myFont;
 
-let colorAxes3D;
 var colorCube3D;
 
 function preload() {
@@ -34,7 +33,6 @@ function setup() {
   const numCols = 10;
 
   colorCube3D = new ColorCube3D(0, 0, 0);
-  colorAxes3D = new ColorAxes3D(colorCube3D.width * 1.2, numCols, boxSize, boxMargin);
   colorCube3D.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
@@ -51,7 +49,6 @@ function onNewSelectedColorEvent(sender, newSelectedColor) {
 function draw() {
   background(100);
 
-  colorAxes3D.draw();
   colorCube3D.draw();
 
   orbitControl();

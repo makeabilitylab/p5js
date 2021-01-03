@@ -26,7 +26,6 @@ class ColorCube3D extends ColorPanel3D {
     this.boxSize = boxSize;
     this.boxMargin = boxMargin;
     this.numCols = numCols;
-    this.maxColor = 255;
 
     this.defaultBoxOpacity = 255;
     this.selectedBoxOpacity = 255;
@@ -36,10 +35,8 @@ class ColorCube3D extends ColorPanel3D {
 
     this.forceSelectedColorsToClosestMatch = true;
 
-  }
+    this.colorAxes3D = new ColorAxes3D(this);
 
-  getColorStep() {
-    return this.maxColor / this.numCols;
   }
 
   /**
@@ -47,19 +44,23 @@ class ColorCube3D extends ColorPanel3D {
    * @param {p5.Color} c 
    */
   getClosestColor(c) {
-    let colorStep = this.getColorStep();
     let cube = this.getCubeForColor(c);
-    return color(cube[0] * colorStep, cube[1] * colorStep, cube[2] * colorStep, alpha(c));
+    return this.getColorForCube(cube);
+    //return color(cube[0] * colorStep, cube[1] * colorStep, cube[2] * colorStep, alpha(c));
   }
 
   /**
    * Returns the cube location (xCol, yCol, zCol) as an array
    * @param {Array} c 
    */
-  getCubeForColor(c) {
-    let xCol = floor(map(red(c), 0, 255, 0, this.numCols));
-    let yCol = floor(map(green(c), 0, 255, 0, this.numCols));
-    let zCol = floor(map(blue(c), 0, 255, 0, this.numCols));
+  getCubeForColor(c, numCols) {
+    return ColorCube3D.getCubeForColor(c, this.numCols);
+  }
+
+  static getCubeForColor(c, numCols){
+    let xCol = floor(map(red(c), 0, 255, 0, numCols - 1));
+    let yCol = floor(map(green(c), 0, 255, 0, numCols - 1));
+    let zCol = floor(map(blue(c), 0, 255, 0, numCols - 1));
     return [xCol, yCol, zCol];
   }
 
@@ -68,14 +69,18 @@ class ColorCube3D extends ColorPanel3D {
    * @param {Array} cube 
    */
   getColorForCube(cube) {
-    let r = map(cube[0], 0, this.numCols, 0, 255);
-    let g = map(cube[1], 0, this.numCols, 0, 255);
-    let b = map(cube[2], 0, this.numCols, 0, 255);
+    return ColorCube3D.getColorForCube(cube, this.numCols);
+  }
+
+  static getColorForCube(cube, numCols) {
+    let r = map(cube[0], 0, numCols - 1, 0, 255);
+    let g = map(cube[1], 0, numCols - 1, 0, 255);
+    let b = map(cube[2], 0, numCols - 1, 0, 255);
     return [r, g, b];
   }
 
   /**
-   * Gets the cube location for color
+   * Gets the x, y, z cube location for color
    * @param {p5.Color} c 
    */
   getCubeLocationForColor(c) {
@@ -88,9 +93,13 @@ class ColorCube3D extends ColorPanel3D {
    * @param {Array} cube 
    */
   getCubeLocationForCube(cube) {
-    let x = cube[0] * (this.boxSize + this.boxMargin);
-    let y = -cube[1] * (this.boxSize + this.boxMargin);
-    let z = cube[2] * (this.boxSize + this.boxMargin);
+    return ColorCube3D.getCubeLocationForCube(cube, this.boxSize, this.boxMargin);
+  }
+
+  static getCubeLocationForCube(cube, boxSize, boxMargin){
+    let x = cube[0] * (boxSize + boxMargin);
+    let y = -cube[1] * (boxSize + boxMargin);
+    let z = cube[2] * (boxSize + boxMargin);
     return [x, y, z];
   }
 
@@ -170,7 +179,7 @@ class ColorCube3D extends ColorPanel3D {
   draw() {
     //print(this.selectedColor, this.getCubeForColor(this.selectedColor));
     //print(this.selectedColor, this.getCubeLocationForColor(this.selectedColor));
-    const hoverColorStroke = color(255);
+    this.colorAxes3D.draw();
     this.drawSelection(this.selectedColor, this.selectedColorBehavior, false);
     this.drawSelection(this.hoverColor, this.hoverColorBehavior, true);
   }
@@ -197,10 +206,6 @@ class ColorCube3D extends ColorPanel3D {
         this.drawCube(selCubeLoc, selColor, isHover, true);
         break;
     }
-
-
-
-
   }
 
   drawCube(cubeLoc, fillColor, isHover, isSelected) {
@@ -381,35 +386,32 @@ class ColorCube3D extends ColorPanel3D {
   // }
 
   keyPressed() {
-    let colorStep = this.getColorStep();
-    let r = red(this.selectedColor);
-    let g = green(this.selectedColor);
-    let b = blue(this.selectedColor);
-
+    let selectedCube = this.getCubeForColor(this.selectedColor);
+    
     switch (keyCode) {
       case LEFT_ARROW:
-        r = max(0, red(this.selectedColor) - colorStep);
+        selectedCube[0] = max(0, selectedCube[0] - 1);
         break;
       case RIGHT_ARROW:
-        r = min(this.maxColor, red(this.selectedColor) + colorStep);
+        selectedCube[0] = min(this.numCols, selectedCube[0] + 1);
         break;
       case UP_ARROW:
-        g = min(this.maxColor, green(this.selectedColor) + colorStep);
+        selectedCube[1] = min(this.numCols, selectedCube[1] + 1);
         break;
       case DOWN_ARROW:
-        g = max(0, green(this.selectedColor) - colorStep);
+        selectedCube[1] = max(0, selectedCube[1] - 1);
         break;
     }
 
     if (key === ' ') {
       if (keyIsDown(SHIFT)) {
-        b = max(0, blue(this.selectedColor) - colorStep);
+        selectedCube[2] = max(0, selectedCube[2] - 1);
       } else {
-        b = min(this.maxColor, blue(this.selectedColor) + colorStep);
+        selectedCube[2] = min(this.numCols, selectedCube[2] + 1);
       }
     }
 
-    let newSelectedColor = color(r, g, b);
+    let newSelectedColor = this.getColorForCube(selectedCube);
     //print("newSelectedColor", newSelectedColor);
     this.setSelectedColor(newSelectedColor);
     this.fireNewSelectedColorEvent(newSelectedColor);

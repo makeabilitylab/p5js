@@ -17,7 +17,6 @@
 let pFrameRate;
 let myFont;
 
-let colorAxes3D;
 let colorCube3D;
 
 function preload() {
@@ -37,7 +36,6 @@ function setup() {
 
 
   colorCube3D = new ColorCube3D(0, 0, 0);
-  colorAxes3D = new ColorAxes3D(colorCube3D.width * 1.2, numCols, boxSize, boxMargin);
   colorCube3D.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
@@ -54,7 +52,6 @@ function draw() {
   background(100);
   fill(255);
 
-  colorAxes3D.draw();
   colorCube3D.draw();
   //draw3DColorGrid();
 

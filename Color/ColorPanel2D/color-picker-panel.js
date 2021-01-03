@@ -2,9 +2,6 @@ class RgbColorPickerPanel extends ColorPanel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
-
-    this.prevColor = color(0);
-
     this.colorPanels = [];
 
     //TODO: if mouse moved outside of RgbColorPickerPanel, then switch off hover? Otherwise, weird lingering hover.
@@ -138,16 +135,22 @@ class RgbColorPickerPanel extends ColorPanel {
   }
 
   static setSelectedColorOfChildren(rgbPanel, newSelectedColor, exceptPanel = null) {
+    if(!(newSelectedColor instanceof p5.Color)){
+      print("We are here", newSelectedColor);
+      newSelectedColor = ColorPanel.parseColor(newSelectedColor);
+    }
+
     for (let colorPanel of rgbPanel.colorPanels) {
       if (colorPanel instanceof ColorPanel && colorPanel != exceptPanel) {
         colorPanel.setSelectedColor(newSelectedColor);
       }
     }
 
-    rgbPanel.prevColor = color(rgbPanel.selectedColor);
-    rgbPanel.prevColorPanel.fillColor = rgbPanel.prevColor;
+    // TODO update this
+    let prevColor = newSelectedColor;
+    print(rgbPanel.prevColor);
+    rgbPanel.prevColorPanel.fillColor = rgbPanel.curColorPanel.fillColor
 
-    rgbPanel.selectedColor = newSelectedColor;
     rgbPanel.curColorPanel.fillColor = newSelectedColor;
   }
 }

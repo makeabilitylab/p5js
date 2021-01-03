@@ -142,7 +142,9 @@ class ColorPanel extends Panel {
 
   static parseColor(possibleColor) {
     //print("possibleColor type", typeof possibleColor);
-    if ('levels' in possibleColor) {
+    if (possibleColor instanceof p5.Color){
+      return possibleColor;
+    }else if ('levels' in possibleColor) {
       //print("levels is in possibleColor", typeof possibleColor.levels);
       //print("Array.isArray", Array.isArray(possibleColor.levels));
       //print(possibleColor.levels);

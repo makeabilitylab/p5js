@@ -1,20 +1,5 @@
-
-
-let angle = 0;
-let boxSize = 10;
-let boxMargin = 2;
-
-const maxColor = 255;
-const numCols = 10;
-let colorStep = maxColor / numCols;
-
 let pFrameRate;
 let myFont;
-
-let selectedColor;
-
-let colorAxes3D;
-let colorCube3D;
 
 let rgbColorPickerPanel;
 
@@ -47,23 +32,7 @@ function draw() {
   // orbitControl();
   rgbColorPickerPanel.draw();
   pFrameRate.html(nfc(frameRate(), 1) + " fps");
-
-  
 }
-
-function setSelectedColor(c){
-  selectedColor = c;
-  rgbColorPickerPanel.setSelectedColor(c);
-}
-
-// function getColorPanelAtCoords(x, y){
-//   for(colorPanel of colorPanels){
-//     if(colorPanel.contains(x, y)){
-//       return colorPanel;
-//     }
-//   }
-//   return null;
-// }
 
 function mousePressed(){
   let colorPanelAtMouse = rgbColorPickerPanel.getColorPanelAtCoords(mouseX, mouseY);

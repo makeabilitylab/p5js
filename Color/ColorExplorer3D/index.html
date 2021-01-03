@@ -41,6 +41,7 @@
     - [fixed] there is a bug in the color sliders when setting a color, sometimes other sliders are affected
     - [] is there a bug in printing out the hex color?
     - [done] add hover and selected color to html?
+    - [] add keyboard support to color slider
   -->
   <script>
     setInterval(outputFrameRate, 500);
@@ -66,9 +67,9 @@
       let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
         'rgbColorPickerPanel'];
       let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
-      if (sender === rgbColorPickerPanel2d) {
+      if (sender === rgbColorPickerPanel2d && colorCube) {
         colorCube.setHoverColor(newHoverColor);
-      } else if (sender === colorCube) {
+      } else if (sender === colorCube && rgbColorPickerPanel2d) {
         rgbColorPickerPanel2d.setHoverColor(newHoverColor);
       }
     }
@@ -82,9 +83,9 @@
       let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
         'rgbColorPickerPanel'];
       let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
-      if (sender === rgbColorPickerPanel2d) {
+      if (sender === rgbColorPickerPanel2d && colorCube) {
         colorCube.setSelectedColor(newSelectedColor);
-      } else if (sender === colorCube) {
+      } else if (sender === colorCube && rgbColorPickerPanel2d) {
         rgbColorPickerPanel2d.setSelectedColor(newSelectedColor);
       }
     }
