@@ -70,14 +70,23 @@
       document.getElementById("hover-color").innerHTML = newHoverColor;
 
       // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
-      let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
-        'rgbColorPickerPanel'];
-      let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
+      let rgbColorPickerPanel2d = getColorPickerPanel();
+      let colorCube = getColorCube();
       if (sender === rgbColorPickerPanel2d && colorCube) {
         colorCube.setHoverColor(newHoverColor);
       } else if (sender === colorCube && rgbColorPickerPanel2d) {
         rgbColorPickerPanel2d.setHoverColor(newHoverColor);
       }
+    }
+
+    function getColorPickerPanel(){
+      // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
+      return document.getElementById('color-picker-2d-iframe').contentWindow['rgbColorPickerPanel'];
+    }
+
+    function getColorCube(){
+      // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
+      return document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
     }
 
     function broadcastNewSelectedColor(sender, newSelectedColor) {
@@ -86,9 +95,8 @@
       document.getElementById("selected-color").innerHTML = newSelectedColor;
 
       // To get global vars in iframes, see: https://stackoverflow.com/a/7647192
-      let rgbColorPickerPanel2d = document.getElementById('color-picker-2d-iframe').contentWindow[
-        'rgbColorPickerPanel'];
-      let colorCube = document.getElementById('color-cube-iframe').contentWindow['colorCube3D'];
+      let rgbColorPickerPanel2d = getColorPickerPanel();
+      let colorCube = getColorCube();
       if (sender === rgbColorPickerPanel2d && colorCube) {
         colorCube.setSelectedColor(newSelectedColor);
       } else if (sender === colorCube && rgbColorPickerPanel2d) {
