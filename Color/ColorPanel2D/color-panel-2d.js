@@ -1,3 +1,17 @@
+/**
+ * Provides a 2D color picker panel. The two dimensions are settable via ColorAxes2D and
+ * can be Red-green, Red-blue, or Green-blue.
+ * 
+ * To see a demo, see:
+ * - http://makeabilitylab.github.io/p5js/Color/ColorPanel2D 
+ * - https://makeabilitylab.github.io/p5js/Color/ColorExplorer3D
+ * 
+ * By Professor Jon E. Froehlich
+ * https://jonfroehlich.github.io/
+ * http://makeabilitylab.cs.washington.edu
+ * 
+ */
+
 // Enum formulation from: https://stackoverflow.com/a/44447975/388117
 const ColorAxes2D = Object.freeze({
   RED_GREEN: Symbol("Red-green"),

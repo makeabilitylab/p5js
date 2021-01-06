@@ -40,3 +40,7 @@ function mouseDragged(){
 function mouseMoved(){
   rgbColorPickerPanel.mouseMoved();
 }
+
+function keyPressed(){
+  rgbColorPickerPanel.keyPressed();
+}

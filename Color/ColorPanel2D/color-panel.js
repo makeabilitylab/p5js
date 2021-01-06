@@ -50,6 +50,10 @@ class Panel {
       y <= (this.y + this.height); // check within bottom edge
   }
 
+  keyPressed(){
+    
+  }
+
   mousePressed() {
 
   }

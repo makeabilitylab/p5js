@@ -1,3 +1,15 @@
+/**
+ * Shows a color slider that can be controlled by the mouse or keyboard
+ * 
+ * To see a demo, see:
+ * - http://makeabilitylab.github.io/p5js/Color/ColorPanel2D 
+ * - https://makeabilitylab.github.io/p5js/Color/ColorExplorer3D
+ * 
+ * By Professor Jon E. Froehlich
+ * https://jonfroehlich.github.io/
+ * http://makeabilitylab.cs.washington.edu
+ */
+
 const SliderColorType = Object.freeze({
   RED: Symbol("Red"),
   GREEN: Symbol("Green"),
@@ -69,12 +81,14 @@ class ColorSliderPanel extends ColorPanel {
 
     const thumbRadius = 5;
 
+    // setup the track
     let trackMargin = (thumbRadius * 0.8) + 3;
     let trackWidth = this.width - 2 * trackMargin;
     let xTrack = trackMargin;
     let yTrack = this.height / 2 + 5;
     this.track = new Track(xTrack, yTrack, trackWidth);
 
+    // setup the thumb
     this.thumbMain = new Thumb(xTrack, yTrack, thumbRadius);
     this.thumbHover = new Thumb(xTrack, yTrack, thumbRadius - 2, true);
 
@@ -84,6 +98,8 @@ class ColorSliderPanel extends ColorPanel {
 
     this.minValue = 0;
     this.maxValue = 255;
+
+    this.stepValue = 5; //used for keyboard
   }
 
   setHoverColor(hoverColor) {
@@ -102,6 +118,33 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.x = map(this.thumbMain.value, this.minValue, this.maxValue, this.track.x, this.track.getRight());
   }
 
+  keyPressed(){
+    print("keypressed", keyCode);
+    let sliderColorAndValue = ColorSliderPanel.getSliderColorAndValue(this.sliderColorType, this.selectedColor);
+    
+    let oldThumbVal = this.thumbMain.value;
+    let newThumbVal = this.thumbMain.value;
+
+    switch (keyCode) {
+      case LEFT_ARROW:
+        newThumbVal -= this.stepValue;
+        newThumbVal = constrain(newThumbVal, 0, 255);
+        break;
+      case RIGHT_ARROW:
+        newThumbVal += this.stepValue;
+        newThumbVal = constrain(newThumbVal, 0, 255);
+        break;
+    }
+
+    if(oldThumbVal !== newThumbVal){
+      let sliderColors = ColorSliderPanel.getSliderColor(this.sliderColorType, newThumbVal, this.selectedColor);
+      this.setSelectedColor(sliderColors.fullColor);
+      this.fireNewSelectedColorEvent(sliderColors.fullColor);
+    }
+    
+    super.keyPressed();
+  }
+
   mousePressed() {
     this.thumbMain.x = constrain(mouseX, this.track.x, this.track.getRight());
     this.thumbMain.value = map(this.thumbMain.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
@@ -109,6 +152,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.color = sliderColors.thumbColor;
     super.setSelectedColor(sliderColors.fullColor);
     this.fireNewSelectedColorEvent(sliderColors.fullColor);
+    super.mousePressed();
   }
 
   mouseDragged() {
@@ -118,6 +162,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.color = sliderColors.thumbColor;
     super.setSelectedColor(sliderColors.fullColor);
     this.fireNewSelectedColorEvent(sliderColors.fullColor);
+    super.mouseDragged();
   }
 
   mouseMoved() {
@@ -127,6 +172,7 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbHover.color = sliderColors.thumbColor;
     super.setHoverColor(sliderColors.fullColor);
     this.fireNewHoverColorEvent(sliderColors.fullColor);
+    super.mouseMoved();
   }
 
   draw() {
@@ -192,6 +238,15 @@ class ColorSliderPanel extends ColorPanel {
     };
   }
 
+  /**
+   * Sliders could show a full RGB color or just a color intensity for red, green, or blue
+   * This is a helper function that extracts the color intensity both for an individual channel
+   * as well as full color
+   * 
+   * @param {SliderColorType} sliderColorType 
+   * @param {Number} val color intensity value between 0 - 255
+   * @param {p5.Color} col the base color
+   */
   static getSliderColor(sliderColorType, val, col) {
     let thumbColor;
     let fullColor;

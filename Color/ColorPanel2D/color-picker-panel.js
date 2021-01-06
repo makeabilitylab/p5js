@@ -1,3 +1,16 @@
+/**
+ * Incorporates 1D and 2D RGB color pickers
+ * 
+ * To see a demo, see:
+ * - http://makeabilitylab.github.io/p5js/Color/ColorPanel2D 
+ * - https://makeabilitylab.github.io/p5js/Color/ColorExplorer3D
+ * 
+ * By Professor Jon E. Froehlich
+ * https://jonfroehlich.github.io/
+ * http://makeabilitylab.cs.washington.edu
+ * 
+ */
+
 class RgbColorPickerPanel extends ColorPanel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
@@ -78,6 +91,13 @@ class RgbColorPickerPanel extends ColorPanel {
       RgbColorPickerPanel.setSelectedColorOfChildren(rgbPanel, newSelectedColor, sender);
 
       rgbPanel.fireNewSelectedColorEvent(newSelectedColor);
+    }
+  }
+
+  keyPressed() {
+    let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
+    if (colorPanelAtMouse) {
+      colorPanelAtMouse.keyPressed();
     }
   }
 
