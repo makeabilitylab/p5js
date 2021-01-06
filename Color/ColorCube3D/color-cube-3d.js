@@ -64,6 +64,19 @@ class ColorCube3D extends ColorPanel3D {
     this.colorAxes3D = new ColorAxes3D(this);
   }
 
+  setNumCols(numCols){
+    numCols = constrain(numCols, 1, 255);
+    if(numCols !== this.numCols){
+      this.numCols = numCols;
+      let cubeSize = ColorCube3D.calcCubeSize(this.numCols, this.boxSize, this.boxMargin);
+      this.width = cubeSize;
+      this.height = cubeSize;
+      this.depth = cubeSize;
+      this.colorAxes3D.axisLength = this.width * 1.1;
+    }
+    return this.numCols;
+  }
+
   /**
    * Calculates the closest color on the 3D cube (since the cube is discretized)
    * @param {p5.Color} c 
