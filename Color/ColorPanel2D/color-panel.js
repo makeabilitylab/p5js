@@ -89,6 +89,8 @@ class ColorPanel extends Panel {
 
     this.hoverColor = color(0);
     this.selectedColor = color(0);
+
+    this.showHoverColor = true;
   }
 
   on(label, callback) {

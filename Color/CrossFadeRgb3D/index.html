@@ -69,14 +69,14 @@
     const RGB_INDEX_GREEN = 1;
     const RGB_INDEX_BLUE = 2;
     const MAX_COLOR_VALUE = 255;
-    var fadeStep = 5;
+    var fadeStep = 15;
     var rgbValues = [255, 0, 0];
 
     var curFadingUpColor = RGB_INDEX_GREEN;
     var curFadingDownColor = RGB_INDEX_RED;
 
     function fadeColorLoop() {
-      console.log(rgbValues);
+      //console.log(rgbValues);
 
       // Increment and decrement the RGB LED values for the current
       // fade up color and the current fade down color

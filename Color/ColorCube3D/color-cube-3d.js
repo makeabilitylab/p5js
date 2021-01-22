@@ -62,6 +62,8 @@ class ColorCube3D extends ColorPanel3D {
     this.hoverColorBehavior = SelectedColorRenderBehavior.SHOW_SELECTED_COLUMNS;
 
     this.colorAxes3D = new ColorAxes3D(this);
+
+    this.showBackground = false;
   }
 
   setNumCols(numCols) {
@@ -203,6 +205,13 @@ class ColorCube3D extends ColorPanel3D {
   draw() {
     //print(this.selectedColor, this.getCubeForColor(this.selectedColor));
     //print(this.selectedColor, this.getCubeLocationForColor(this.selectedColor));
+    if(this.showBackground){
+      //push();
+      //fill(this.selectedColor);
+      background(this.selectedColor);
+      //pop();
+    }
+
     this.colorAxes3D.draw();
     this.drawSelection(this.selectedColor, this.selectedColorBehavior, false);
 
