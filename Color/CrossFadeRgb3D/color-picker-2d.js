@@ -4,6 +4,7 @@ function setup() {
   createCanvas(600, 120);
 
   rgbColorPickerPanel = new RgbColorPickerPanel(0, 0, width, height);
+  rgbColorPickerPanel.setShowHoverColor(false);
   rgbColorPickerPanel.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);
   rgbColorPickerPanel.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
@@ -23,6 +24,18 @@ function draw() {
   background(0);
 
   rgbColorPickerPanel.draw();
+}
+
+function mousePressed(){
+  rgbColorPickerPanel.mousePressed();
+}
+
+function mouseReleased(){
+  rgbColorPickerPanel.mouseReleased();
+}
+
+function mouseDragged(){
+  rgbColorPickerPanel.mouseDragged();
 }
 
 function mouseMoved(){

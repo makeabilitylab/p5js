@@ -64,9 +64,9 @@ class ColorCube3D extends ColorPanel3D {
     this.colorAxes3D = new ColorAxes3D(this);
   }
 
-  setNumCols(numCols){
+  setNumCols(numCols) {
     numCols = constrain(numCols, 1, 255);
-    if(numCols !== this.numCols){
+    if (numCols !== this.numCols) {
       this.numCols = numCols;
       let cubeSize = ColorCube3D.calcCubeSize(this.numCols, this.boxSize, this.boxMargin);
       this.width = cubeSize;
@@ -95,7 +95,7 @@ class ColorCube3D extends ColorPanel3D {
     return ColorCube3D.getCubeForColor(c, this.numCols);
   }
 
-  static getCubeForColor(c, numCols){
+  static getCubeForColor(c, numCols) {
     let xCol = floor(map(red(c), 0, 255, 0, numCols - 1));
     let yCol = floor(map(green(c), 0, 255, 0, numCols - 1));
     let zCol = floor(map(blue(c), 0, 255, 0, numCols - 1));
@@ -134,7 +134,7 @@ class ColorCube3D extends ColorPanel3D {
     return ColorCube3D.getCubeLocationForCube(cube, this.boxSize, this.boxMargin);
   }
 
-  static getCubeLocationForCube(cube, boxSize, boxMargin){
+  static getCubeLocationForCube(cube, boxSize, boxMargin) {
     let x = cube[0] * (boxSize + boxMargin);
     let y = -cube[1] * (boxSize + boxMargin);
     let z = cube[2] * (boxSize + boxMargin);
@@ -205,7 +205,10 @@ class ColorCube3D extends ColorPanel3D {
     //print(this.selectedColor, this.getCubeLocationForColor(this.selectedColor));
     this.colorAxes3D.draw();
     this.drawSelection(this.selectedColor, this.selectedColorBehavior, false);
-    this.drawSelection(this.hoverColor, this.hoverColorBehavior, true);
+
+    if (this.showHoverColor) {
+      this.drawSelection(this.hoverColor, this.hoverColorBehavior, true);
+    }
   }
 
   drawSelection(selColor, renderBehavior, isHover) {
@@ -269,7 +272,7 @@ class ColorCube3D extends ColorPanel3D {
    * @param {Array} selCube Array of xCol, yCol, zCol
    */
   drawColumn(columnAxis, selCube, isHover, startIndex = 0, endIndex = -1) {
-    if(endIndex == -1){
+    if (endIndex == -1) {
       endIndex = selCube[columnAxis]
     }
     for (let columnIndex = startIndex; columnIndex < endIndex; columnIndex++) {
@@ -291,7 +294,7 @@ class ColorCube3D extends ColorPanel3D {
 
   keyPressed() {
     let selectedCube = this.getCubeForColor(this.selectedColor);
-    
+
     switch (keyCode) {
       case LEFT_ARROW:
         selectedCube[0] = max(0, selectedCube[0] - 1);
@@ -334,7 +337,7 @@ class ColorCube3D extends ColorPanel3D {
 
 class ColorAxes3D {
 
-  constructor(colorCube3D){
+  constructor(colorCube3D) {
     this.colorCube3D = colorCube3D;
     this.axisLength = colorCube3D.width * 1.1;
     this.axisRadius = 2;
@@ -353,7 +356,7 @@ class ColorAxes3D {
     this.drawTickMarks();
   }
 
-  drawTickMarks(){
+  drawTickMarks() {
 
     let cubeForSelColor = this.colorCube3D.getCubeForColor(colorCube3D.selectedColor);
     let cubeForHoverColor = this.colorCube3D.getCubeForColor(colorCube3D.hoverColor);
@@ -361,18 +364,18 @@ class ColorAxes3D {
     const selColMarkSize = 5;
 
     push();
-    
+
     // put axes right on the edges of the boxes (rather than through center)
     translate(-colorCube3D.boxSize / 2, colorCube3D.boxSize / 2, -colorCube3D.boxSize / 2);
 
     // draw y-axis (green) ticks and tick labels
     push();
     textSize(this.tickFontSize);
-    for(let yCol = 0; yCol < this.colorCube3D.numCols; yCol++){
+    for (let yCol = 0; yCol < this.colorCube3D.numCols; yCol++) {
       const cube = [0, yCol, 0];
       const c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
       const cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);
-      
+
       // setup and draw tick location
       const x = cubeLoc[0] - this.colorCube3D.boxSize / 2 - this.tickMarkLength;
       const y = cubeLoc[1] - this.colorCube3D.boxSize / 2;
@@ -387,14 +390,14 @@ class ColorAxes3D {
       text(lblTick, lblXLoc, y + textSize() / 3);
 
       // mark locations
-      if(yCol === cubeForHoverColor[1]){
+      if (yCol === cubeForHoverColor[1]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
         line(markX, y, markX + hoverMarkSize, y);
       }
-      
-      if(yCol === cubeForSelColor[1]){
+
+      if (yCol === cubeForSelColor[1]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - selColMarkSize / 2 - 3;
@@ -407,11 +410,11 @@ class ColorAxes3D {
     push();
     textSize(this.tickFontSize);
     rotateX(HALF_PI);
-    for(let zCol = 0; zCol < this.colorCube3D.numCols; zCol++){
+    for (let zCol = 0; zCol < this.colorCube3D.numCols; zCol++) {
       const cube = [0, 0, zCol];
       const c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
       const cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);
-      
+
       // setup and draw tick location
       const x = cubeLoc[0] - this.colorCube3D.boxSize / 2 - this.tickMarkLength;
       const y = cubeLoc[2] + this.colorCube3D.boxSize / 2;
@@ -426,14 +429,14 @@ class ColorAxes3D {
       text(lblTick, lblXLoc, y + textSize() / 3);
 
       // mark locations
-      if(zCol === cubeForHoverColor[2]){
+      if (zCol === cubeForHoverColor[2]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
         line(markX, y, markX + hoverMarkSize, y);
       }
-      
-      if(zCol === cubeForSelColor[2]){
+
+      if (zCol === cubeForSelColor[2]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - selColMarkSize / 2 - 3;
@@ -445,11 +448,11 @@ class ColorAxes3D {
     // draw x-axis (red) ticks and labels
     push();
     rotateZ(-HALF_PI);
-    for(let xCol = 0; xCol < this.colorCube3D.numCols; xCol++){
+    for (let xCol = 0; xCol < this.colorCube3D.numCols; xCol++) {
       const cube = [xCol, 0, 0];
       const c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
       const cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);
-      
+
       // setup and draw tick location
       const x = cubeLoc[1] - this.colorCube3D.boxSize / 2 - this.tickMarkLength;
       const y = cubeLoc[0] + this.colorCube3D.boxSize / 2;
@@ -464,14 +467,14 @@ class ColorAxes3D {
       text(lblTick, lblXLoc, y + textSize() / 3);
 
       // mark locations
-      if(xCol === cubeForHoverColor[0]){
+      if (xCol === cubeForHoverColor[0]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - hoverMarkSize - 3;
         line(markX, y, markX + hoverMarkSize, y);
       }
-      
-      if(xCol === cubeForSelColor[0]){
+
+      if (xCol === cubeForSelColor[0]) {
         noFill();
         stroke(c);
         let markX = lblXLoc - selColMarkSize / 2 - 3;
@@ -483,9 +486,9 @@ class ColorAxes3D {
     pop();
   }
 
-  drawAxes(){
+  drawAxes() {
     push();
-    
+
     // put axes right on the edges of the boxes (rather than through center)
     translate(-colorCube3D.boxSize / 2, colorCube3D.boxSize / 2, -colorCube3D.boxSize / 2);
 
@@ -509,7 +512,7 @@ class ColorAxes3D {
     text(lbl, -lblWidth / 2, 14);
     pop();
 
-    
+
     // draw z-axis (blue) and z-axis title
     push();
     rotateX(HALF_PI);
@@ -548,14 +551,14 @@ class ColorAxes3D {
     pop();
   }
 
-  drawGrid(){
+  drawGrid() {
     // draw green (y) and red (x) outline grid
     push();
     noFill();
     translate(0, 0, -this.colorCube3D.boxSize / 2);
     rectMode(CENTER); // p5js 3D mode draws boxes through center, so match this with 2D
-    for(let xCol = 0; xCol < this.colorCube3D.numCols; xCol++){
-      for(let yCol = 0; yCol < this.colorCube3D.numCols; yCol++){
+    for (let xCol = 0; xCol < this.colorCube3D.numCols; xCol++) {
+      for (let yCol = 0; yCol < this.colorCube3D.numCols; yCol++) {
         let cube = [xCol, yCol, 0];
         let c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
         let cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);
@@ -571,8 +574,8 @@ class ColorAxes3D {
     translate(0, this.colorCube3D.boxSize / 2, 0);
     rotateX(HALF_PI);
     rectMode(CENTER);
-    for(let xCol = 0; xCol < this.colorCube3D.numCols; xCol++){
-      for(let zCol = 0; zCol < this.colorCube3D.numCols; zCol++){
+    for (let xCol = 0; xCol < this.colorCube3D.numCols; xCol++) {
+      for (let zCol = 0; zCol < this.colorCube3D.numCols; zCol++) {
         let cube = [xCol, 0, zCol];
         let c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
         let cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);
@@ -589,8 +592,8 @@ class ColorAxes3D {
     rotateX(HALF_PI);
     rotateY(HALF_PI);
     rectMode(CENTER);
-    for(let yCol = 0; yCol < this.colorCube3D.numCols; yCol++){
-      for(let zCol = 0; zCol < this.colorCube3D.numCols; zCol++){
+    for (let yCol = 0; yCol < this.colorCube3D.numCols; yCol++) {
+      for (let zCol = 0; zCol < this.colorCube3D.numCols; zCol++) {
         let cube = [0, yCol, zCol];
         let c = ColorCube3D.getColorForCube(cube, this.colorCube3D.numCols);
         let cubeLoc = ColorCube3D.getCubeLocationForCube(cube, this.colorCube3D.boxSize, this.colorCube3D.boxMargin);

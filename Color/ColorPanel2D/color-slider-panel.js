@@ -118,10 +118,10 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.x = map(this.thumbMain.value, this.minValue, this.maxValue, this.track.x, this.track.getRight());
   }
 
-  keyPressed(){
+  keyPressed() {
     print("keypressed", keyCode);
     let sliderColorAndValue = ColorSliderPanel.getSliderColorAndValue(this.sliderColorType, this.selectedColor);
-    
+
     let oldThumbVal = this.thumbMain.value;
     let newThumbVal = this.thumbMain.value;
 
@@ -136,12 +136,12 @@ class ColorSliderPanel extends ColorPanel {
         break;
     }
 
-    if(oldThumbVal !== newThumbVal){
+    if (oldThumbVal !== newThumbVal) {
       let sliderColors = ColorSliderPanel.getSliderColor(this.sliderColorType, newThumbVal, this.selectedColor);
       this.setSelectedColor(sliderColors.fullColor);
       this.fireNewSelectedColorEvent(sliderColors.fullColor);
     }
-    
+
     super.keyPressed();
   }
 
@@ -191,7 +191,10 @@ class ColorSliderPanel extends ColorPanel {
     // draw track and thumbs
     this.track.draw();
     this.thumbMain.draw();
-    this.thumbHover.draw();
+
+    if (this.showHoverColor) {
+      this.thumbHover.draw();
+    }
 
     // draw text
     textSize(this.fontSize);

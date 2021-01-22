@@ -67,6 +67,12 @@ class RgbColorPickerPanel extends ColorPanel {
     }
   }
 
+  setShowHoverColor(visibility){
+    for (let colorPanel of this.colorPanels) {
+      colorPanel.showHoverColor = visibility;
+    }
+  }
+
   setSelectedColor(newSelectedColor) {
     super.setSelectedColor(newSelectedColor);
     RgbColorPickerPanel.setSelectedColorOfChildren(this, this.selectedColor);

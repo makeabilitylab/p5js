@@ -246,7 +246,7 @@ class ColorPanel2D extends ColorPanel {
       ellipse(selColorCoords.x, selColorCoords.y, 4);
     }
 
-    if (this.hoverColor) {
+    if (this.hoverColor && this.showHoverColor) {
       noFill();
       stroke(255);
       let selColorCoords = this.getPixelForColor(this.hoverColor);
