@@ -18,7 +18,7 @@ function setup() {
 
   colorCube3D = new ColorCube3D(0, 0, 0, 17);
   colorCube3D.showHoverColor = false;
-  colorCube3D.showBackground = true;
+  colorCube3D.showBackground = false;
   colorCube3D.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
