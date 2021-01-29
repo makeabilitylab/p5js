@@ -17,10 +17,12 @@
 let myFont;
 
 var colorCube3D;
+let hoverColor;
 
 function preload() {
   //font = textFont("Inconsolata");
   myFont = loadFont('assets/AvenirNextLTPro-Demi.ttf');
+  hoverColor = color(100);
 }
 
 function setup() {
@@ -35,10 +37,13 @@ function setup() {
   colorCube3D = new ColorCube3D(0, 0, 0);
   colorCube3D.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
+
+  colorCube3D.setSelectedColor(color(100));
 }
 
 function onNewHoverColorEvent(sender, newHoverColor) {
   print("color-cube onNewHoverColorEvent", sender, newHoverColor);
+  //hoverColor = ColorPanel.parseColor(newHoverColor);
 }
 
 function onNewSelectedColorEvent(sender, newSelectedColor) {
@@ -47,7 +52,8 @@ function onNewSelectedColorEvent(sender, newSelectedColor) {
 }
 
 function draw() {
-  background(100);
+  //background(hoverColor);
+  background(colorCube3D.selectedColor);
 
   colorCube3D.draw();
 

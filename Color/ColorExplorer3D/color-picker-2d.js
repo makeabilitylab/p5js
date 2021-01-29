@@ -29,6 +29,10 @@ function mouseMoved(){
   rgbColorPickerPanel.mouseMoved();
 }
 
+function mousePressed(){
+  rgbColorPickerPanel.mousePressed();
+}
+
 function keyPressed(){
   rgbColorPickerPanel.keyPressed();
 }
