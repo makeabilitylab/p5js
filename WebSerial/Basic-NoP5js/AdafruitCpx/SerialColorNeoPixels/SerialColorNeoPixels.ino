@@ -22,6 +22,18 @@ const int DELAY_MS = 5; // set to 0 for no delay between loop calls
 void setup() {
   CircuitPlayground.begin();
   Serial.begin(BAUD_RATE);
+
+  // Set colors into a pretty state. This just lets us know that the program is running 
+  // and we are waiting for serial data
+  for(int i = 0; i < NUM_NEO_PIXELS; i++){
+    // color wheel is a hue color wheel from 0 to 255
+    int wheelPosition = map(i, 0, NUM_NEO_PIXELS, 0, 255);
+
+    // convert to a 24-bit RGB color val
+    // https://caternuson.github.io/Adafruit_CircuitPlayground/colorWheel.html
+    int colorWheelVal = CircuitPlayground.colorWheel(wheelPosition);
+    CircuitPlayground.setPixelColor(i, colorWheelVal);
+  }
 }
 
 void loop() {
