@@ -73,8 +73,9 @@ async function connectSerial() {
     const writableStreamClosed = textEncoder.readable.pipeTo(serialPort.writable);
     serialWriter = textEncoder.writable.getWriter();
 
-    document.getElementById("connect-button").style.visibility = "hidden";
+    document.getElementById("connect-button").style.display = "none";
     document.getElementById("interactive-controls").style.visibility = "visible";
+    document.getElementById("interactive-controls").style.display = "block";
     document.getElementById('error_message').innerHTML = "";
 
     // Now that the serialWriter is established, send out the initial slider value
