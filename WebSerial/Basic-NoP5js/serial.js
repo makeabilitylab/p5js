@@ -1,7 +1,6 @@
 // This code outputs a slider value over Web Serial and also receives serial input and prints to console. 
 // The code is based on https://web.dev/serial/
 //
-// 
 // Currently, this code only works in Chrome because of its reliance on WebUSB (not yet
 // supported in FireFox, Safari, etc.). If you are using a Chrome version earlier than v87, you 
 // may need to enable an experimental flag.
@@ -43,7 +42,7 @@ function onConnectButtonClick() {
   if (navigator.serial) {
     connectSerial();
   } else {
-    alert('Web Serial API not supported.');
+    alert('Web Serial API not supported. Did you remember to enable `experimental-web-platform-features` in Chrome? ');
   }
 }
 
