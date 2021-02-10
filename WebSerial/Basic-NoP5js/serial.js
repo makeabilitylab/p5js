@@ -20,6 +20,9 @@
 // 3. If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
 //    If, instead, it says "undefined" then it didn't work. Try restarting your computer and then Chrome.
 //
+// Some related examples:
+// - https://codelabs.developers.google.com/codelabs/web-serial#0
+//
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 
