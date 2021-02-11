@@ -64,6 +64,6 @@ void loop() {
       CircuitPlayground.setPixelColor(i, val, 0, 0);
     }
   }
-
+  
   delay(10);
 }

@@ -39,7 +39,6 @@ void setup() {
 void loop() {
   if(Serial.available() > 0){
     String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
-    Serial.println(s1);//display same received Data back in serial monitor.
     int val = s1.toInt();
 
     // We expect a value between 0 and 255 (just make sure)
