@@ -19,15 +19,12 @@ function setup() {
   slider.style('width', '80px');
   slider.input(onSliderValueChanged);
   slider.style('visibility', 'hidden');
-
-  // TODO: work on error message
 }
 
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
   pHtmlMsg.html(error);
 }
-
 
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");

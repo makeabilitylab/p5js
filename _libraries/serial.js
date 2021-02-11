@@ -170,7 +170,10 @@ class Serial {
    */
   async connectAndOpen(portFilters = null, serialOptions = { baudRate: 9600 }) {
     await this.connect(null, portFilters);
-    this.open(serialOptions);
+
+    if(this.serialPort){
+      this.open(serialOptions);
+    }
   }
 
   /**

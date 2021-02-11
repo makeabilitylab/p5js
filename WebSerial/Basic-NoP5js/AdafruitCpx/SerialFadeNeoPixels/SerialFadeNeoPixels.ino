@@ -29,7 +29,7 @@ void setup() {
   CircuitPlayground.begin();
   Serial.begin(BAUD_RATE);
 
-  // Set colors into a pretty state. This just lets us know that the program is running 
+  // Set CPX colors into a pretty state. This just lets us know that the program is running 
   // and we are waiting for serial data
   for(int i = 0; i < NUM_NEO_PIXELS; i++){
     // color wheel is a hue color wheel from 0 to 255
@@ -61,6 +61,10 @@ void loop() {
 
     // Iterate through all NeoPixel LEDs and set the red brightness level
     for(int i = 0; i < NUM_NEO_PIXELS; i++){
+      
+      // Sets a NeoPixel to the specified color
+      // setPixelColor(p, r, g, b) where p = the NeoPixel index
+      // and r, g, b are 0-255 values for red, green, and blue
       CircuitPlayground.setPixelColor(i, val, 0, 0);
     }
   }

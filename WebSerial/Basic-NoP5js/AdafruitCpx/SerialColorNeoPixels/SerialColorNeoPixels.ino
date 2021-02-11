@@ -7,6 +7,9 @@
  * Serial API for web browsers (currently only works with Chrome). This new API allows 
  * developers to write JavaScript code in a web browser to read/write data over the serial
  * port, including to devices like Arduino.
+ * 
+ * You can read the CircuitPlayground color wheel source code here:
+ * https://github.com/adafruit/Adafruit_CircuitPlayground/blob/336c4c1914fc13071d1c6248f0b00128888809af/Adafruit_CircuitPlayground.cpp
  *
  * By Jon E. Froehlich
  * @jonfroehlich
