@@ -1,3 +1,13 @@
+// This sketch demonstrates how to send and receive data over WebUSB's serial.
+//
+// This p5.js sketch is intended to run with the following Circuit
+// Playground Express program. Your CPX must be connected and running
+// this Arduino code to work with this website:
+// https://github.com/makeabilitylab/p5js/tree/master/WebSerial/ColorIO/AdafruitCpx/CpxColorIO
+//
+// By Jon E. Froehlich
+// http://makeabilitylab.io/
+
 let sliderInFromSerial;
 let sliderOutToSerial;
 
@@ -85,7 +95,7 @@ function onSerialDataReceived(eventSender, newData) {
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   // Check if data received starts with '#'. If so, ignore it
-  // Otherwise, parse it!
+  // Otherwise, parse it! We ignore lines that start with '#' 
   if(!newData.startsWith("#")){
     serialInputRgb = ColorUtils.rgbToRgb(newData);
 

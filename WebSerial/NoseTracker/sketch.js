@@ -1,5 +1,9 @@
-// This sketch draws a nose and two eyes on a human face. It is based on
-// this "Hour of Code" Coding Train video by Daniel Shiffman: https://youtu.be/EA3-k9mnLHs
+// This sketch draws a nose and two eyes on a human face using ml5js
+// and then transmits the x position of the nose (normalized from 0 to 100)
+// over WebUSB
+//
+// This sketch is loosely based this "Hour of Code" Coding Train video 
+// by Daniel Shiffman: https://youtu.be/EA3-k9mnLHs
 //
 // This Sketch uses ml5js, a Machine Learning JavaScript library that
 // works well with p5js. ml5js provides lots of interesting methods

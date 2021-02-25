@@ -1,3 +1,16 @@
+// This sketch demonstrates how to send three comma separated values over 
+// WebUSB using serial. On a mouse click, it will transmit a comma separated
+// value string of R, G, B where each value corresponds to red, green, blue
+// of 0 to 255 intensity
+//
+// This p5.js sketch is intended to run with the following Circuit
+// Playground Express program. Your CPX must be connected and running
+// this Arduino code to work with this website:
+// https://github.com/makeabilitylab/p5js/tree/master/WebSerial/ColorSerialOut/AdafruitCpx/CpxColorSerialIn
+//
+// By Jon E. Froehlich
+// http://makeabilitylab.io/
+
 let serial;
 let pHtmlMsg;
 let serialConnectButton;
@@ -54,6 +67,7 @@ function onSerialDataReceived(eventSender, newData) {
 function draw() {
   background(220);
 
+  // Draw the pretty hue gradient with max saturation and brightness
   for(x = 0; x < width; x++){
     let hue = x / width;
     let rgb = ColorUtils.hsvToRgb(hue, 1, 1);
@@ -62,10 +76,12 @@ function draw() {
     line(x, 0, x, height);
   }
 
+  // Draw current mouse position as a vertical line
   stroke(255);
   line(mouseX, 0, mouseX, height);
   
- 
+  // If the mouse has been pressed and an RGB value saved
+  // then draw that to the screen
   if(mouseXSaved && rgbSaved){
     stroke(0);
     line(mouseXSaved, 0, mouseXSaved, height);
@@ -78,6 +94,8 @@ function draw() {
 }
 
 function mousePressed(){
+  // When the mouse is pressed, check to see if the serial device is open and connected
+  // And, if so, save the mouse position and convert it to a color
   if(serial.isOpen()){
     mouseXSaved = mouseX;
     let hue = mouseXSaved / width;

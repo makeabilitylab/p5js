@@ -1,3 +1,21 @@
+// This sketch demonstrates how to use a slider to send a value over
+// WebUSB's serial connection. It transmits a value between 0 and 255.
+//
+// This p5.js sketch is intended to run with the following Circuit
+// Playground Express programs. Your CPX must be connected and running
+// this Arduino code to work with this website. You can either use:
+//
+// SerialColorNeoPixels
+// Changes the color of the NeoPixels depending on the slider's position:
+// https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialColorNeoPixels
+//
+// SerialFadeNeoPixels
+// Changes the brightness of the NeoPixels depending on the slider's position:
+// https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialFadeNeoPixels
+//
+// By Jon E. Froehlich
+// http://makeabilitylab.io/
+
 let slider;
 let serial;
 let pHtmlMsg;
@@ -46,6 +64,7 @@ function onSerialDataReceived(eventSender, newData) {
 function onSliderValueChanged() {
   console.log("Slider:", slider.value());
 
+  // If the serial connection is open, send the slider value
   if (serial.isOpen()) {
     serial.writeLine(slider.value());
   }
