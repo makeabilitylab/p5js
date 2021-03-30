@@ -17,6 +17,11 @@ p5js repo for teaching
 * [Noise2D](https://makeabilitylab.github.io/p5js/PerlinNoise/Noise2D/): Explore [Perlin Noise](https://en.wikipedia.org/wiki/Perlin_noise) in 2D
 
 ## Vectors
-[Angle Explorer](https://makeabilitylab.github.io/p5js/Vectors/AngleExplorer/): Shows how to use vectors to calculate angles
-[Angle Playground](https://makeabilitylab.github.io/p5js/Vectors/AnglePlayground/): Draw two arrows and calculate angle between them
-[Bouncing balls and line segments](https://makeabilitylab.github.io/p5js/Vectors/BouncingBallsAndLineSegmentsImproved/): Demonstrates how to use vectors to calculate vectors and reflecting collisions
+* [Angle Explorer](https://makeabilitylab.github.io/p5js/Vectors/AngleExplorer/): Shows how to use vectors to calculate angles
+* [Angle Playground](https://makeabilitylab.github.io/p5js/Vectors/AnglePlayground/): Draw two arrows and calculate angle between them
+* [Bouncing balls and line segments](https://makeabilitylab.github.io/p5js/Vectors/BouncingBallsAndLineSegmentsImproved/): Demonstrates how to use vectors to calculate vectors and reflecting collisions
+
+## Computer Vision
+* [Hand pose demo](https://makeabilitylab.github.io/p5js/ml5js/Handpose/Demo/): demonstration of the [ml5js](https://ml5js.org/) [handpose library](https://learn.ml5js.org/#/reference/handpose)
+* [Hand wave recognizer](https://makeabilitylab.github.io/p5js/ml5js/Handpose/HandWaveDetector/): wave your hand at the camera
+* [Elmo generator](https://github.com/makeabilitylab/p5js/tree/master/ml5js/PoseNet/ElmoGeneratorMultiperson): turn you and your friends into Elmo in realtime! Uses the [ml5js PoseNet implementation](https://ml5js.org/reference/api-PoseNet/)
