@@ -1,4 +1,10 @@
-// From https://stackoverflow.com/a/17243070
+// A collection of color utility functions. Most are based from code I've found on the web, including:
+//  - https://stackoverflow.com/a/17243070
+//  - https://stackoverflow.com/a/5624139
+//
+// By Jon E. Froehlich
+// http://makeabilitylab.io/
+//
 
 class ColorUtils {
   /**
