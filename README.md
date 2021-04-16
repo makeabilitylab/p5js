@@ -25,3 +25,7 @@ p5js repo for teaching
 * [Hand pose demo](https://makeabilitylab.github.io/p5js/ml5js/Handpose/Demo/): demonstration of the [ml5js](https://ml5js.org/) [handpose library](https://learn.ml5js.org/#/reference/handpose)
 * [Hand wave recognizer](https://makeabilitylab.github.io/p5js/ml5js/Handpose/HandWaveDetector/): wave your hand at the camera
 * [Elmo generator](https://github.com/makeabilitylab/p5js/tree/master/ml5js/PoseNet/ElmoGeneratorMultiperson): turn you and your friends into Elmo in realtime! Uses the [ml5js PoseNet implementation](https://ml5js.org/reference/api-PoseNet/)
+
+## Games
+* [Pong](https://makeabilitylab.github.io/p5js/Games/Pong): simple [Pong](https://en.wikipedia.org/wiki/Pong) game
+* [Flappy Bird](https://makeabilitylab.github.io/p5js/Games/FlappyBird2/): simple [Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird) game with procedural backgrounds
