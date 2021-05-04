@@ -29,6 +29,7 @@
 // TODO/BUGS: 
 // - there is a bug when ball hits end of line segment (edge, corner) straight on
 //   -- see: https://gamedev.stackexchange.com/questions/92067/how-do-i-calculate-the-bounce-vector-of-a-ball-hitting-the-starting-point-of-a-s
+//   -- Jon's note: I actually fixed this in a diff demo: https://github.com/makeabilitylab/p5js/tree/master/Vectors/BouncingBallsAndLineSegmentsImproved
 // - also bug when ball is close to a line segment with similar velocity vector
 //   the ball gets stuck on wall
 //
