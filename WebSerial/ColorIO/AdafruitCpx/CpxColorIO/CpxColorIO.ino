@@ -75,6 +75,6 @@ void loop() {
   }
   Serial.println(colorVal24BitRgb);
 
-  // We don't expect the signal to change much, so delay 50-100ms should be fine
-  delay(50);
+  // Send values once per secon
+  delay(1000);
 }
