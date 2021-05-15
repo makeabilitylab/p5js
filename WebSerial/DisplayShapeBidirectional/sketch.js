@@ -111,7 +111,7 @@ function onSerialConnectionClosed(eventSender) {
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
-  console.log("onSerialDataReceived", newData);
+  //console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   // Check if data received starts with '#'. If so, ignore it
