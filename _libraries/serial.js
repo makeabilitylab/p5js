@@ -13,6 +13,9 @@
 // 3. If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
 //    If, instead, it says "undefined" then it didn't work. Try restarting your computer and then Chrome.
 //
+// TODOs:
+//  - Support binary in addition to text
+//
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 
@@ -52,6 +55,7 @@ class Serial {
 
       navigator.serial.addEventListener("disconnect", (event) => {
         console.log("navigator.serial event: disconnected!");
+        this.close();
       });
     }
   }
@@ -79,7 +83,7 @@ class Serial {
    * Automatically connects and opens the previously approved port
    * If there are more than one, it takes the top port in the approved port list
    */
-  async autoConnectAndOpenPreviouslyApprovedPort() {
+  async autoConnectAndOpenPreviouslyApprovedPort(serialOptions = { baudRate: 9600 }) {
     if (navigator.serial) {
       const approvedPortList = await navigator.serial.getPorts();
       console.log("approvedPortList", approvedPortList);
@@ -89,7 +93,7 @@ class Serial {
         await this.connect(approvedPortList[0]);
 
         console.log("Attempting to open port:")
-        this.open();
+        this.open(serialOptions);
       }
     }
   }
@@ -252,9 +256,10 @@ class Serial {
       const textEncoder = new TextEncoderStream();
       this.writableStreamClosed = textEncoder.readable.pipeTo(this.serialPort.writable);
       this.serialWriter = textEncoder.writable.getWriter();
-      console.log("Setup serial writer", this.serialWriter);
+      console.log("Serial writer set up as:", this.serialWriter);
 
       // We communicate with the Arduino using text for now
+      // TODO: in future could improve this serial.js class to support binary
       const textDecoder = new TextDecoderStream();
       this.keepReading = true;
       this.readableStreamClosed = this.serialPort.readable.pipeTo(textDecoder.writable);
