@@ -282,7 +282,7 @@ class Serial {
             }
 
             if (value) {
-              console.log("Serial received:", value);
+              // console.log("Serial received:", value);
               this.fireEvent(SerialEvents.DATA_RECEIVED, value);
             }
           }

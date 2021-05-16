@@ -29,17 +29,15 @@
 let video;
 let poseNet;
 let human = null;
+let pHtmlMsg;
 
-let serialConnectButton;
+let serialOptions = { baudRate: 115200  };
 
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
   video.hide();
 
-  serialConnectButton = createButton("Connect to Serial Device");
-  serialConnectButton.mousePressed(onSerialConnectButtonClicked);
-  
   // setup PoseNet. This can take a while, so we load it 
   // asynchronously (when it's done, it will call modelReady)
   poseNet = ml5.poseNet(video, onPoseNetModelReady); //call onModelReady when setup
@@ -50,43 +48,96 @@ function setup() {
   serial.on(SerialEvents.CONNECTION_CLOSED, onSerialConnectionClosed);
   serial.on(SerialEvents.DATA_RECEIVED, onSerialDataReceived);
   serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
-  serial.autoConnectAndOpenPreviouslyApprovedPort();
+  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  pHtmlMsg = createP('Serial input and error messages...');
+  pHtmlMsg = select('#html-messages');
+
+  // Move connect button down
+  let mainTag = document.getElementsByTagName("main")[0];
+  mainTag.appendChild(
+    document.getElementById('connect-button')
+  );
+
+  // Move the lil html message output to main tag so the messages are below the canvas 
+  // https://stackoverflow.com/a/6329160/388117
+  mainTag.appendChild(
+    document.getElementById('html-messages')
+  );
 }
 
-function onSerialConnectButtonClicked(){
+/**
+ * Callback function for when the connect button is pressed
+ */
+async function onButtonConnectToSerialDevice() {
   if (!serial.isOpen()) {
-    serial.connectAndOpen();
-  }else{
-    serialConnectButton.style("display", "none");
+    await serial.connectAndOpen();
   }
 }
 
+/**
+ * Callback function by serial.js when there is an error on web serial
+ * 
+ * @param {} eventSender 
+ */
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
   pHtmlMsg.html(error);
 }
 
+/**
+ * Callback function by serial.js when web serial connection is opened
+ * 
+ * @param {} eventSender 
+ */
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
-  pHtmlMsg.html("onSerialConnectionOpened");
-  serialConnectButton.style("display", "none");
+  pHtmlMsg.html("Serial connection opened successfully");
+
+  let canvas = document.getElementsByClassName('p5Canvas')[0];
+  canvas.style.display = "block";
+
+  document.getElementById("connect-button").style.display = "none";
 }
 
+/**
+ * Callback function by serial.js when web serial connection is closed
+ * 
+ * @param {} eventSender 
+ */
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
   pHtmlMsg.html("onSerialConnectionClosed");
-  serialConnectButton.style("display", "block");
 }
 
+/**
+ * Callback function serial.js when new web serial data is received
+ * 
+ * @param {*} eventSender 
+ * @param {String} newData new data received over serial
+ */
 function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
+
+  // Check if data received starts with '#'. If so, ignore it
+  // Otherwise, parse it! We ignore lines that start with '#' 
+  if (!newData.startsWith("#")) {
+    // Empty for now 
+  }
 }
 
 function onPoseNetModelReady() {
-  print("The PoseNet model is ready...");
+  let debugMsg = "Posenet model ready!";
+  console.log(debugMsg);
+  if(serial.isOpen()){
+    debugMsg += " And we are connected to web serial!"
+  }else{
+    debugMsg += " Waiting to connect to serial...";
+  }
+  pHtmlMsg.html(debugMsg);
+
+  // Hide the hand-pose-status div
+  document.getElementById("posenet-status").style.display = "none";
 }
 
 function onPoseDetected(poses) {
@@ -96,12 +147,15 @@ function onPoseDetected(poses) {
   // which is at poses[0]
   human = poses[0];
 
-  // Grab the nose's x position and transform that into a number between 0 and 100
   if (human != null) {
-    let noseXNormalized = map(human.pose.nose.x, 0, width, 0, 100);
+    // grab nose position and normalize as x,y fraction of screen to transmit over serial
+    let noseXNormalized = human.pose.nose.x / width;
+    let noseYNormalized = human.pose.nose.y / height;
 
-    if(serial.isOpen()){
-      serial.writeLine(noseXNormalized);
+    if (serial.isOpen()) {
+      let outputData = nf(noseXNormalized, 1, 4) + ", " + nf(noseYNormalized, 1, 4) 
+      console.log("Writing to serial:", outputData);
+      serial.writeLine(outputData);
     }
   }
 }
