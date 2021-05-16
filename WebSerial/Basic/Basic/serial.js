@@ -26,28 +26,7 @@
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 
-var serialPort;
-var serialWriter;
 
-async function onSliderValueChanged(src, event) {
-  console.log("Writing to serial: ", src.value.toString());
-  let rv = await serialWriter.write(src.value.toString() + "\n");
-  console.log("Writing finished.");
-
-  // Update the slider value text
-  document.getElementById('slider_value').innerHTML = src.value;
-}
-
-/**
- * Automatically called when the connect button has been clicked
- */
-function onConnectButtonClick() {
-  if (navigator.serial) {
-    connectSerial();
-  } else {
-    alert('Web Serial API not supported. Did you remember to enable `experimental-web-platform-features` in Chrome? ');
-  }
-}
 
 /**
  * Connects to the Web Serial port and starts listening to serial input

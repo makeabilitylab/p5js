@@ -79,7 +79,7 @@ void loop() {
     // Echo the data back on serial (for debugging purposes)
     // This is not necessary but helpful. Then the webpage can
     // display this debug output (if necessary)
-    Serial.print("Arduino Received: '");
+    Serial.print("Arduino received: '");
     Serial.print(rcvdSerialData);
     Serial.println("'");
   }

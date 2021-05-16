@@ -1,7 +1,7 @@
 /**
  * This example receives an integer value (as a text string) delimited by a return character '\n',
  * converts the text into an integer, and uses this to set the analogWrite value on Pin 13.
- * On the Arduino Uno and Leondardo, Pin 13 is tied to the internal green LED (so this
+ * On the Arduino Uno and Leonardo, Pin 13 is tied to the internal green LED (so this
  * internal LED will fade on/off depending on the serial data received).
  * 
  * While this example will work with any Serial program, I wrote it to demonstrate the

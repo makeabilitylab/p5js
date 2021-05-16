@@ -1,6 +1,7 @@
 /**
  * This example receives an integer value (as a text string) delimited by a return character '\n',
  * converts the text into an integer, and uses this to control a servo motor on pin 9.
+ * 
  * To learn more about servo motors and Arduino in general, see:
  * https://learn.adafruit.com/adafruit-arduino-lesson-14-servo-motors/overview
  * 
