@@ -13,13 +13,7 @@ let mapShapeTypeToShapeName = {
   2: "Triangle"
 };
 
-let mapShapeDrawMode = {
-  0: "Fill",
-  1: "Outline",
-};
-
-let curShapeType = 0; // Circle as default
-let curShapeDrawMode = 0; // Fill as default
+let curShapeType = 0;
 let curShapeSize = 10;
 
 const MIN_SHAPE_SIZE = 10;
@@ -112,45 +106,27 @@ function onSerialConnectionClosed(eventSender) {
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
-  //console.log("onSerialDataReceived", newData);
+  console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   // Check if data received starts with '#'. If so, ignore it
   // Otherwise, parse it! We ignore lines that start with '#' 
   if(!newData.startsWith("#")){
-     // Data format is ShapeType, ShapeDrawMode
-     const indexOfComma = newData.indexOf(",");
-     if(indexOfComma != -1){
-       let strShapeType = newData.substring(0, indexOfComma).trim();
-       let strShapeDrawMode = newData.substring(indexOfComma + 1, newData.length).trim();
-       let newShapeType = parseInt(strShapeType);
-       let newShapeDrawMode = parseInt(strShapeDrawMode);
-       
-       if(newShapeType in mapShapeTypeToShapeName){
-         curShapeType = newShapeType;
-       }
-
-       if(newShapeDrawMode in mapShapeDrawMode){
-        curShapeDrawMode = newShapeDrawMode;
-      }
-
-       // console.log(strShapeType, tmpShapeType, strShapeDrawMode, tmpShapeDrawMode);
-     }
+    // Empty for now 
   }
 }
 
-async function serialWriteShapeData(shapeType, shapeSize, shapeDrawMode) {
+async function serialWriteShapeData(shapeType, shapeSize) {
 
   if (serial.isOpen()) {
-    //console.log("serialWriteShapeData ", shapeType, shapeSize);
+    console.log("serialWriteShapeData ", shapeType, shapeSize);
 
     let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
 
     // Format the text string to send over serial. nf simply formats the floating point
     // See: https://p5js.org/reference/#/p5/nf
-    let strData = shapeType + ", " + nf(shapeSizeFraction, 1, 2) + ", " + shapeDrawMode;
-
-    //console.log("Writing to serial: ", strData);
+    let strData = shapeType + ", " + nf(shapeSizeFraction, 1, 2);
+    console.log("Writing to serial: ", strData);
     serial.writeLine(strData);
   }
 }
@@ -163,14 +139,8 @@ function draw() {
 
   background(100);
 
-  if(curShapeDrawMode == 0){
-    fill(250);
-    noStroke();
-  }else{
-    stroke(250);
-    noFill();
-  }
-
+  fill(250);
+  noStroke();
   let xCenter = width / 2;
   let yCenter = height / 2;
   let halfShapeSize = curShapeSize / 2;
@@ -196,21 +166,13 @@ function draw() {
   }
 }
 
-function mousePressed(mouseEvent){
-  
-  if(mouseButton == RIGHT){
-    curShapeDrawMode++;
-    if(curShapeDrawMode >= Object.keys(mapShapeDrawMode).length){
-      curShapeDrawMode = 0;
-    }
-  }else{
-    curShapeType++;
-    if(curShapeType >= Object.keys(mapShapeTypeToShapeName).length){
-      curShapeType = 0;
-    }
+function mousePressed(){
+  curShapeType++;
+  if(curShapeType >= Object.keys(mapShapeTypeToShapeName).length){
+    curShapeType = 0;
   }
 
-  serialWriteShapeData(curShapeType, curShapeSize, curShapeDrawMode);
+  serialWriteShapeData(curShapeType, curShapeSize);
 }
 
 function mouseMoved(){
@@ -219,7 +181,7 @@ function mouseMoved(){
   curShapeSize = constrain(curShapeSize, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
 
   if(lastShapeSize != curShapeSize){
-    serialWriteShapeData(curShapeType, curShapeSize, curShapeDrawMode);
+    serialWriteShapeData(curShapeType, curShapeSize);
   }
   //console.log(mouseX, width, curShapeSize, MAX_SHAPE_SIZE);
 }
