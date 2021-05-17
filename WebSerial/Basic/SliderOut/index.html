@@ -43,21 +43,23 @@ http://makeabilitylab.io/
 <body>
   <script src="../../../_libraries/serial.js"></script>
   <h1>Web Serial Demo</h1>
-  This demo uses a slider to send a number between 0-255 to your connected serial device (<i>e.g.,</i> a CPX or Arduino).
-  
+  This demo uses a slider to send a number between 0-255 to your connected serial device (<i>e.g.,</i> a CPX or
+  Arduino).
+
   <p>To begin, read the instructions below and then click this "Connect" button.</p>
-  
+
   <p></p>
   <button id="connect-button" onclick="onConnectButtonClick()">Connect via Serial Port</button>
   <div id="interactive-controls" style="display:none">
-      <h1>Slider value: <span id="slider-value">0</span></h1>
-      <input id="slider" type="range" min="0" max="255" value="128" onchange="onSliderValueChanged(this, event)" />
+    <h1>Slider value: <span id="slider-value">0</span></h1>
+    <input id="slider" type="range" min="0" max="255" value="128" onchange="onSliderValueChanged(this, event)" />
   </div>
   <div id="html-message"></div>
-  
+
   <div id="instructions">
     <h1>Instructions</h1>
-    This demo and the instructions below are based on a <a href="https://web.dev/serial/">web.dev</a> post by François Beaufort. 
+    This demo and the instructions below are based on a <a href="https://web.dev/serial/">web.dev</a> post by François
+    Beaufort.
     <p></p>
     For this demo to work, there are two requirements:
     <ol>
@@ -71,8 +73,8 @@ http://makeabilitylab.io/
     <ol>
       <li>Open Chrome to any webpage</li>
       <li>Open the dev console (cmd-option-i on Mac or ctrl-shift-i on Windows) and type: > navigator.serial</li>
-      <li>If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked! 
-          If, instead, it says "undefined", then it didn't work (see below)
+      <li>If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
+        If, instead, it says "undefined", then it didn't work (see below)
       </li>
     </ol>
 
@@ -95,8 +97,12 @@ http://makeabilitylab.io/
     <h3>CPX Demos</h3>
     TODO: update these links!
     <ol>
-      <li><a href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialColorNeoPixels">SerialColorNeoPixels</a></li>
-      <li><a href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialFadeNeoPixels">SerialFadeNeoPixels</a></li>
+      <li><a
+          href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialColorNeoPixels">SerialColorNeoPixels</a>
+      </li>
+      <li><a
+          href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialFadeNeoPixels">SerialFadeNeoPixels</a>
+      </li>
     </ol>
   </div>
 
@@ -116,7 +122,7 @@ http://makeabilitylab.io/
     async function onSliderValueChanged(src, event) {
       console.log("Writing to serial: ", src.value.toString());
       serial.writeLine(src.value);
-     
+
       // Update the slider value text
       document.getElementById('slider-value').textContent = src.value;
     }
@@ -126,12 +132,12 @@ http://makeabilitylab.io/
      */
     async function onConnectButtonClick() {
       if (navigator.serial) {
-        if(!serial.isOpen()){
+        if (!serial.isOpen()) {
           await serial.connectAndOpen();
-        }else{
+        } else {
           console.log("The serial connection appears already open");
         }
-        
+
       } else {
         alert('The Web Serial API does not appear supported on this web browser. Are you using Chrome? Did you remember to enable `experimental-web-platform-features` in Chrome? See https://web.dev/serial/');
       }
@@ -156,7 +162,7 @@ http://makeabilitylab.io/
       console.log("onSerialConnectionOpened");
       document.getElementById("connect-button").style.display = "none";
       document.getElementById("instructions").style.display = "none";
-      
+
       document.getElementById("interactive-controls").style.visibility = "visible";
       document.getElementById("interactive-controls").style.display = "block";
       htmlMsg.textContent = "Serial connection opened!";
