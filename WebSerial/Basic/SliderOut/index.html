@@ -1,15 +1,49 @@
+<!-- 
+
+This code outputs a slider value over Web Serial and also receives serial input and prints to console. 
+The code is based on https://web.dev/serial/
+
+Currently, this code only works in Chrome because of its reliance on WebUSB (not yet
+supported in FireFox, Safari, etc.). If you are using a Chrome version earlier than v87, you 
+may need to enable an experimental flag.
+
+To check your Chrome version, in the Chrome address bar, type:
+chrome://version
+
+To enable WebUSB on older Chrome versions:
+1. First, type chrome://flags in the address bar
+2. Then, in the search box, type "experimental-web-platform-features"
+3. This flag should be set to "Enabled"
+4. Restart your browser
+
+To test that this worked
+1. Open Chrome to any webpage
+2. Open the dev console (cmd-option-i on Mac or ctrl-shift-i on Windows) and type: > navigator.serial
+3. If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
+   If, instead, it says "undefined" then it didn't work. Try restarting your computer and then Chrome.
+
+Some related examples:
+- https://codelabs.developers.google.com/codelabs/web-serial#0
+
+By Jon E. Froehlich
+@jonfroehlich
+http://makeabilitylab.io/ 
+
+-->
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <title>Simple Web Serial I/O Demo</title>
+  <meta name="author" content="Jon E. Froehlich">
 </head>
 
 <body>
   <script src="../../../_libraries/serial.js"></script>
   <h1>Web Serial Demo</h1>
-  This simple demo uses a slider to send a number between 0-255 to your connected serial device (e.g., a CPX or Arduino).
+  This demo uses a slider to send a number between 0-255 to your connected serial device (<i>e.g.,</i> a CPX or Arduino).
   
   <p>To begin, read the instructions below and then click this "Connect" button.</p>
   
@@ -23,6 +57,8 @@
   
   <div id="instructions">
     <h1>Instructions</h1>
+    This demo and the instructions below are based on a <a href="https://web.dev/serial/">web.dev</a> post by François Beaufort. 
+    <p></p>
     For this demo to work, there are two requirements:
     <ol>
       <li>First, you must run Chrome and enable the 'experimental-web-platform-features' flag (see below)</li>
