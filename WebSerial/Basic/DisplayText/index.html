@@ -9,15 +9,13 @@
   <meta name="description" content="Simple Web Serial Demo with text">
   <meta name="author" content="Jon E. Froehlich">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
   <script src="../../../_libraries/serial.js"></script>
 </head>
 
 <body>
   <div id="main-content">
-
     <button id="connect-button" onclick="onButtonConnectToSerialDevice()">Connect via Serial Port</button>
-
     <div id="text-interface">
       <h3>Enter text:</h3>
       <input placeholder="Enter some text" name="input-text" />
@@ -52,6 +50,7 @@
      * Callback function for when the connect button is pressed
      */
     async function onButtonConnectToSerialDevice() {
+      console.log("onButtonConnectToSerialDevice");
       if (!serial.isOpen()) {
         await serial.connectAndOpen();
       }

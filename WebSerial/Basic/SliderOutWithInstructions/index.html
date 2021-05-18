@@ -56,6 +56,56 @@ http://makeabilitylab.io/
   </div>
   <div id="html-message"></div>
 
+  <div id="instructions">
+    <h1>Instructions</h1>
+    This demo and the instructions below are based on a <a href="https://web.dev/serial/">web.dev</a> post by François
+    Beaufort.
+    <p></p>
+    For this demo to work, there are two requirements:
+    <ol>
+      <li>First, you must run Chrome and enable the 'experimental-web-platform-features' flag (see below)</li>
+      <li>Second, you must be running a supported program on your Adafruit CPX or Arduino</li>
+    </ol>
+    We expand on each below.
+
+    <h2>Chrome Setup</h2>
+    To check to see if your current version of Chrome supports WebSerial:
+    <ol>
+      <li>Open Chrome to any webpage</li>
+      <li>Open the dev console (cmd-option-i on Mac or ctrl-shift-i on Windows) and type: > navigator.serial</li>
+      <li>If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
+        If, instead, it says "undefined", then it didn't work (see below)
+      </li>
+    </ol>
+
+    To enable web serial support in Chrome:
+    <ol>
+      <li>First, type chrome://flags in the address bar</li>
+      <li>Then, in the search box, type "experimental-web-platform-features"</li>
+      <li>This flag should be set to "Enabled"</li>
+      <li>Restart your browser and follow the steps above to ensure that it worked</li>
+    </ol>
+
+    <h2>CPX/Arduino</h2>
+    To see the full demo, you must have your CPX or Arduino plugged in and running code that
+    listens to the serial port, parses it, and does something. We've created a few demos:
+
+    <h3>Arduino</h3>
+    - TODO LED output demo
+    - TODO LED output with text demo (based on DisplayTextSerial)
+
+    <h3>CPX Demos</h3>
+    TODO: update these links!
+    <ol>
+      <li><a
+          href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialColorNeoPixels">SerialColorNeoPixels</a>
+      </li>
+      <li><a
+          href="https://github.com/makeabilitylab/p5js/tree/master/WebSerial/Basic-NoP5js/AdafruitCpx/SerialFadeNeoPixels">SerialFadeNeoPixels</a>
+      </li>
+    </ol>
+  </div>
+
   <script>
     const htmlMsg = document.getElementById('html-message');
 
@@ -66,7 +116,6 @@ http://makeabilitylab.io/
     serial.on(SerialEvents.DATA_RECEIVED, onSerialDataReceived);
     serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
 
-    // Initialize the text that prints out the slider value
     let sliderVal = document.getElementById('slider').value;
     document.getElementById('slider-value').textContent = sliderVal;
 

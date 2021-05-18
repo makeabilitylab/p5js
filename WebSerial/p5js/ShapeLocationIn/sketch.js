@@ -111,8 +111,6 @@ function onSerialDataReceived(eventSender, newData) {
       let xFraction = parseFloat(strShapeLocX);
       let yFraction = parseFloat(strShapeLocY);
 
-      // TODO fix diameter / radius issue
-      // TODO 2: track floats of x and y position
       let circleRadius = circleDiameter / 2.0;
       circleX = circleRadius + (width - circleDiameter) * xFraction;
       circleY = circleRadius + (height - circleDiameter) * yFraction;

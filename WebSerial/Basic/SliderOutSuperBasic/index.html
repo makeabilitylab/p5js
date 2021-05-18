@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Web Serial Demo</title>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/gh/makeabilitylab/p5js/_libraries/serial.js"></script>
+  <h1>Web Serial Demo</h1>
+  This demo uses a slider to send a number between 0-255 to your connected serial device.
+
+  <p></p>
+  <button id="connect-button" onclick="onConnectButtonClick()">Connect via Serial Port</button>
+  
+  <input id="slider" type="range" min="0" max="255" value="128" onchange="onSliderValueChanged(this, event)" />
+
+  <script>
+    // Setup Web Serial using serial.js
+    const serial = new Serial();
+    serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);
+    serial.on(SerialEvents.CONNECTION_CLOSED, onSerialConnectionClosed);
+    serial.on(SerialEvents.DATA_RECEIVED, onSerialDataReceived);
+    serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
+
+    function onSerialErrorOccurred(eventSender, error) {
+      console.log("onSerialErrorOccurred", error);
+    }
+
+    function onSerialConnectionOpened(eventSender) {
+      console.log("onSerialConnectionOpened", eventSender);
+    }
+
+    function onSerialConnectionClosed(eventSender) {
+      console.log("onSerialConnectionClosed", eventSender);
+    }
+
+    function onSerialDataReceived(eventSender, newData) {
+      console.log("onSerialDataReceived", newData);
+    }
+
+    async function onSliderValueChanged(src, event) {
+      console.log("Writing to serial: ", src.value.toString());
+      serial.writeLine(src.value);
+    }
+
+    async function onConnectButtonClick() {
+      console.log("Connect button clicked!");
+
+      if (navigator.serial) {
+        if (!serial.isOpen()) {
+          await serial.connectAndOpen();
+        } else {
+          console.log("The serial connection appears already open");
+        }
+
+      } else {
+        alert('The Web Serial API does not appear supported on this web browser. Are you using Chrome? Did you remember to enable `experimental-web-platform-features` in Chrome? See https://web.dev/serial/');
+      }
+    }
+  </script>
+</body>
+
+</html>
