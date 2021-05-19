@@ -1,3 +1,11 @@
+// This is a basic web serial template for p5.js. Please see:
+// https://makeabilitylab.github.io/physcomp/communication/p5js-serial
+// 
+// By Jon E. Froehlich
+// @jonfroehlich
+// http://makeabilitylab.io/
+//
+
 
 let pHtmlMsg;
 let serialOptions = { baudRate: 115200  };
