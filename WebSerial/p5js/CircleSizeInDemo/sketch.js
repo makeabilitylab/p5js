@@ -1,7 +1,30 @@
+// Demonstrates basic web serial input with p5js. See:
+// https://makeabilitylab.github.io/physcomp/communication/p5js-serial
+// 
+// By Jon E. Froehlich
+// @jonfroehlich
+// http://makeabilitylab.io/
+//
 
-let newShapeFrac = 0;
+let shapeFraction = 0; // tracks the new shape fraction off serial
+let serial; // the Serial object
+let serialOptions = { baudRate: 115200  };
+
 function setup() {
   createCanvas(400, 400);
+
+  // Setup Web Serial using serial.js
+  serial = new Serial();
+  serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);
+  serial.on(SerialEvents.CONNECTION_CLOSED, onSerialConnectionClosed);
+  serial.on(SerialEvents.DATA_RECEIVED, onSerialDataReceived);
+  serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
+
+  // If we have previously approved ports, attempt to connect with them
+  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
+
+  // Add in a lil <p> element to provide messages. This is optional
+  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
 function draw() {
@@ -16,12 +39,12 @@ function draw() {
 
   // Set the diameter based on mouse x position
   const maxDiameter = min(width, height);
-  let circleDiameter = maxDiameter * mouseX / width;
+  // let shapeFraction = mouseX / width;
+  let circleDiameter = maxDiameter * shapeFraction;
   circle(xCenter, yCenter, circleDiameter);
 }
 
-
- function onSerialErrorOccurred(eventSender, error) {
+function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
 }
 
@@ -37,6 +60,11 @@ function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
-  let newShapeFrac = parseFloat(newData);
-  // curShapeSize = MIN_SHAPE_SIZE + newShapeFrac * (maxShapeSize - MIN_SHAPE_SIZE);
+  shapeFraction = parseFloat(newData);
+}
+
+function mouseClicked() {
+  if (!serial.isOpen()) {
+    serial.connectAndOpen(null, serialOptions);
+  }
 }

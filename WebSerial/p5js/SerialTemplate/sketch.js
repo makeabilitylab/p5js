@@ -9,6 +9,7 @@
 
 let pHtmlMsg;
 let serialOptions = { baudRate: 115200  };
+let serial;
 
 function setup() {
   createCanvas(640, 480);
@@ -23,6 +24,7 @@ function setup() {
   // If we have previously approved ports, attempt to connect with them
   serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
+  // Add in a lil <p> element to provide messages. This is optional
   pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
