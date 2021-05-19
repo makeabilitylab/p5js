@@ -7,20 +7,13 @@
 
 let pHtmlMsg;
 
-let mapShapeTypeToShapeName = {
-  0: "Circle",
-  1: "Square",
-  2: "Triangle"
-};
-
-let curShapeType = 0;
 let curShapeSize = 10;
 
 const MIN_SHAPE_SIZE = 10;
 const MAX_SHAPE_MARGIN = 10;
-let MAX_SHAPE_SIZE = -1;
+let maxShapeSize = -1;
 
-let serialOptions = { baudRate: 115200  };
+const serialOptions = { baudRate: 115200  };
 
 function setup() {
   createCanvas(640, 480);
@@ -33,33 +26,13 @@ function setup() {
   serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
 
   // If we have previously approved ports, attempt to connect with them
-  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
+  //serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
   // Grab link to #html-messages in DOM, so we can update it with messages
-  pHtmlMsg = select('#html-messages');
+  // pHtmlMsg = select('#html-messages');
+  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 
-  MAX_SHAPE_SIZE = min(width, height) - MAX_SHAPE_MARGIN;
-
-  // Move connect button down
-  let mainTag = document.getElementsByTagName("main")[0];
-  mainTag.appendChild(
-    document.getElementById('connect-button')
-  );
-
-  // Move the lil html message output to main tag so the messages are below the canvas 
-  // https://stackoverflow.com/a/6329160/388117
-  mainTag.appendChild(
-    document.getElementById('html-messages')
-  );
-}
-
-/**
- * Callback function for when the connect button is pressed
- */
-async function onButtonConnectToSerialDevice(){
-  if (!serial.isOpen()) {
-    await serial.connectAndOpen(null, serialOptions);
-  }
+  maxShapeSize = min(width, height) - MAX_SHAPE_MARGIN;
 }
 
 /**
@@ -80,11 +53,6 @@ function onSerialErrorOccurred(eventSender, error) {
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("Serial connection opened successfully");
-
-  let canvas = document.getElementsByClassName('p5Canvas')[0];
-  canvas.style.display = "block";
-
-  document.getElementById("connect-button").style.display = "none";
 }
 
 /**
@@ -107,13 +75,8 @@ function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
-  // Check if data received starts with '#'. If so, ignore it
-  // Otherwise, parse it! We ignore lines that start with '#' 
-  if(!newData.startsWith("#")){
-    // Parse the data
-    let newShapeFrac = parseFloat(newData);
-    curShapeSize = MIN_SHAPE_SIZE + newShapeFrac * (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
-  }
+  let newShapeFrac = parseFloat(newData);
+  curShapeSize = MIN_SHAPE_SIZE + newShapeFrac * (maxShapeSize - MIN_SHAPE_SIZE);
 }
 
 /**
@@ -124,7 +87,30 @@ function draw() {
   background(100);
   fill(250);
   noStroke();
+
+  if(!serial.isOpen()){
+    const tSize = 32;
+    const connectStr = "Click on here to connect to serial";
+    textSize(tSize);
+    let strWidth = textWidth(connectStr);
+    let xText = width / 2 - strWidth / 2;
+    let yText = height / 2 - tSize / 2;
+    text(connectStr, xText, yText);
+
+    // don't draw anything else until we setup serial
+    return; 
+  }
+
+  // Get x,y center of drawing Canvas
   let xCenter = width / 2;
   let yCenter = height / 2;
+
+  // Draw the circle
   circle(xCenter, yCenter, curShapeSize);
+}
+
+function mouseClicked() {
+  if (!serial.isOpen()) {
+    serial.connectAndOpen(null, serialOptions);
+  }
 }
