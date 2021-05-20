@@ -1,4 +1,4 @@
-// Demonstrates basic web serial input with p5js. See:
+// Demonstrates a basic real-time graph with serial input. See:
 // https://makeabilitylab.github.io/physcomp/communication/p5js-serial
 // 
 // By Jon E. Froehlich
@@ -46,7 +46,6 @@ function draw() {
     line(xPos, height, xPos, yPixelPos);
 
     xPos++;
-    print(xPos, yPixelPos);
   }
 
   if(xPos >= width){
