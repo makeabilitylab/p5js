@@ -35,31 +35,10 @@ function setup() {
   // If we have previously approved ports, attempt to connect with them
   serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  // Grab link to #html-messages in DOM, so we can update it with messages
-  pHtmlMsg = select('#html-messages');
-
   MAX_SHAPE_SIZE = min(width, height) - MAX_SHAPE_MARGIN;
 
-  // Move connect button down
-  let mainTag = document.getElementsByTagName("main")[0];
-  mainTag.appendChild(
-    document.getElementById('connect-button')
-  );
-
-  // Move the lil html message output to main tag so the messages are below the canvas 
-  // https://stackoverflow.com/a/6329160/388117
-  mainTag.appendChild(
-    document.getElementById('html-messages')
-  );
-}
-
-/**
- * Callback function for when the connect button is pressed
- */
-async function onButtonConnectToSerialDevice(){
-  if (!serial.isOpen()) {
-    await serial.connectAndOpen(null, serialOptions);
-  }
+  // Add in a lil <p> element to provide messages. This is optional
+  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
 /**
@@ -80,11 +59,6 @@ function onSerialErrorOccurred(eventSender, error) {
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("Serial connection opened successfully");
-
-  let canvas = document.getElementsByClassName('p5Canvas')[0];
-  canvas.style.display = "block";
-
-  document.getElementById("connect-button").style.display = "none";
 }
 
 /**
@@ -106,18 +80,12 @@ function onSerialConnectionClosed(eventSender) {
 function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
-
-  // Check if data received starts with '#'. If so, ignore it
-  // Otherwise, parse it! We ignore lines that start with '#' 
-  if(!newData.startsWith("#")){
-    // Empty for now 
-  }
 }
 
 async function serialWriteShapeData(shapeType, shapeSize) {
 
   if (serial.isOpen()) {
-    console.log("serialWriteShapeData ", shapeType, shapeSize);
+    //console.log("serialWriteShapeData ", shapeType, shapeSize);
 
     let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
 
@@ -182,4 +150,10 @@ function mouseMoved(){
     serialWriteShapeData(curShapeType, curShapeSize);
   }
   //console.log(mouseX, width, curShapeSize, MAX_SHAPE_SIZE);
+}
+
+function mouseClicked() {
+  if (!serial.isOpen()) {
+    serial.connectAndOpen(null, serialOptions);
+  }
 }

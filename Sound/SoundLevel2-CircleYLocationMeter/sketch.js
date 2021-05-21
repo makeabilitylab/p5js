@@ -1,6 +1,8 @@
 // Ball moves up from bottom of screen and animates down
-//
+// Based on: https://p5js.org/examples/sound-mic-input.html
+// 
 // By Jon Froehlich
+// @jonfroehlich
 // http://makeabilitylab.io/
 
 let mic;

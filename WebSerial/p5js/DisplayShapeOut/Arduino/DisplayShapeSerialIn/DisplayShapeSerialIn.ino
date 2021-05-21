@@ -1,5 +1,13 @@
 /**
- * TODO
+ * Takes in two parameters off of serial as comma separated text-encoded
+ * data: shapeType, shapeSize
+ * 
+ * shapeType is either 0, 1, 2 corresponding to CIRCLE, SQUARE, TRIANGLE
+ * shapeSize is a float between [0, 1] inclusive that corresponds to shape size
+ * 
+ * Designed to work with the p5.js app:
+ *  - Live page: https://makeabilitylab.github.io/p5js/WebSerial/p5js/DisplayShapeOut/
+ *  - Code: https://github.com/makeabilitylab/p5js/tree/master/WebSerial/p5js/DisplayShapeOut
  * 
  * By Jon E. Froehlich
  * @jonfroehlich
@@ -31,7 +39,7 @@ ShapeType _curShapeType = CIRCLE;
 float _curShapeSizeFraction = -1;
 
 const int MIN_SHAPE_SIZE = 4;
-int MAX_SHAPE_SIZE;
+int _maxShapeSize;
 
 void setup() {
   Serial.begin(115200);
@@ -42,7 +50,7 @@ void setup() {
     for(;;); // Don't proceed, loop forever
   }
 
-  MAX_SHAPE_SIZE = min(_display.width(), _display.height());
+  _maxShapeSize = min(_display.width(), _display.height());
 
   _display.clearDisplay();
   _display.setTextSize(1);      // Normal 1:1 pixel scale
@@ -75,8 +83,7 @@ void loop() {
     // Echo the data back on serial (for debugging purposes)
     // This is not necessary but helpful. Then the webpage can
     // display this debug output (if necessary)
-    // Prefix debug output with '#' as a convention
-    Serial.print("# Arduino Received: '");
+    Serial.print("Arduino Received: '");
     Serial.print(rcvdSerialData);
     Serial.println("'");
   }
@@ -89,13 +96,14 @@ void loop() {
 void drawShape(ShapeType shapeType, float fractionSize){
   _display.clearDisplay();
 
-  int shapeSize = MIN_SHAPE_SIZE + fractionSize * (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
+  int shapeSize = MIN_SHAPE_SIZE + fractionSize * (_maxShapeSize - MIN_SHAPE_SIZE);
   int halfShapeSize = shapeSize / 2;
   int xCenter = _display.width() / 2;
   int yCenter = _display.height() / 2; 
   int xLeft =  xCenter - halfShapeSize;
   int yTop =  yCenter - halfShapeSize;
-  
+
+  // Render the appropriate shape
   if(shapeType == CIRCLE){
     _display.fillRoundRect(xLeft, yTop, shapeSize, shapeSize, halfShapeSize, SSD1306_WHITE);
   }else if(shapeType == SQUARE){
