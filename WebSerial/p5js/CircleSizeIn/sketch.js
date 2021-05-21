@@ -1,9 +1,16 @@
-// This sketch demonstrates how to 
-// 
-// TODO:
+// Demonstrates basic web serial input with p5js. 
+// This is a slightly more complicated version than CircleSizeInDemo
+// because we intermix some HTML defined elements with p5.js
 //
+// I ended up teaching CircleSizeInDemo to keep things simple
+//
+// See:
+// https://makeabilitylab.github.io/physcomp/communication/p5js-serial
+// 
 // By Jon E. Froehlich
+// @jonfroehlich
 // http://makeabilitylab.io/
+//
 
 let pHtmlMsg;
 

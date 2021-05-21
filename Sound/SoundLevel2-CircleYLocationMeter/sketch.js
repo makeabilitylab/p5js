@@ -10,9 +10,17 @@ let yGravity = 5;
 let diameter = 30;
 
 function setup() {
-  createCanvas(400, 400);
+  let cnv = createCanvas(400, 400);
   
-  mic = new p5.AudioIn(); // see https://p5js.org/reference/#/p5.AudioIn
+  // https://p5js.org/reference/#/p5/userStartAudio
+  // For security reasons, Chrome, iOS Safari, and other browsers force the user
+  // to interact with a webpage to start media devices like microphones
+  // (this is a good thing, prevents websites from unknowingly listening to us!)
+  // So, after user presses mouse, mic input will begin
+  cnv.mousePressed(userStartAudio);
+
+  // See https://p5js.org/reference/#/p5.AudioIn
+  mic = new p5.AudioIn(); 
   mic.start();
   
   x = width / 2;
@@ -26,6 +34,12 @@ function draw() {
   // background(220, 220, 220, 10);
   background(220);
   
+  if(getAudioContext().state !== "running" ){
+    textAlign(CENTER, CENTER);
+    text("Click screen to begin", width/2, height/2);
+    return;
+  }
+
   // get current microphone level
   let micLevel = mic.getLevel(); // between 0 and 1
   
@@ -42,6 +56,6 @@ function draw() {
   }
   
   // the size of the circle proportional to mic level
-  //let diameter = map(micLevel, 0, 1, 5, maxDiameter);
+  // let diameter = map(micLevel, 0, 1, 5, maxDiameter);
   ellipse(x, y, diameter);
 }
