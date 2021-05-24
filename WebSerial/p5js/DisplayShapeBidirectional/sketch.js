@@ -24,9 +24,9 @@ let curShapeSize = 10;
 
 const MIN_SHAPE_SIZE = 10;
 const MAX_SHAPE_MARGIN = 10;
-let MAX_SHAPE_SIZE = -1;
+let maxShapeSize = -1;
 
-let serialOptions = { baudRate: 115200  };
+let serialOptions = { baudRate: 115200 };
 
 function setup() {
   createCanvas(640, 480);
@@ -39,33 +39,12 @@ function setup() {
   serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
 
   // If we have previously approved ports, attempt to connect with them
-  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
+  //serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  // Grab link to #html-messages in DOM, so we can update it with messages
-  pHtmlMsg = select('#html-messages');
+  maxShapeSize = min(width, height) - MAX_SHAPE_MARGIN;
 
-  MAX_SHAPE_SIZE = min(width, height) - MAX_SHAPE_MARGIN;
-
-  // Move connect button down
-  let mainTag = document.getElementsByTagName("main")[0];
-  mainTag.appendChild(
-    document.getElementById('connect-button')
-  );
-
-  // Move the lil html message output to main tag so the messages are below the canvas 
-  // https://stackoverflow.com/a/6329160/388117
-  mainTag.appendChild(
-    document.getElementById('html-messages')
-  );
-}
-
-/**
- * Callback function for when the connect button is pressed
- */
-async function onButtonConnectToSerialDevice(){
-  if (!serial.isOpen()) {
-    await serial.connectAndOpen(null, serialOptions);
-  }
+  // Add in a lil <p> element to provide messages. This is optional
+  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
 /**
@@ -86,13 +65,6 @@ function onSerialErrorOccurred(eventSender, error) {
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("Serial connection opened successfully");
-
-  let canvas = document.getElementsByClassName('p5Canvas')[0];
-  canvas.style.display = "block";
-
-  document.getElementById("connect-button").style.display = "none";
-
-  
 }
 
 /**
@@ -117,34 +89,34 @@ function onSerialDataReceived(eventSender, newData) {
 
   // Check if data received starts with '#'. If so, ignore it
   // Otherwise, parse it! We ignore lines that start with '#' 
-  if(!newData.startsWith("#")){
-     // Data format is ShapeType, ShapeDrawMode
-     const indexOfComma = newData.indexOf(",");
-     if(indexOfComma != -1){
-       let strShapeType = newData.substring(0, indexOfComma).trim();
-       let strShapeDrawMode = newData.substring(indexOfComma + 1, newData.length).trim();
-       let newShapeType = parseInt(strShapeType);
-       let newShapeDrawMode = parseInt(strShapeDrawMode);
-       
-       if(newShapeType in mapShapeTypeToShapeName){
-         curShapeType = newShapeType;
-       }
+  if (!newData.startsWith("#")) {
+    // Data format is ShapeType, ShapeDrawMode
+    const indexOfComma = newData.indexOf(",");
+    if (indexOfComma != -1) {
+      let strShapeType = newData.substring(0, indexOfComma).trim();
+      let strShapeDrawMode = newData.substring(indexOfComma + 1, newData.length).trim();
+      let newShapeType = parseInt(strShapeType);
+      let newShapeDrawMode = parseInt(strShapeDrawMode);
 
-       if(newShapeDrawMode in mapShapeDrawMode){
+      // If data valid, set new shape type
+      if (newShapeType in mapShapeTypeToShapeName) {
+        curShapeType = newShapeType;
+      }
+
+      // if shape draw mode valid, set new draw mode
+      if (newShapeDrawMode in mapShapeDrawMode) {
         curShapeDrawMode = newShapeDrawMode;
       }
 
-       // console.log(strShapeType, tmpShapeType, strShapeDrawMode, tmpShapeDrawMode);
-     }
+      // console.log(strShapeType, tmpShapeType, strShapeDrawMode, tmpShapeDrawMode);
+    }
   }
 }
 
 async function serialWriteShapeData(shapeType, shapeSize, shapeDrawMode) {
 
   if (serial.isOpen()) {
-    //console.log("serialWriteShapeData ", shapeType, shapeSize);
-
-    let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
+    let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (maxShapeSize - MIN_SHAPE_SIZE);
 
     // Format the text string to send over serial. nf simply formats the floating point
     // See: https://p5js.org/reference/#/p5/nf
@@ -163,10 +135,10 @@ function draw() {
 
   background(100);
 
-  if(curShapeDrawMode == 0){
+  if (curShapeDrawMode == 0) {
     fill(250);
     noStroke();
-  }else{
+  } else {
     stroke(250);
     noFill();
   }
@@ -174,7 +146,7 @@ function draw() {
   let xCenter = width / 2;
   let yCenter = height / 2;
   let halfShapeSize = curShapeSize / 2;
-  switch(curShapeType){
+  switch (curShapeType) {
     case 0:
       circle(xCenter, yCenter, curShapeSize);
       break;
@@ -191,35 +163,66 @@ function draw() {
 
       let x3 = xCenter + halfShapeSize;
       let y3 = y1;
-     
+
       triangle(x1, y1, x2, y2, x3, y3)
   }
-}
 
-function mousePressed(mouseEvent){
-  
-  if(mouseButton == RIGHT){
-    curShapeDrawMode++;
-    if(curShapeDrawMode >= Object.keys(mapShapeDrawMode).length){
-      curShapeDrawMode = 0;
-    }
-  }else{
-    curShapeType++;
-    if(curShapeType >= Object.keys(mapShapeTypeToShapeName).length){
-      curShapeType = 0;
-    }
+  // Some instructions to the user
+  noStroke();
+  fill(255);
+  const tSize = 14;
+  let strInstructions = "";
+  if (serial.isOpen()) {
+    strInstructions = "Left click to change the shape. Right click to change fill/outline";
+  } else {
+    strInstructions = "Click anywhere to connect with serial"
   }
-
-  serialWriteShapeData(curShapeType, curShapeSize, curShapeDrawMode);
+  textSize(tSize);
+  let tWidth = textWidth(strInstructions);
+  const xText = width / 2 - tWidth / 2;
+  text(strInstructions, xText, height - tSize + 6);
 }
 
-function mouseMoved(){
+function mouseMoved() {
   let lastShapeSize = curShapeSize;
-  curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
-  curShapeSize = constrain(curShapeSize, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
+  curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, maxShapeSize);
+  curShapeSize = constrain(curShapeSize, MIN_SHAPE_SIZE, maxShapeSize);
 
-  if(lastShapeSize != curShapeSize){
+  if (lastShapeSize != curShapeSize) {
     serialWriteShapeData(curShapeType, curShapeSize, curShapeDrawMode);
   }
-  //console.log(mouseX, width, curShapeSize, MAX_SHAPE_SIZE);
+  // console.log(mouseX, width, curShapeSize, maxShapeSize);
+}
+
+function mousePressed() {
+  // Only update states if we're connected to serial
+  if (serial.isOpen()) {
+    if (mouseButton == RIGHT) {
+      // Switch between fill and outline mode based on right click
+      curShapeDrawMode++;
+      if (curShapeDrawMode >= Object.keys(mapShapeDrawMode).length) {
+        curShapeDrawMode = 0;
+      }
+      console.log("Right click!");
+    } else {
+      curShapeType++;
+      if (curShapeType >= Object.keys(mapShapeTypeToShapeName).length) {
+        curShapeType = 0;
+      }
+    }
+    serialWriteShapeData(curShapeType, curShapeSize, curShapeDrawMode);
+  }
+}
+
+/**
+ * Called automatically when the mouse button has been pressed and then released
+ * According to the p5.js docs, this function is only guaranteed to be called when
+ * the left mouse button is clicked.
+ * 
+ * See: https://p5js.org/reference/#/p5/mouseClicked
+ */
+function mouseClicked() {
+  if (!serial.isOpen()) {
+    serial.connectAndOpen(null, serialOptions);
+  }
 }

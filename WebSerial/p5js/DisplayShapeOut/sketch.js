@@ -7,18 +7,18 @@
 
 let pHtmlMsg;
 
-let mapShapeTypeToShapeName = {
+const mapShapeTypeToShapeName = {
   0: "Circle",
   1: "Square",
   2: "Triangle"
 };
 
-let curShapeType = 0;
-let curShapeSize = 10;
+let curShapeType = 0;        // track current shape type
 
-const MIN_SHAPE_SIZE = 10;
-const MAX_SHAPE_MARGIN = 10;
-let MAX_SHAPE_SIZE = -1;
+const MIN_SHAPE_SIZE = 10;   // minimum shape size in pixels
+const MAX_SHAPE_MARGIN = 10; // when shape is at max size, the margin to edge of canvas
+let maxShapeSize = -1;       // the maximum shape size
+let curShapeSize = 10;       // the current shape size
 
 let serialOptions = { baudRate: 115200  };
 
@@ -35,7 +35,7 @@ function setup() {
   // If we have previously approved ports, attempt to connect with them
   serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  MAX_SHAPE_SIZE = min(width, height) - MAX_SHAPE_MARGIN;
+  maxShapeSize = min(width, height) - MAX_SHAPE_MARGIN;
 
   // Add in a lil <p> element to provide messages. This is optional
   pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
@@ -83,16 +83,14 @@ function onSerialDataReceived(eventSender, newData) {
 }
 
 async function serialWriteShapeData(shapeType, shapeSize) {
-
   if (serial.isOpen()) {
     //console.log("serialWriteShapeData ", shapeType, shapeSize);
 
-    let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (MAX_SHAPE_SIZE - MIN_SHAPE_SIZE);
+    let shapeSizeFraction = (shapeSize - MIN_SHAPE_SIZE) / (maxShapeSize - MIN_SHAPE_SIZE);
 
     // Format the text string to send over serial. nf simply formats the floating point
     // See: https://p5js.org/reference/#/p5/nf
     let strData = shapeType + ", " + nf(shapeSizeFraction, 1, 2);
-    console.log("Writing to serial: ", strData);
     serial.writeLine(strData);
   }
 }
@@ -107,18 +105,18 @@ function draw() {
 
   fill(250);
   noStroke();
-  let xCenter = width / 2;
-  let yCenter = height / 2;
-  let halfShapeSize = curShapeSize / 2;
+  const xCenter = width / 2;
+  const yCenter = height / 2;
+  const halfShapeSize = curShapeSize / 2;
   switch(curShapeType){
-    case 0:
+    case 0: // draw circle
       circle(xCenter, yCenter, curShapeSize);
       break;
-    case 1:
-      rectMode(CENTER);
+    case 1: // draw square
+      rectMode(CENTER); // See: https://p5js.org/reference/#/p5/rectMode
       square(xCenter, yCenter, curShapeSize);
       break;
-    case 2:
+    case 2: // draw triangle
       let x1 = xCenter - halfShapeSize;
       let y1 = yCenter + halfShapeSize;
 
@@ -130,30 +128,43 @@ function draw() {
      
       triangle(x1, y1, x2, y2, x3, y3)
   }
-}
 
-function mousePressed(){
-  curShapeType++;
-  if(curShapeType >= Object.keys(mapShapeTypeToShapeName).length){
-    curShapeType = 0;
+  // Some instructions to the user
+  noStroke();
+  fill(255);
+  const tSize = 14;
+  let strInstructions = "";
+  if(serial.isOpen()){
+    strInstructions = "Mouse click anywhere to change the shape";
+  }else{
+    strInstructions = "Click anywhere to connect with serial"
   }
-
-  serialWriteShapeData(curShapeType, curShapeSize);
+  textSize(tSize);
+  let tWidth = textWidth(strInstructions);
+  const xText = width / 2 - tWidth / 2;
+  text(strInstructions, xText, height - tSize + 6);
 }
 
 function mouseMoved(){
   let lastShapeSize = curShapeSize;
-  curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
-  curShapeSize = constrain(curShapeSize, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
+  curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, maxShapeSize);
+  curShapeSize = constrain(curShapeSize, MIN_SHAPE_SIZE, maxShapeSize);
 
   if(lastShapeSize != curShapeSize){
     serialWriteShapeData(curShapeType, curShapeSize);
   }
-  //console.log(mouseX, width, curShapeSize, MAX_SHAPE_SIZE);
+  //console.log(mouseX, width, curShapeSize, maxShapeSize);
 }
 
 function mouseClicked() {
   if (!serial.isOpen()) {
     serial.connectAndOpen(null, serialOptions);
+  }else{
+    curShapeType++;
+    if(curShapeType >= Object.keys(mapShapeTypeToShapeName).length){
+      curShapeType = 0;
+    }
+
+    serialWriteShapeData(curShapeType, curShapeSize);
   }
 }
