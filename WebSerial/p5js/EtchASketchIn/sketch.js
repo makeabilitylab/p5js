@@ -102,8 +102,7 @@ function onSerialDataReceived(eventSender, newData) {
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   // Check if data received starts with '#'. If so, ignore it
-  // Otherwise, parse it! We ignore lines that start with '#' 
-  
+  // Otherwise, parse it! We ignore lines that start with '#'  
   if(!newData.startsWith("#")){
     // Parse the data
     const indexOfComma = newData.indexOf(",");
