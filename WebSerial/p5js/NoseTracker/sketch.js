@@ -1,5 +1,5 @@
 // This sketch draws a nose and two eyes on a human face using ml5js
-// and then transmits the x position of the nose (normalized from 0 to 100)
+// and then transmits the x position of the nose (normalized from 0 to 1)
 // over WebUSB
 //
 // This sketch is loosely based this "Hour of Code" Coding Train video 
@@ -50,28 +50,11 @@ function setup() {
   serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
   serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  pHtmlMsg = select('#html-messages');
+  // If we have previously approved ports, attempt to connect with them
+  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  // Move connect button down
-  let mainTag = document.getElementsByTagName("main")[0];
-  mainTag.appendChild(
-    document.getElementById('connect-button')
-  );
-
-  // Move the lil html message output to main tag so the messages are below the canvas 
-  // https://stackoverflow.com/a/6329160/388117
-  mainTag.appendChild(
-    document.getElementById('html-messages')
-  );
-}
-
-/**
- * Callback function for when the connect button is pressed
- */
-async function onButtonConnectToSerialDevice() {
-  if (!serial.isOpen()) {
-    await serial.connectAndOpen();
-  }
+  // Add in a lil <p> element to provide messages. This is optional
+  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
 /**
@@ -92,11 +75,6 @@ function onSerialErrorOccurred(eventSender, error) {
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("Serial connection opened successfully");
-
-  let canvas = document.getElementsByClassName('p5Canvas')[0];
-  canvas.style.display = "block";
-
-  document.getElementById("connect-button").style.display = "none";
 }
 
 /**
@@ -126,6 +104,9 @@ function onSerialDataReceived(eventSender, newData) {
   }
 }
 
+/**
+ * Called by ml5js when the PoseNet model has been loaded
+ */
 function onPoseNetModelReady() {
   let debugMsg = "Posenet model ready!";
   console.log(debugMsg);
@@ -140,6 +121,13 @@ function onPoseNetModelReady() {
   document.getElementById("posenet-status").style.display = "none";
 }
 
+/**
+ * Triggers every time there's a new pose detected. If you create a new poseNet method 
+ * with a video element, this Event Listener will be called continuously over the video 
+ * frames. Returns an array of objects containing pose estimations using single detection
+ * 
+ * @param {*} poses 
+ */
 function onPoseDetected(poses) {
   // poses can contain an array of bodies (because PoseNet supports
   // recognition for *multiple* human bodies at the same time
@@ -147,16 +135,15 @@ function onPoseDetected(poses) {
   // which is at poses[0]
   human = poses[0];
 
-  if (human != null) {
-    // grab nose position and normalize as x,y fraction of screen to transmit over serial
+  if (human != null && serial.isOpen()) {
+    // Grab nose position and normalize as x,y fraction of screen to transmit over serial
+    // See keypoints here: // https://github.com/tensorflow/tfjs-models/tree/master/posenet#keypoints
     let noseXNormalized = human.pose.nose.x / width;
     let noseYNormalized = human.pose.nose.y / height;
 
-    if (serial.isOpen()) {
-      let outputData = nf(noseXNormalized, 1, 4) + ", " + nf(noseYNormalized, 1, 4) 
-      console.log("Writing to serial:", outputData);
-      serial.writeLine(outputData);
-    }
+    let outputData = nf(noseXNormalized, 1, 4) + ", " + nf(noseYNormalized, 1, 4) 
+    // console.log("Writing to serial:", outputData);
+    serial.writeLine(outputData); 
   }
 }
 
@@ -175,32 +162,38 @@ function draw() {
     drawEye(human.pose.leftEye.x, human.pose.leftEye.y);
     drawEye(human.pose.rightEye.x, human.pose.rightEye.y);
   }
+}
 
-  /**
-   * Draws a nose at the given x,y position
-   * 
-   * @param {number} x the x pos of the nose
-   * @param {number} y the y pos of the nose
-   */
-  function drawNose(x, y) {
-    fill(255, 0, 0);
-    let noseWidth = 30;
-    ellipse(x, y, noseWidth);
-  }
+/**
+ * Draws a nose at the given x,y position
+ * 
+ * @param {number} x the x pos of the nose
+ * @param {number} y the y pos of the nose
+ */
+function drawNose(x, y) {
+  fill(255, 0, 0);
+  let noseWidth = 30;
+  ellipse(x, y, noseWidth);
+}
 
-  /**
-   * Draws an eye at the given x,y position
-   * 
-   * @param {number} x the x pos of the eye
-   * @param {number} y the y pos of the eye
-   */
-  function drawEye(x, y) {
-    fill(255);
-    let eyeWidth = 40;
-    let pupilWidth = 15;
-    ellipse(x, y, eyeWidth);
+/**
+ * Draws an eye at the given x,y position
+ * 
+ * @param {number} x the x pos of the eye
+ * @param {number} y the y pos of the eye
+ */
+function drawEye(x, y) {
+  fill(255);
+  let eyeWidth = 40;
+  let pupilWidth = 15;
+  ellipse(x, y, eyeWidth);
 
-    fill(0);
-    ellipse(x, y, pupilWidth);
+  fill(0);
+  ellipse(x, y, pupilWidth);
+}
+
+function mouseClicked() {
+  if (!serial.isOpen()) {
+    serial.connectAndOpen(null, serialOptions);
   }
 }
