@@ -30,7 +30,7 @@ let crossHairSize = 10;
 
 let offscreenGfxBuffer;
 
-const MAX_BRUSH_SIZE = 30;
+const MAX_BRUSH_SIZE = 100;
 
 let serialOptions = { baudRate: 115200 };
 
@@ -47,7 +47,7 @@ function setup() {
   // If we have previously approved ports, attempt to connect with them
   //serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  brushColor = color(250, 250, 250, 75);
+  brushColor = color(250, 250, 250, 50);
 
   // Add in a lil <p> element to provide messages. This is optional
   pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
@@ -214,7 +214,15 @@ function draw() {
 
   // draw the paint cursor
   if(!hideCrosshair && brushSize <= 0){
-    stroke(255, 255, 255, 127); 
+
+    // Change color of crosshair dependent on background color
+    let bgColorAtCrossHair = offscreenGfxBuffer.get(brushX, brushY);
+    if(red(bgColorAtCrossHair) > 150){
+      stroke(0, 0, 0, 127); // background is light, make crosshair dark
+    }else{
+      stroke(255, 255, 255, 127);
+    }
+     
     const halfCrosshair = crossHairSize / 2.0;
     line(brushX - halfCrosshair, brushY, brushX + halfCrosshair, brushY);
     line(brushX, brushY - halfCrosshair, brushX, brushY + halfCrosshair);
