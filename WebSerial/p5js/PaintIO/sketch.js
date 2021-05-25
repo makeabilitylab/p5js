@@ -30,12 +30,18 @@ let crossHairSize = 10;
 
 let offscreenGfxBuffer;
 
-const MAX_BRUSH_SIZE = 100;
+let treatMouseAsPaintBrush = true;
+let serialBrushOn = true;
+let showInstructions = true;
+
+const MAX_BRUSH_SIZE = 150;
 
 let serialOptions = { baudRate: 115200 };
 
+let p5Canvas;
+
 function setup() {
-  createCanvas(640, 480);
+  p5Canvas = createCanvas(640, 480);
 
   // Setup Web Serial using serial.js
   serial = new Serial();
@@ -47,10 +53,15 @@ function setup() {
   // If we have previously approved ports, attempt to connect with them
   //serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
-  brushColor = color(250, 250, 250, 50);
+  // Set the color mode to HSB with max values of 1
+  // See: https://p5js.org/reference/#/p5/colorMode
+  colorMode(HSB, 1, 1, 1, 1)
+
+  //brushColor = color(250, 250, 250, 50);
+  brushColor = color(1, 0, 1, 0.18);
 
   // Add in a lil <p> element to provide messages. This is optional
-  pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
+  pHtmlMsg = createP("Press 'c' key to open the serial connection dialog");
 
   offscreenGfxBuffer = createGraphics(width, height);
   offscreenGfxBuffer.background(100);
@@ -96,7 +107,7 @@ function onSerialConnectionClosed(eventSender) {
  */
 function onSerialDataReceived(eventSender, newData) {
   //console.log("onSerialDataReceived", newData);
-  //pHtmlMsg.html("onSerialDataReceived: " + newData);
+  pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   if(!newData.startsWith("#")){
     if(newData.toLowerCase().startsWith("cls")){
@@ -152,7 +163,7 @@ function parseBrushData(newData){
     
     brushSize = MAX_BRUSH_SIZE * brushSizeFraction;
 
-    pHtmlMsg.html("(" + brushX + ", " + brushY + ")" + " " + brushSize);
+    //pHtmlMsg.html("(" + brushX + ", " + brushY + ")" + " " + brushSize);
   }
 }
 
@@ -175,7 +186,100 @@ async function serialWriteShapeData(shapeType, shapeDrawMode) {
 function draw() {
 
   //background(100);
+  let hue = map(mouseX, 0, width, 0, 1);
+  brushColor = color(hue, 0.7, 1, 0.2);
 
+  if(treatMouseAsPaintBrush && mouseIsPressed){
+    drawBrushStroke(mouseX, mouseY);
+  }
+
+  if(serialBrushOn){
+    drawBrushStroke(brushX, brushY);
+  }
+
+  image(offscreenGfxBuffer, 0, 0);
+
+  // draw the paint cursor
+  if(!hideCrosshair && brushSize <= 0 || !serialBrushOn){
+
+    // Change color of crosshair dependent on background color
+    let bgColorAtCrossHair = offscreenGfxBuffer.get(brushX, brushY);
+    if(red(bgColorAtCrossHair) > 150){
+      stroke(0, 0, 0, 127); // background is light, make crosshair dark
+    }else{
+      stroke(255, 255, 255, 127);
+    }
+     
+    const halfCrosshair = crossHairSize / 2.0;
+    line(brushX - halfCrosshair, brushY, brushX + halfCrosshair, brushY);
+    line(brushX, brushY - halfCrosshair, brushX, brushY + halfCrosshair);
+  }
+
+  if(showInstructions){
+    drawInstructions();
+  }
+}
+
+function drawInstructions(){
+  // Some instructions to the user
+  noStroke();
+  fill(255);
+  let tSize = 10;
+
+  textSize(tSize);
+  let yText = 2;
+  let yBuffer = 1;
+  let xText = 3;
+  text("KEYBOARD COMMANDS", xText, yText + tSize);
+  yText += tSize + yBuffer;
+  text("'h' : Show/hide instructions", xText, yText + tSize);
+  
+  yText += tSize + yBuffer;
+  let strConnectToSerial = "'c' : Connect to serial (";
+  if(serial.isOpen()){
+    strConnectToSerial += "connected";
+  }else{
+    strConnectToSerial += "not connected";
+  }
+  strConnectToSerial += ")";
+  text(strConnectToSerial, xText, yText + tSize);
+
+  yText += tSize + yBuffer;
+  let strMouseAsBrush = "'m' : Toggle mouse as brush (";
+  if(treatMouseAsPaintBrush){
+    strMouseAsBrush += "on";
+  }else{
+    strMouseAsBrush += "off";
+  }
+  strMouseAsBrush += ")";
+  text(strMouseAsBrush, xText, yText + tSize);
+
+  yText += tSize + yBuffer;
+  let strSerialBrushOn = "'s' : Toggle serial brush (";
+  if(serialBrushOn){
+    strSerialBrushOn += "on";
+  }else{
+    strSerialBrushOn += "off";
+  }
+  strSerialBrushOn += ")";
+  text(strSerialBrushOn, xText, yText + tSize);
+
+  yText += tSize + yBuffer;
+  let strBrushType = "'b' : Set brush type (" + mapBrushTypeToShapeName[brushType].toLowerCase() + ")";
+  text(strBrushType, xText, yText + tSize);
+  
+  yText += tSize + yBuffer;
+  let strToggleFillMode = "'f' : Toggle fill mode (" + mapBrushFillMode[brushFillMode].toLowerCase() + ")";
+  text(strToggleFillMode, xText, yText + tSize);
+}
+
+/**
+ * Draws the brush stroke with the current global settings at the x,y position
+ * 
+ * @param {Number} xBrush x brush position
+ * @param {Number} yBrush y brush position
+ */
+function drawBrushStroke(xBrush, yBrush){
   if(brushSize > 0){
     if (brushFillMode == 0) {
       offscreenGfxBuffer.fill(brushColor);
@@ -185,8 +289,8 @@ function draw() {
       offscreenGfxBuffer.noFill();
     }
 
-    let xCenter = brushX;
-    let yCenter = brushY;
+    let xCenter = xBrush;
+    let yCenter = yBrush;
     let halfShapeSize = brushSize / 2;
     switch (brushType) {
       case 0:
@@ -209,70 +313,40 @@ function draw() {
         offscreenGfxBuffer.triangle(x1, y1, x2, y2, x3, y3)
     }
   }
-
-  image(offscreenGfxBuffer, 0, 0);
-
-  // draw the paint cursor
-  if(!hideCrosshair && brushSize <= 0){
-
-    // Change color of crosshair dependent on background color
-    let bgColorAtCrossHair = offscreenGfxBuffer.get(brushX, brushY);
-    if(red(bgColorAtCrossHair) > 150){
-      stroke(0, 0, 0, 127); // background is light, make crosshair dark
-    }else{
-      stroke(255, 255, 255, 127);
-    }
-     
-    const halfCrosshair = crossHairSize / 2.0;
-    line(brushX - halfCrosshair, brushY, brushX + halfCrosshair, brushY);
-    line(brushX, brushY - halfCrosshair, brushX, brushY + halfCrosshair);
-  }
-
-  // Some instructions to the user
-  noStroke();
-  fill(255);
-  const tSize = 14;
-  let strInstructions = "";
-  if (serial.isOpen()) {
-    strInstructions = "Left click to change the shape. Right click to change fill/outline";
-  } else {
-    strInstructions = "Click anywhere to connect with serial"
-  }
-  textSize(tSize);
-  let tWidth = textWidth(strInstructions);
-  const xText = width / 2 - tWidth / 2;
-  text(strInstructions, xText, height - tSize + 6);
-}
-
-function mousePressed() {
-  // Only update states if we're connected to serial
-  if (serial.isOpen()) {
-    if (mouseButton == RIGHT) {
-      // Switch between fill and outline mode based on right click
-      brushFillMode++;
-      if (brushFillMode >= Object.keys(mapBrushFillMode).length) {
-        brushFillMode = 0;
-      }
-      console.log("Right click!");
-    } else {
-      brushType++;
-      if (brushType >= Object.keys(mapBrushTypeToShapeName).length) {
-        brushType = 0;
-      }
-    }
-    serialWriteShapeData(brushType, brushFillMode);
-  }
 }
 
 /**
- * Called automatically when the mouse button has been pressed and then released
- * According to the p5.js docs, this function is only guaranteed to be called when
- * the left mouse button is clicked.
- * 
- * See: https://p5js.org/reference/#/p5/mouseClicked
+ * The keyPressed() function is called once every time a key is pressed.
+ * See: https://p5js.org/reference/#/p5/keyPressed
  */
-function mouseClicked() {
-  if (!serial.isOpen()) {
-    serial.connectAndOpen(null, serialOptions);
+function keyPressed() {
+  let lastFillMode = brushFillMode;
+  let lastBrushType = brushType;
+  print("keyPressed", key);
+  if(key == 'f'){
+    brushFillMode++;
+    if (brushFillMode >= Object.keys(mapBrushFillMode).length) {
+      brushFillMode = 0;
+    }
+  }else if(key == 'b'){
+    brushType++;
+    if (brushType >= Object.keys(mapBrushTypeToShapeName).length) {
+      brushType = 0;
+    }
+  }else if(key == 's'){
+    serialBrushOn = !serialBrushOn;
+  }else if(key == 'm'){
+    treatMouseAsPaintBrush = !treatMouseAsPaintBrush;
+  }else if(key == 'h'){
+    showInstructions = !showInstructions;
+    print("showInstructions", showInstructions);
+  }else if(key == 'c'){
+    if (!serial.isOpen()) {
+      serial.connectAndOpen(null, serialOptions);
+    }
+  }
+
+  if(lastFillMode != brushFillMode || lastBrushType != brushType){
+    serialWriteShapeData(brushType, brushFillMode);
   }
 }
