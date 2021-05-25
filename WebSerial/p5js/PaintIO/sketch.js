@@ -25,6 +25,17 @@ let brushX = 0;
 let brushY = 0;
 let brushColor;
 
+let lastBrushX = 0;
+let lastBrushY = 0;
+
+let mapColorMode = {
+  0: "Brush speed",
+  1: "Brush location",
+  2: "Mouse location",
+};
+
+let brushColorMode = 0;
+
 let hideCrosshair = false;
 let crossHairSize = 10;
 
@@ -61,7 +72,7 @@ function setup() {
   brushColor = color(1, 0, 1, 0.18);
 
   // Add in a lil <p> element to provide messages. This is optional
-  pHtmlMsg = createP("Press 'c' key to open the serial connection dialog");
+  pHtmlMsg = createP("Press 'o' key to open the serial connection dialog");
 
   offscreenGfxBuffer = createGraphics(width, height);
   offscreenGfxBuffer.background(100);
@@ -158,6 +169,9 @@ function parseBrushData(newData){
       brushFillMode = newBrushDrawMode;
     }
 
+    lastBrushX = brushX;
+    lastBrushY = brushY;
+
     brushX = xFraction * width;
     brushY = yFraction * height;
     
@@ -186,14 +200,24 @@ async function serialWriteShapeData(shapeType, shapeDrawMode) {
 function draw() {
 
   //background(100);
-  let hue = map(mouseX, 0, width, 0, 1);
+  let hue = 0;
+  if(brushColorMode == 0){
+    let brushMovementDist = dist(lastBrushX, lastBrushY, brushX, brushY);
+    hue = map(brushMovementDist, 0, 50, 0, 1);
+  }else if(brushColorMode == 1){
+    hue = map(brushX, 0, width, 0, 1);
+  }else if(brushColorMode == 2){
+    hue = map(mouseX, 0, width, 0, 1);
+  }
+  
+  //print(brushMovementDist);
   brushColor = color(hue, 0.7, 1, 0.2);
 
   if(treatMouseAsPaintBrush && mouseIsPressed){
     drawBrushStroke(mouseX, mouseY);
   }
 
-  if(serialBrushOn){
+  if(serialBrushOn && serial.isOpen()){
     drawBrushStroke(brushX, brushY);
   }
 
@@ -232,10 +256,10 @@ function drawInstructions(){
   let xText = 3;
   text("KEYBOARD COMMANDS", xText, yText + tSize);
   yText += tSize + yBuffer;
-  text("'h' : Show/hide instructions", xText, yText + tSize);
+  text("'i' : Show/hide instructions", xText, yText + tSize);
   
   yText += tSize + yBuffer;
-  let strConnectToSerial = "'c' : Connect to serial (";
+  let strConnectToSerial = "'o' : Open serial (";
   if(serial.isOpen()){
     strConnectToSerial += "connected";
   }else{
@@ -271,6 +295,10 @@ function drawInstructions(){
   yText += tSize + yBuffer;
   let strToggleFillMode = "'f' : Toggle fill mode (" + mapBrushFillMode[brushFillMode].toLowerCase() + ")";
   text(strToggleFillMode, xText, yText + tSize);
+
+  yText += tSize + yBuffer;
+  let strColorMode = "'c' : Color mode (" + mapColorMode[brushColorMode].toLowerCase() + ")";
+  text(strColorMode, xText, yText + tSize);
 }
 
 /**
@@ -333,14 +361,20 @@ function keyPressed() {
     if (brushType >= Object.keys(mapBrushTypeToShapeName).length) {
       brushType = 0;
     }
-  }else if(key == 's'){
+  }else if(key == 'c'){
+    brushColorMode++;
+    if(brushColorMode >= Objects.keys(mapColorMode).length){
+      brushColorMode = 0;
+    }
+  }
+  else if(key == 's'){
     serialBrushOn = !serialBrushOn;
   }else if(key == 'm'){
     treatMouseAsPaintBrush = !treatMouseAsPaintBrush;
-  }else if(key == 'h'){
+  }else if(key == 'i'){
     showInstructions = !showInstructions;
     print("showInstructions", showInstructions);
-  }else if(key == 'c'){
+  }else if(key == 'o'){
     if (!serial.isOpen()) {
       serial.connectAndOpen(null, serialOptions);
     }
