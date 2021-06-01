@@ -1,6 +1,10 @@
-// This sketch demonstrates how to 
-// 
-// TODO:
+// This sketch demonstrates a full end-to-end p5.js + Arduino application.
+// For a step-by-step tutorial, see:
+// - http://makeabilitylab.github.io/physcomp/communication/p5js-paint-io
+
+// It is designed to work with the following Arduino based programs:
+// - https://github.com/makeabilitylab/arduino/blob/master/Serial/PaintIO/PaintIO.ino
+// - https://github.com/makeabilitylab/arduino/blob/master/Serial/PaintIOAccel/PaintIOAccel.ino
 //
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
@@ -18,20 +22,23 @@ let mapBrushFillMode = {
   1: "Outline",
 };
 
-let brushType = 0; // Circle as default
-let brushFillMode = 0; // Fill as default
-let brushSize = 10;
-let brushX = 0;
-let brushY = 0;
-let brushColor;
+const MAX_BRUSH_SIZE = 150; // the maximum brush size
 
-let lastBrushX = 0;
-let lastBrushY = 0;
+let brushType = 0;      // Circle as default
+let brushFillMode = 0;  // Fill as default
+let brushSize = 10;     // Initial brush size
+let brushX = 0;         // Current brush x location (in pixel coordinates)
+let brushY = 0;         // Current brush y location (in pixel coordinates)
+let brushColor;         // Current brush color
+ 
+let lastBrushX = 0;     // Last brush y position (similar to pmouseX but for the brush)
+let lastBrushY = 0;     // Last brush y position (similar to pmouseY but for the brush)
 
 let mapColorMode = {
-  0: "Brush speed",
-  1: "Brush location",
-  2: "Mouse location",
+  0: "Brush size",
+  1: "Brush speed",
+  2: "Brush location",
+  3: "Mouse location",
 };
 
 let brushColorMode = 0;
@@ -39,20 +46,18 @@ let brushColorMode = 0;
 let hideCrosshair = false;
 let crossHairSize = 10;
 
+// We will paint to an offscreen graphics buffer
+// See: https://p5js.org/reference/#/p5/createGraphics
 let offscreenGfxBuffer;
 
 let treatMouseAsPaintBrush = true;
 let serialBrushOn = true;
 let showInstructions = true;
 
-const MAX_BRUSH_SIZE = 150;
-
 let serialOptions = { baudRate: 115200 };
 
-let p5Canvas;
-
 function setup() {
-  p5Canvas = createCanvas(640, 480);
+  createCanvas(640, 480);
 
   // Setup Web Serial using serial.js
   serial = new Serial();
@@ -62,7 +67,7 @@ function setup() {
   serial.on(SerialEvents.ERROR_OCCURRED, onSerialErrorOccurred);
 
   // If we have previously approved ports, attempt to connect with them
-  //serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
+  serial.autoConnectAndOpenPreviouslyApprovedPort(serialOptions);
 
   // Set the color mode to HSB with max values of 1
   // See: https://p5js.org/reference/#/p5/colorMode
@@ -74,8 +79,12 @@ function setup() {
   // Add in a lil <p> element to provide messages. This is optional
   pHtmlMsg = createP("Press 'o' key to open the serial connection dialog");
 
+  // Rather than storing individual paint strokes + paint properties in a
+  // data structure, we simply draw immediately to an offscreen buffer
+  // and then show this offscreen buffer on each draw call
+  // See: https://p5js.org/reference/#/p5/createGraphics
   offscreenGfxBuffer = createGraphics(width, height);
-  offscreenGfxBuffer.background(100);
+  offscreenGfxBuffer.background(100); 
 
   background(100);
 }
@@ -120,6 +129,8 @@ function onSerialDataReceived(eventSender, newData) {
   //console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
+  // We decided to make lines prefixed by "#" as comment/debugging lines
+  // so we ignore these
   if(!newData.startsWith("#")){
     if(newData.toLowerCase().startsWith("cls")){
       offscreenGfxBuffer.background(100);
@@ -129,6 +140,11 @@ function onSerialDataReceived(eventSender, newData) {
   }
 }
 
+/**
+ * Called by onSerialDataReceived to parse our incoming brush data
+ * 
+ * @param {string} newData 
+ */
 function parseBrushData(newData){
   // Parse the data
   // The format is xPosFrac, yPosFrac, sizeFrac, brushType, brushFillMode
@@ -176,19 +192,14 @@ function parseBrushData(newData){
     brushY = yFraction * height;
     
     brushSize = MAX_BRUSH_SIZE * brushSizeFraction;
-
-    //pHtmlMsg.html("(" + brushX + ", " + brushY + ")" + " " + brushSize);
   }
 }
 
 async function serialWriteShapeData(shapeType, shapeDrawMode) {
-
   if (serial.isOpen()) {
-
     // Format the text string to send over serial. nf simply formats the floating point
     // See: https://p5js.org/reference/#/p5/nf
     let strData = shapeType + "," + shapeDrawMode;
-
     serial.writeLine(strData);
   }
 }
@@ -202,11 +213,13 @@ function draw() {
   //background(100);
   let hue = 0;
   if(brushColorMode == 0){
+    hue = map(brushSize, 0, MAX_BRUSH_SIZE, 0, 1);
+  }else if(brushColorMode == 1){ // based on brush speed
     let brushMovementDist = dist(lastBrushX, lastBrushY, brushX, brushY);
     hue = map(brushMovementDist, 0, 50, 0, 1);
-  }else if(brushColorMode == 1){
+  }else if(brushColorMode == 2){ // based on brush x location
     hue = map(brushX, 0, width, 0, 1);
-  }else if(brushColorMode == 2){
+  }else if(brushColorMode == 3){ // based on mouse x location
     hue = map(mouseX, 0, width, 0, 1);
   }
   
@@ -221,6 +234,7 @@ function draw() {
     drawBrushStroke(brushX, brushY);
   }
 
+  // Draw the offscreen buffer to the screen
   image(offscreenGfxBuffer, 0, 0);
 
   // draw the paint cursor
@@ -244,6 +258,9 @@ function draw() {
   }
 }
 
+/**
+ * Draws the keyboard instructions to the screen
+ */
 function drawInstructions(){
   // Some instructions to the user
   noStroke();
@@ -257,6 +274,9 @@ function drawInstructions(){
   text("KEYBOARD COMMANDS", xText, yText + tSize);
   yText += tSize + yBuffer;
   text("'i' : Show/hide instructions", xText, yText + tSize);
+
+  yText += tSize + yBuffer;
+  text("'l' : Clear the screen", xText, yText + tSize);
   
   yText += tSize + yBuffer;
   let strConnectToSerial = "'o' : Open serial (";
@@ -304,8 +324,8 @@ function drawInstructions(){
 /**
  * Draws the brush stroke with the current global settings at the x,y position
  * 
- * @param {Number} xBrush x brush position
- * @param {Number} yBrush y brush position
+ * @param {Number} xBrush x brush position in pixels
+ * @param {Number} yBrush y brush position in pixels
  */
 function drawBrushStroke(xBrush, yBrush){
   if(brushSize > 0){
@@ -366,14 +386,16 @@ function keyPressed() {
     if(brushColorMode >= Objects.keys(mapColorMode).length){
       brushColorMode = 0;
     }
-  }
-  else if(key == 's'){
+  }else if(key == 's'){
     serialBrushOn = !serialBrushOn;
   }else if(key == 'm'){
     treatMouseAsPaintBrush = !treatMouseAsPaintBrush;
   }else if(key == 'i'){
     showInstructions = !showInstructions;
-    print("showInstructions", showInstructions);
+  }else if(key == 'l'){
+    // To clear the screen, simply "draw" over the existing
+    // graphics buffer with an empty background
+    offscreenGfxBuffer.background(100);
   }else if(key == 'o'){
     if (!serial.isOpen()) {
       serial.connectAndOpen(null, serialOptions);
