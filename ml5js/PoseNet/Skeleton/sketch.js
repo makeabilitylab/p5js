@@ -1,78 +1,123 @@
-// This sketch is based on the PoseNet_webcam example on the ml5js website:
-// https://git.io/JkccK
+// TODO
 //
-// This sketch should work with multiple people in the camera frame. To test this if you 
-// only have one person available, you can hold up pictures of groups of people to your 
-// webcam! :)
-//
-// This Sketch uses ml5js, a Machine Learning JavaScript library that
-// works well with p5js. ml5js provides lots of interesting methods
-// including pitch detection, human pose detection, sound classification, etc.
-// Read more here: https://ml5js.org/
-//
-// This particular Sketch uses ml5js's PoseNet implementation for human pose tracking.
-//
-// Reference for the ml5js PoseNet implementation:
-//  - https://ml5js.org/reference/api-PoseNet/
-//
-// Primary PoseNet library, which ml5js is using under the hood:
-//  - Read this article: "Real-time Human Pose Estimation in the Browser with TensorFlow.js"
-//    here: https://link.medium.com/7EBfMICUh2
-//  - https://github.com/tensorflow/tfjs-models/tree/master/posenet
-//
-// Other ML JavaScript APIs:
-//  - Face Rec: https://github.com/justadudewhohacks/face-api.js/
-// 
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
-//
-// TODO:
-// - Add sidebar that allows for configuration
-// - Allow user to select which video source to use.
-//  -- https://github.com/processing/p5.js/issues/1496
-//  -- https://github.com/ITPNYU/ICM-2015/blob/master/09_video_sound/02_capture/13_get_sources/sketch.js
-// - G suggests adding a star wars lightsaber
-//
 
 let video;
 let poseNet;
-let humans = [];
+let currentPoses = [];
+
+// The following options are all optional. Here are the defaults:
+// {
+//   architecture: 'MobileNetV1',
+//   imageScaleFactor: 0.3,
+//   outputStride: 16,
+//   flipHorizontal: false,
+//   minConfidence: 0.5,
+//   maxPoseDetections: 5,
+//   scoreThreshold: 0.5,
+//   nmsRadius: 20,
+//   detectionType: 'multiple',
+//   inputResolution: 513,
+//   multiplier: 0.75,
+//   quantBytes: 2,
+// };
+const poseNetOptions = { detectionType: "single"};
 
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
-  video.size(width, height);
-
-  // Create a new poseNet method with a single detection
-  poseNet = ml5.poseNet(video, modelReady);
-  // This sets up an event that fills the global variable "poses"
-  // with an array every time new poses are detected
-  poseNet.on("pose", function(results) {
-    humans = results;
-  });
-  // Hide the video element, and just show the canvas
+  //video.size(width, height);
   video.hide();
+
+  // Setup PoseNet. This can take a while, so we load it 
+  // asynchronously (when it's done, it will call modelReady)
+  poseNet = ml5.poseNet(video, poseNetOptions, onPoseNetModelReady); //call onModelReady when setup
+  
+  // PoseNet has one and only one event subscription called 'pose', which is
+  // called when pose is detected
+  poseNet.on('pose', onPoseDetected); // call onPoseDetected when pose detected
+  //frameRate(1);
 }
 
-function modelReady() {
-  select("#status").html("Model Loaded");
-  document.getElementById("status").style.display = "none";
+
+function onPoseNetModelReady() {
+  print("The PoseNet model is ready...");
+}
+
+function onPoseDetected(poses) {
+  currentPoses = poses;
 }
 
 function draw() {
   image(video, 0, 0, width, height);
 
-  // We can call both functions to draw all keypoints and the skeletons
-  drawKeypoints();
-  drawSkeleton();
+  // Iterate through all poses and print them out
+  if(currentPoses){
+    for(const pose of currentPoses){
+      drawPose(pose);
+    }
+  }
 }
+
+function drawPose(pose){
+  
+  // Draw skeleton
+  const skeletonColor = color(255, 255, 255, 128);
+  stroke(skeletonColor); 
+  strokeWeight(2);
+  const skeleton = pose.skeleton;
+  for (let j = 0; j < skeleton.length; j += 1) {
+    const partA = skeleton[j][0];
+    const partB = skeleton[j][1];
+    line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
+  }
+  
+  // Draw keypoints with text
+  const kpFillColor = color(255, 255, 255, 200);
+  const textColor = color(255, 255, 255, 230);
+  const kpOutlineColor = color(0, 0, 0, 150);
+  strokeWeight(1);
+
+  const keypoints = pose.pose.keypoints;
+  const kpSize = 10;
+  const kpTextMargin = 2;
+  for (let j = 0; j < keypoints.length; j += 1) {
+    // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+    const kp = keypoints[j];
+
+    fill(kpFillColor); 
+    noStroke();
+    circle(kp.position.x, kp.position.y, kpSize);
+
+    fill(textColor);
+    textAlign(LEFT);
+    let xText = kp.position.x + kpSize + kpTextMargin;
+    if(kp.part.startsWith("right")){
+      textAlign(RIGHT);
+      xText = kp.position.x - (kpSize + kpTextMargin);
+    }
+    textStyle(BOLD);
+    text(kp.part, xText, kp.position.y);
+    textStyle(NORMAL);
+    text(nf(kp.score, 1, 2), xText, kp.position.y + textSize());
+    //console.log(keypoint);
+    // Only draw an ellipse is the pose probability is bigger than 0.2
+    //if (keypoint.score > 0.2) {
+
+    noFill();
+    stroke(kpOutlineColor);
+    circle(kp.position.x, kp.position.y, kpSize);
+  }
+}
+
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
   // Loop through all the poses detected
-  for (let i = 0; i < humans.length; i += 1) {
+  for (let i = 0; i < poses.length; i += 1) {
     // For each pose detected, loop through all the keypoints
-    const pose = humans[i].pose;
+    const pose = poses[i].pose;
     for (let j = 0; j < pose.keypoints.length; j += 1) {
       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
       const keypoint = pose.keypoints[j];
@@ -89,8 +134,8 @@ function drawKeypoints() {
 // A function to draw the skeletons
 function drawSkeleton() {
   // Loop through all the skeletons detected
-  for (let i = 0; i < humans.length; i += 1) {
-    const skeleton = humans[i].skeleton;
+  for (let i = 0; i < poses.length; i += 1) {
+    const skeleton = poses[i].skeleton;
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j += 1) {
       const partA = skeleton[j][0];
