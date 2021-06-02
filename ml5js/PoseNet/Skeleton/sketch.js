@@ -54,13 +54,13 @@ function draw() {
 
   // Iterate through all poses and print them out
   if(currentPoses){
-    for(const pose of currentPoses){
-      drawPose(pose);
+    for (let i = 0; i < currentPoses.length; i++) {
+      drawPose(currentPoses[i], i);
     }
   }
 }
 
-function drawPose(pose){
+function drawPose(pose, poseIndex){
   
   // Draw skeleton
   const skeletonColor = color(255, 255, 255, 128);
@@ -82,9 +82,26 @@ function drawPose(pose){
   const keypoints = pose.pose.keypoints;
   const kpSize = 10;
   const kpTextMargin = 2;
+  let xPoseLeftMost = width;
+  let xPoseRightMost = -1;
+  let yPoseTop = height;
+  let yPoseBottom = -1;
   for (let j = 0; j < keypoints.length; j += 1) {
     // A keypoint is an object describing a body part (like rightArm or leftShoulder)
     const kp = keypoints[j];
+
+    // check for maximum extents
+    if(xPoseLeftMost > kp.position.x){
+      xPoseLeftMost = kp.position.x;
+    }else if(xPoseRightMost < kp.position.x){
+      xPoseRightMost = kp.position.x;
+    }
+
+    if(yPoseBottom < kp.position.y){
+      yPoseBottom = kp.position.y;
+    }else if(yPoseTop > kp.position.y){
+      yPoseTop = kp.position.y;
+    }
 
     fill(kpFillColor); 
     noStroke();
@@ -93,14 +110,19 @@ function drawPose(pose){
     fill(textColor);
     textAlign(LEFT);
     let xText = kp.position.x + kpSize + kpTextMargin;
+    let yText = kp.position.y;
     if(kp.part.startsWith("right")){
       textAlign(RIGHT);
       xText = kp.position.x - (kpSize + kpTextMargin);
     }
     textStyle(BOLD);
-    text(kp.part, xText, kp.position.y);
+    text(kp.part, xText, yText);
     textStyle(NORMAL);
-    text(nf(kp.score, 1, 2), xText, kp.position.y + textSize());
+    yText += textSize();
+    text(int(kp.position.x) + ", " + int(kp.position.y), xText, yText);
+
+    yText += textSize();
+    text(nf(kp.score, 1, 2), xText, yText);
     //console.log(keypoint);
     // Only draw an ellipse is the pose probability is bigger than 0.2
     //if (keypoint.score > 0.2) {
@@ -109,6 +131,34 @@ function drawPose(pose){
     stroke(kpOutlineColor);
     circle(kp.position.x, kp.position.y, kpSize);
   }
+
+  const boundingBoxExpandFraction = 0.1;
+  let boundingBoxWidth = xPoseRightMost - xPoseLeftMost;
+  let boundingBoxHeight = yPoseBottom - yPoseTop;
+  let boundingBoxXMargin = boundingBoxWidth * boundingBoxExpandFraction;
+  let boundingBoxYMargin = boundingBoxHeight * boundingBoxExpandFraction;
+  xPoseRightMost += boundingBoxXMargin / 2;
+  xPoseLeftMost -= boundingBoxXMargin / 2;
+  yPoseTop -= boundingBoxYMargin / 2;
+  yPoseBottom += boundingBoxYMargin / 2;
+  
+  noStroke();
+  fill(textColor);
+  textStyle(BOLD);
+  textAlign(LEFT, BOTTOM);
+  const strPoseNum = "Pose: " + (poseIndex + 1);
+  text(strPoseNum, xPoseLeftMost, yPoseTop - textSize() - 1);
+  const strWidth = textWidth(strPoseNum);
+  textStyle(NORMAL);
+  text("Confidence: " + nf(pose.pose.score, 0, 1), xPoseLeftMost, yPoseTop);
+
+  noFill();
+  stroke(kpFillColor);
+  rect(xPoseLeftMost, yPoseTop, boundingBoxWidth + boundingBoxXMargin, 
+    boundingBoxHeight + boundingBoxYMargin);
+
+  rect(10, 10, 10, 10);
+  //rect(xPoseLeftMost, yPoseTop, )
 }
 
 
