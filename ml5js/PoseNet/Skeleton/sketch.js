@@ -1,4 +1,5 @@
-// TODO
+// Demonstrates the ml5.js PoseNet API:
+// https://learn.ml5js.org/#/reference/posenet
 //
 // Based loosely on the official ml5.js PoseNet example:
 // https://github.com/ml5js/ml5-library/blob/main/examples/p5js/PoseNet/PoseNet_webcam/sketch.js
