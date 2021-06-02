@@ -1,5 +1,11 @@
 // TODO
 //
+// Based loosely on the official ml5.js PoseNet example:
+// https://github.com/ml5js/ml5-library/blob/main/examples/p5js/PoseNet/PoseNet_webcam/sketch.js
+//
+// As linked to from:
+// https://ml5js.org/reference/api-PoseNet/
+// 
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 
@@ -40,11 +46,17 @@ function setup() {
   //frameRate(1);
 }
 
-
+/**
+ * Callback function called by ml5.js PoseNet when the PoseNet model is ready
+ * Will be called once and only once
+ */
 function onPoseNetModelReady() {
   print("The PoseNet model is ready...");
 }
 
+/**
+ * Callback function called by ml5.js PosetNet when a pose has been detected
+ */
 function onPoseDetected(poses) {
   currentPoses = poses;
 }
@@ -156,9 +168,6 @@ function drawPose(pose, poseIndex){
   stroke(kpFillColor);
   rect(xPoseLeftMost, yPoseTop, boundingBoxWidth + boundingBoxXMargin, 
     boundingBoxHeight + boundingBoxYMargin);
-
-  rect(10, 10, 10, 10);
-  //rect(xPoseLeftMost, yPoseTop, )
 }
 
 
