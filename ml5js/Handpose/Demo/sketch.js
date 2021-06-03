@@ -1,69 +1,65 @@
-// This sketch is based on the official Handpose example from ml5js:
-// https://github.com/ml5js/ml5-library/blob/main/examples/p5js/Handpose/Handpose_Webcam/sketch.js
+// This sketch is based on the official HandPose example from ml5js:
+// https://github.com/ml5js/ml5-library/blob/main/examples/p5js/HandPose/HandPose_Webcam/sketch.js
 //
 // This Sketch uses ml5js, a Machine Learning JavaScript library that
 // works well with p5js. ml5js provides lots of interesting methods
 // including pitch detection, human pose detection, sound classification, etc.
 // Read more here: https://ml5js.org/
 //
-// This particular Sketch uses ml5js's Handpose implementation for hand tracking
+// This particular Sketch uses ml5js's HandPose implementation for hand tracking
 //
 // Reference for the ml5js PoseNet implementation:
-//  - https://learn.ml5js.org/#/reference/handpose
+//  - https://learn.ml5js.org/#/reference/handPose
 //
 // 
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
 //
-// TODO: 
-//  - [done] calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
-//  - calculate angle from palm to middle finger to determine angle of hand?
-//  - use hand angle to calculate wave rate
 
-let handposeModel;
+let handPoseModel;
 let video;
-let curHandpose = null;
+let curHandPose = null;
 
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
   // video.size(width, height);
 
-  handposeModel = ml5.handpose(video, onHandposeModelReady);
+  handPoseModel = ml5.handpose(video, onHandPoseModelReady);
 
-  // Call onNewHandposePrediction every time a new handpose is predicted
-  handposeModel.on("predict", onNewHandposePrediction);
+  // Call onNewHandPosePrediction every time a new handPose is predicted
+  handPoseModel.on("predict", onNewHandPosePrediction);
 
   // Hide the video element, and just show the canvas
   video.hide();
 }
 
-function onHandposeModelReady() {
-  console.log("Handpose model ready!");
+function onHandPoseModelReady() {
+  console.log("HandPose model ready!");
 }
 
-function onNewHandposePrediction(predictions) {
+function onNewHandPosePrediction(predictions) {
   if (predictions && predictions.length > 0) {
-    curHandpose = predictions[0];
-    // console.log(curHandpose);
+    curHandPose = predictions[0];
+    // console.log(curHandPose);
   } else {
-    curHandpose = null;
+    curHandPose = null;
   }
 }
 
 function draw() {
   image(video, 0, 0, width, height);
 
-  drawHand(curHandpose);
+  drawHand(curHandPose);
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawHand(handpose) {
-  if (!handpose) {
+function drawHand(handPose) {
+  if (!handPose) {
     return;
   }
 
-  // The handpose data is in this format, see: https://learn.ml5js.org/#/reference/handpose?id=predict
+  // The handPose data is in this format, see: https://learn.ml5js.org/#/reference/handPose?id=predict
   // {
   //   handInViewConfidence: 1, // The probability of a hand being present.
   //   boundingBox: { // The bounding box surrounding the hand.
@@ -86,8 +82,8 @@ function drawHand(handpose) {
 
   // Draw landmarks
   // Find tight bounding box
-  const tightBoundingBox = drawKeypoints(handpose);
-  drawSkeleton(handpose);
+  const tightBoundingBox = drawKeypoints(handPose);
+  drawSkeleton(handPose);
 
   // Draw tight bounding box
   noFill();
@@ -98,7 +94,7 @@ function drawHand(handpose) {
   rect(tightBoundingBox.left, tightBoundingBox.top, tightBoundingBoxWidth, tightBoundingBoxHeight);
 
   // Draw hand pose bounding box
-  const bb = handpose.boundingBox;
+  const bb = handPose.boundingBox;
   const bbWidth = bb.bottomRight[0] - bb.topLeft[0];
   const bbHeight = bb.bottomRight[1] - bb.topLeft[1];
   rect(bb.topLeft[0], bb.topLeft[1], bbWidth, bbHeight);
@@ -106,22 +102,22 @@ function drawHand(handpose) {
   // Draw confidence
   fill(255, 0, 0);
   noStroke();
-  text(nfc(handpose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 15);
+  text(nfc(handPose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 15);
 }
 
-function drawKeypoints(handpose) {
-  if (!handpose) {
+function drawKeypoints(handPose) {
+  if (!handPose) {
     return;
   }
 
-  let boundingBoxLeft = handpose.landmarks[0][0];
-  let boundingBoxTop = handpose.landmarks[0][1];
+  let boundingBoxLeft = handPose.landmarks[0][0];
+  let boundingBoxTop = handPose.landmarks[0][1];
   let boundingBoxRight = boundingBoxLeft;
   let boundingBoxBottom = boundingBoxTop;
 
   // draw keypoints
-  for (let j = 0; j < handpose.landmarks.length; j += 1) {
-    const landmark = handpose.landmarks[j];
+  for (let j = 0; j < handPose.landmarks.length; j += 1) {
+    const landmark = handPose.landmarks[j];
     fill(0, 255, 0, 200);
     noStroke();
     ellipse(landmark[0], landmark[1], 10, 10);
@@ -148,8 +144,8 @@ function drawKeypoints(handpose) {
 }
 
 // A function to draw the skeletons
-function drawSkeleton(handpose) {
-  if (!handpose) {
+function drawSkeleton(handPose) {
+  if (!handPose) {
     return;
   }
 
@@ -157,7 +153,7 @@ function drawSkeleton(handpose) {
   noFill();
 
   // Loop through all the skeletons detected
-  const a = handpose.annotations;
+  const a = handPose.annotations;
 
   // For every skeleton, loop through all body connections
   for (let i = 0; i < a.thumb.length - 1; i++) {

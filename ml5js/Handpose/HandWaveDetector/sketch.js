@@ -1,5 +1,5 @@
-// This sketch detects a hand wave and angle using the Handpose implementation in ml5js
-//  - https://learn.ml5js.org/#/reference/handpose
+// This sketch detects a hand wave and angle using the HandPose implementation in ml5js
+//  - https://learn.ml5js.org/#/reference/handPose
 //
 // ml5js is a Machine Learning JavaScript library that provides an easy-to-use API
 // for machine learning. See: https://ml5js.org/
@@ -9,7 +9,7 @@
 // http://makeabilitylab.cs.uw.edu
 //
 // TODO: 
-//  - [done] calculate and show a tighter bounding box; the one from handpose model seems large (unless I have a bug)
+//  - [done] calculate and show a tighter bounding box; the one from handPose model seems large (unless I have a bug)
 //  - [done] calculate angle from palm to middle finger to determine angle of hand?
 //  - use hand angle to calculate wave rate
 //  - to determine wave:
@@ -19,7 +19,7 @@
 //      are on top of all other points
 //    - second, determine angle of wave
 
-let handposeModel;
+let handPoseModel;
 let video;
 let hand;
 
@@ -29,10 +29,10 @@ function setup() {
   video = createCapture(VIDEO);
   // video.size(width, height);
 
-  handposeModel = ml5.handpose(video, onHandPoseModelReady);
+  handPoseModel = ml5.handpose(video, onHandPoseModelReady);
 
-  // Call onNewHandposePrediction every time a new handpose is predicted
-  handposeModel.on("predict", onNewHandPosePrediction);
+  // Call onNewHandPosePrediction every time a new handPose is predicted
+  handPoseModel.on("predict", onNewHandPosePrediction);
 
   // Hide the video element, and just show the canvas
   video.hide();
@@ -60,12 +60,12 @@ function onHandWavePositionExited(){
 }
 
 function onHandPoseModelReady() {
-  console.log("Handpose model ready!");
+  console.log("HandPose model ready!");
   document.getElementById("status").style.display = "none";
 }
 
 /**
- * Called by ml5js Handpose library
+ * Called by ml5js HandPose library
  * 
  * @param {*} predictions 
  */
