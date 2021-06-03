@@ -141,6 +141,7 @@ class LineSegment {
 
   /**
    * Calculates the orthogonal projection of vector p to this line segment
+   * http://mathonline.wikidot.com/orthogonal-projections
    * @param {p5.Vector} p a p5.Vector
    */
   getOrthogonalProjection(p) {
