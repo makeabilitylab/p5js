@@ -69,6 +69,9 @@ class Hand {
     this.isInHandWavePosition = false;
     this.palmToMiddleFingerLineSegment = null;
 
+    this.isBoundingBoxVisible = true;
+    this.isHandWaveTextVisible = true;
+
     // Hand wave stuff  
     this.handWaveState = HandWaveStateEnum.INITIAL;
     this.lastHandWaveAngleThresholdExceeded = null; // stores the last hand wave angle exceeded
@@ -310,7 +313,9 @@ class Hand {
 
   draw() {
     if (this.handPose) {
-      this.drawBoundingBoxes();
+      if(this.isBoundingBoxVisible){
+        this.drawBoundingBoxes();
+      }
 
       this.drawSkeleton();
       this.drawLandmarks();
@@ -376,12 +381,13 @@ class Hand {
     let yTextPos = this.tightBoundingBox.top - yTextHeight;
     text(nfc(this.handPose.handInViewConfidence, 2), this.tightBoundingBox.left, yTextPos);
 
-    yTextPos -= yTextHeight;
-    text("Wave count: " + this.contiguousHandWaveCount, this.tightBoundingBox.left, yTextPos);
+    if(this.isHandWaveTextVisible){
+      yTextPos -= yTextHeight;
+      text("Wave count: " + this.contiguousHandWaveCount, this.tightBoundingBox.left, yTextPos);
 
-    yTextPos -= yTextHeight;
-    text("Is hand in 'handwave' position: " + this.isInHandWavePosition, this.tightBoundingBox.left, yTextPos);
-
+      yTextPos -= yTextHeight;
+      text("Is hand in 'handwave' position: " + this.isInHandWavePosition, this.tightBoundingBox.left, yTextPos);
+    }
     // draw rotated bounding box
     push();
     noFill();
