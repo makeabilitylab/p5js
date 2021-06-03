@@ -13,6 +13,7 @@
 let video;
 let poseNet;
 let currentPoses = [];
+let poseNetModelReady = false;
 
 // The following options are all optional. Here are the defaults:
 // {
@@ -53,6 +54,7 @@ function setup() {
  */
 function onPoseNetModelReady() {
   print("The PoseNet model is ready...");
+  poseNetModelReady = true;
 }
 
 /**
@@ -64,6 +66,17 @@ function onPoseDetected(poses) {
 
 function draw() {
   image(video, 0, 0, width, height);
+
+  if(!poseNetModelReady){
+    background(100);
+    push();
+    textSize(32);
+    textAlign(CENTER);
+    fill(255);
+    noStroke();
+    text("Waiting for PoseNet model to load...", width/2, height/2);
+    pop();
+  }
 
   // Iterate through all poses and print them out
   if(currentPoses){

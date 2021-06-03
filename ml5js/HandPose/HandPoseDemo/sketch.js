@@ -19,6 +19,12 @@
 let handPoseModel;
 let video;
 let curHandPose = null;
+let isHandPoseModelInitialized = false;
+
+let boundingBoxColor;
+let kpCircleDiameter = 10;
+let kpColor;
+let skeletonColor;
 
 function setup() {
   createCanvas(640, 480);
@@ -32,10 +38,15 @@ function setup() {
 
   // Hide the video element, and just show the canvas
   video.hide();
+
+  boundingBoxColor = color(255, 0, 0);
+  kpColor = color(0, 255, 0, 200);
+  skeletonColor = color(kpColor);
 }
 
 function onHandPoseModelReady() {
   console.log("HandPose model ready!");
+  isHandPoseModelInitialized = true;
 }
 
 function onNewHandPosePrediction(predictions) {
@@ -49,6 +60,17 @@ function onNewHandPosePrediction(predictions) {
 
 function draw() {
   image(video, 0, 0, width, height);
+
+  if(!isHandPoseModelInitialized){
+    background(100);
+    push();
+    textSize(32);
+    textAlign(CENTER);
+    fill(255);
+    noStroke();
+    text("Waiting for HandPose model to load...", width/2, height/2);
+    pop();
+  }
 
   drawHand(curHandPose);
 }
@@ -87,7 +109,7 @@ function drawHand(handPose) {
 
   // Draw tight bounding box
   noFill();
-  stroke(255, 0, 0);
+  stroke(boundingBoxColor);
   console.log(tightBoundingBox);
   const tightBoundingBoxWidth = tightBoundingBox.right - tightBoundingBox.left;
   const tightBoundingBoxHeight = tightBoundingBox.bottom - tightBoundingBox.top;
@@ -100,7 +122,7 @@ function drawHand(handPose) {
   rect(bb.topLeft[0], bb.topLeft[1], bbWidth, bbHeight);
 
   // Draw confidence
-  fill(255, 0, 0);
+  fill(boundingBoxColor);
   noStroke();
   text(nfc(handPose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 15);
 }
@@ -116,11 +138,13 @@ function drawKeypoints(handPose) {
   let boundingBoxBottom = boundingBoxTop;
 
   // draw keypoints
+  // While each keypoints supplies a 3D point (x,y,z), we only draw
+  // the x, y point.
   for (let j = 0; j < handPose.landmarks.length; j += 1) {
     const landmark = handPose.landmarks[j];
-    fill(0, 255, 0, 200);
+    fill(kpColor);
     noStroke();
-    ellipse(landmark[0], landmark[1], 10, 10);
+    circle(landmark[0], landmark[1], kpCircleDiameter);
     if (landmark[0] < boundingBoxLeft) {
       boundingBoxLeft = landmark[0];
     } else if (landmark[0] > boundingBoxRight) {
@@ -149,7 +173,7 @@ function drawSkeleton(handPose) {
     return;
   }
 
-  stroke(0, 255, 0, 200);
+  stroke(skeletonColor);
   noFill();
 
   // Loop through all the skeletons detected
@@ -177,4 +201,14 @@ function drawSkeleton(handPose) {
   line(a.palmBase[0][0], a.palmBase[0][1], a.middleFinger[0][0], a.middleFinger[0][1]);
   line(a.palmBase[0][0], a.palmBase[0][1], a.ringFinger[0][0], a.ringFinger[0][1]);
   line(a.palmBase[0][0], a.palmBase[0][1], a.pinky[0][0], a.pinky[0][1]);
+
+  noStroke();
+  fill(skeletonColor);
+  const xTextMargin = kpCircleDiameter / 2 + 3;
+  text("Thumb", a.thumb[a.thumb.length - 1][0] + xTextMargin, a.thumb[a.thumb.length - 1][1]);
+  text("Index Finger", a.indexFinger[a.indexFinger.length - 1][0] + xTextMargin, a.indexFinger[a.indexFinger.length - 1][1]);
+  text("Middle Finger", a.middleFinger[a.middleFinger.length - 1][0] + xTextMargin, a.middleFinger[a.middleFinger.length - 1][1]);
+  text("Ring Finger", a.ringFinger[a.ringFinger.length - 1][0] + xTextMargin, a.ringFinger[a.ringFinger.length - 1][1]);
+  text("Pinky", a.pinky[a.pinky.length - 1][0] + xTextMargin, a.pinky[a.pinky.length - 1][1]);
+  text("Palm Base", a.palmBase[0][0] + xTextMargin, a.palmBase[0][1]);
 }
