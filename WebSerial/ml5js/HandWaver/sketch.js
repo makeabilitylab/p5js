@@ -24,6 +24,9 @@ let video;
 let curHandPose = null;
 let isHandPoseModelInitialized = false;
 let kpSize = 10;
+let palmXNormalized = 0;
+let timestampLastTransmit = 0;
+const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 50; // 50 ms is ~20 Hz
 
 function setup() {
   createCanvas(640, 480);
@@ -65,13 +68,20 @@ function onHandPoseModelReady() {
 function onNewHandPosePrediction(predictions) {
   if (predictions && predictions.length > 0) {
     curHandPose = predictions[0];
+    // Grab the palm's x-position and normalize it to [0, 1]
+    const palmBase = curHandPose.landmarks[0];
+    palmXNormalized = palmBase[0] / width;
+    
     if(serial.isOpen()){
-      
-      // Grab the palm's x-position and normalize it to [0, 1]
-      const palmBase = curHandPose.landmarks[0];
-      const palmXNormalized = palmBase[0] / width;
       const outputData = nf(palmXNormalized, 1, 4); 
-      serial.writeLine(outputData); 
+      const timeSinceLastTransmitMs = millis() - timestampLastTransmit;
+      if(timeSinceLastTransmitMs > MIN_TIME_BETWEEN_TRANSMISSIONS_MS){
+        serial.writeLine(outputData); 
+        timestampLastTransmit = millis();
+      }else{
+        console.log("Did not send  '" + outputData + "' because time since last transmit was " 
+                    + timeSinceLastTransmitMs + "ms");
+      }
     }
   } else {
     curHandPose = null;
@@ -104,7 +114,6 @@ function draw() {
     
     noStroke();
     fill(255);
-    const palmXNormalized = palmBase[0] / width;
     text(nf(palmXNormalized, 1, 4), palmBase[0] + kpSize, palmBase[1] + textSize() / 2);
   }
 }
