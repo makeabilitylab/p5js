@@ -1,6 +1,9 @@
 // This sketch is based on the official HandPose example from ml5js:
 // https://github.com/ml5js/ml5-library/blob/main/examples/p5js/HandPose/HandPose_Webcam/sketch.js
 //
+// See our step-by-step guide:
+// https://makeabilitylab.github.io/physcomp/communication/handpose-serial
+//
 // This Sketch uses ml5js, a Machine Learning JavaScript library that
 // works well with p5js. ml5js provides lots of interesting methods
 // including pitch detection, human pose detection, sound classification, etc.
@@ -44,11 +47,18 @@ function setup() {
   skeletonColor = color(kpColor);
 }
 
+/**
+ * Callback function called by ml5.js HandPose when the HandPose model is ready
+ * Will be called once and only once
+ */
 function onHandPoseModelReady() {
   console.log("HandPose model ready!");
   isHandPoseModelInitialized = true;
 }
 
+/**
+ * Callback function called by ml5.js HandPose when a pose has been detected
+ */
 function onNewHandPosePrediction(predictions) {
   if (predictions && predictions.length > 0) {
     curHandPose = predictions[0];
@@ -72,14 +82,13 @@ function draw() {
     pop();
   }
 
-  drawHand(curHandPose);
+  if(curHandPose){
+    drawHand(curHandPose);
+  }
 }
 
 // A function to draw ellipses over the detected keypoints
 function drawHand(handPose) {
-  if (!handPose) {
-    return;
-  }
 
   // The handPose data is in this format, see: https://learn.ml5js.org/#/reference/handPose?id=predict
   // {
@@ -110,7 +119,6 @@ function drawHand(handPose) {
   // Draw tight bounding box
   noFill();
   stroke(boundingBoxColor);
-  console.log(tightBoundingBox);
   const tightBoundingBoxWidth = tightBoundingBox.right - tightBoundingBox.left;
   const tightBoundingBoxHeight = tightBoundingBox.bottom - tightBoundingBox.top;
   rect(tightBoundingBox.left, tightBoundingBox.top, tightBoundingBoxWidth, tightBoundingBoxHeight);
@@ -137,8 +145,7 @@ function drawKeypoints(handPose) {
   let boundingBoxRight = boundingBoxLeft;
   let boundingBoxBottom = boundingBoxTop;
 
-  // draw keypoints
-  // While each keypoints supplies a 3D point (x,y,z), we only draw
+  // Draw keypoints. While each keypoints supplies a 3D point (x,y,z), we only draw
   // the x, y point.
   for (let j = 0; j < handPose.landmarks.length; j += 1) {
     const landmark = handPose.landmarks[j];
