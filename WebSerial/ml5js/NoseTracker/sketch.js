@@ -32,6 +32,8 @@ let human = null;
 let pHtmlMsg;
 
 let serialOptions = { baudRate: 115200  };
+let timestampLastTransmit = 0;
+const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 100;
 
 function setup() {
   createCanvas(640, 480);
@@ -94,7 +96,7 @@ function onSerialConnectionClosed(eventSender) {
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
-  console.log("onSerialDataReceived", newData);
+  //console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
   // Check if data received starts with '#'. If so, ignore it
@@ -141,9 +143,15 @@ function onPoseDetected(poses) {
     let noseXNormalized = human.pose.nose.x / width;
     let noseYNormalized = human.pose.nose.y / height;
 
-    let outputData = nf(noseXNormalized, 1, 4) + ", " + nf(noseYNormalized, 1, 4) 
-    // console.log("Writing to serial:", outputData);
-    serial.writeLine(outputData); 
+    const outputData = nf(noseXNormalized, 1, 4) + ", " + nf(noseYNormalized, 1, 4) 
+    const timeSinceLastTransmitMs = millis() - timestampLastTransmit;
+    if(timeSinceLastTransmitMs > MIN_TIME_BETWEEN_TRANSMISSIONS_MS){
+      serial.writeLine(outputData); 
+      timestampLastTransmit = millis();
+    }else{
+      // console.log("Did not send  '" + outputData + "' because time since last transmit was " 
+      //             + timeSinceLastTransmitMs + "ms");
+    }
   }
 }
 
