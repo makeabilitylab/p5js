@@ -39,6 +39,14 @@ function setup() {
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 
   colorCube3D.setSelectedColor(color(100));
+
+  print("The default cube size is", colorCube3D.numCols)
+  print("To create a more granular cube, type: getColorCube().setNumCols(<num cols>);")
+  print("For example, getColorCube().setNumCols(20);")
+  print("");
+  print("With the cube selected and in focus...")
+  print("You can navigate the cube with arrow keys and space bar (shift+space to go back)");
+  print("Hit esc to hide the hover bar");
 }
 
 function onNewHoverColorEvent(sender, newHoverColor) {

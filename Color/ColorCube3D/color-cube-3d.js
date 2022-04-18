@@ -64,6 +64,7 @@ class ColorCube3D extends ColorPanel3D {
     this.colorAxes3D = new ColorAxes3D(this);
 
     this.showBackground = false;
+    this.showHoverColor = true;
   }
 
   setNumCols(numCols) {
@@ -257,15 +258,14 @@ class ColorCube3D extends ColorPanel3D {
       noStroke();
     }
 
-    if (isHover) {
+    if (isHover && !isSelected) {
       // can draw hover cubes differently...
 
       // for example, as wireframes rather than fills
-      // stroke(fillColor);
-      // noFill();
+      stroke(fillColor);
 
       // experimented with using alpha
-      // fillColor = color(red(fillColor), green(fillColor), blue(fillColor), 180);
+      fillColor = color(red(fillColor), green(fillColor), blue(fillColor), 50);
       fill(fillColor);
     } else {
       fill(fillColor);
@@ -316,6 +316,10 @@ class ColorCube3D extends ColorPanel3D {
         break;
       case DOWN_ARROW:
         selectedCube[1] = max(0, selectedCube[1] - 1);
+        break;
+      case ESCAPE:
+        this.showHoverColor = !this.showHoverColor;
+        print("Showing hover color", this.showHoverColor);
         break;
     }
 
