@@ -144,3 +144,15 @@ function draw() {
   //print(mic);
   //print(mic.getSources());
 }
+
+function touchStarted() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+
+function mouseClicked() {
+  getAudioContext().resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
+}
