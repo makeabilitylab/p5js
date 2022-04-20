@@ -10,7 +10,15 @@ You can see all of this code at our [p5js GitHub repo](https://github.com/makeab
 
 ## Sound
 
-* [Sound Visualization](https://makeabilitylab.github.io/p5js/Sound/SoundVis4-ImprovedPerformance/): Processes microphone input in realtime and shows a scrolling waveform and various frequency visualizations (spectrogram, spectral graph). [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundVis4-ImprovedPerformance).
+### Visualizing Sound Level
+
+* [Sound Level 1: Circle Size Meter](/Sound/SoundLevel1-CircleSizeMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) as a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel1-CircleSizeMeter)
+
+### Visualizing Multiple Sound Properties
+
+* [Sound Visualization](https://makeabilitylab.github.io/p5js/Sound/SoundVis4-ImprovedPerformance/): Processes microphone input in realtime and shows a scrolling waveform and various frequency visualizations (spectrogram, spectral graph). Writes to an off-screen graphics buffer for performance. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundVis4-ImprovedPerformance).
+
+
 
 ## Perlin Noise
 
