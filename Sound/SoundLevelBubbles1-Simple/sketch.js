@@ -55,7 +55,10 @@ function draw() {
     return;
   }
 
-  const micLevel = mic.getLevel();
+  // Get the current sound level (sound amplitude) from the microphone
+  // We can also pass in an optional smoothing value to smooth between readings
+  // See: https://p5js.org/reference/#/p5.AudioIn/getLevel
+  const micLevel = mic.getLevel(0.9);
  
   for(const bubble of bubbles){
     bubble.update(micLevel);
