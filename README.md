@@ -46,6 +46,10 @@ You can learn more about analyzing sound frequency using Fast Fourier Transforms
 
 * [Frequency Bar Graph 3: With Classes](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph3-WithClasses): Builds on the previous example but uses a more object-oriented approach. Also visualizes and animates peaks. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph3-WithClasses)
 
+#### Frequency Spectrum Line Graphs
+
+* [Frequency Spectrum 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencySpectrum1-Simple): Visualizes the current frequency spectrum in real-time [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencySpectrum1-Simple)
+
 #### Abstract Frequency Visualizations
 
 * [Frequency Bubbles 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencyBubbles1-Simple): Visualizes each FFT frequency bin as a dynamically sized circle proportional to frequency amplitude in that bin. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBubbles1-Simple)
