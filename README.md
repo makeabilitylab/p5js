@@ -24,6 +24,8 @@ You can see all of this code at our [p5js GitHub repo](https://github.com/makeab
 
 * [Sound Level Bubbles 2: Image](https://makeabilitylab.github.io/p5js/Sound/SoundLevelBubbles2-Image): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of random circles colored by a backing image. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelBubbles2-Image)
 
+* [Sound Reactive Flower 1: Sound Level](https://makeabilitylab.github.io/p5js/Sound/SoundReactiveFlower1-SoundLevel): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of rotating flower petals. Each petal represents sound loudness at a snapshot in time. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundReactiveFlower1-SoundLevel)
+
 #### Time-series Visualizations
 
 * [Sound Level Time Series 1: Simple](https://makeabilitylab.github.io/p5js/Sound/SoundLevelTimesSeries1-Simple): A very simple visualization of sound level over time. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelTimesSeries1-Simple)
@@ -55,6 +57,8 @@ You can learn more about analyzing sound frequency using Fast Fourier Transforms
 * [Frequency Bubbles 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencyBubbles1-Simple): Visualizes each FFT frequency bin as a dynamically sized circle proportional to frequency amplitude in that bin. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBubbles1-Simple)
 
 * [Frequency Bubbles 2: Image](https://makeabilitylab.github.io/p5js/Sound/FrequencyBubbles2-Image): Visualizes each FFT frequency bin as a dynamically sized circle proportional to frequency amplitude in that bin. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBubbles2-Image)
+
+* [Sound Reactive Flower 2: Frequency](https://makeabilitylab.github.io/p5js/Sound/SoundReactiveFlower2-Frequency): Visualizes the frequency amplitudes of microphone input as dynamically sized flower petals. Each petal is assigned a certain frequency range. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundReactiveFlower2-Frequency)
 
 ### Visualizing Multiple Sound Properties
 
