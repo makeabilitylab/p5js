@@ -133,7 +133,6 @@ function drawAxes(){
     const xTickLblWidth = textWidth(xTickLbl);
     text(xTickLbl, xTickPixelLoc - xTickLblWidth / 2, height - 3);
   }
-
 }
 
 function getYPixelValueForMicLevel(micLevel){
