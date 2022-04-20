@@ -18,6 +18,12 @@ You can see all of this code at our [p5js GitHub repo](https://github.com/makeab
 
 * [Sound Level 2: Circle Y Location Meter](https://makeabilitylab.github.io/p5js/Sound/SoundLevel2-CircleYLocationMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) by changing the y-location of a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel2-CircleYLocationMeter)
 
+#### Abstract Sound Visualizations
+
+* [Sound Level Bubbles 1: Simple](https://makeabilitylab.github.io/p5js/Sound/SoundLevelBubbles1-Simple): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of random circles. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelBubbles1-Simple)
+
+* [Sound Level Bubbles 2: Image](https://makeabilitylab.github.io/p5js/Sound/SoundLevelBubbles2-Image): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of random circles colored by a backing image. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelBubbles2-Image)
+
 #### Time-series Visualizations
 
 * [Sound Level Time Series 1: Simple](https://makeabilitylab.github.io/p5js/Sound/SoundLevelTimesSeries1-Simple): A very simple visualization of sound level over time. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelTimesSeries1-Simple)
@@ -25,6 +31,8 @@ You can see all of this code at our [p5js GitHub repo](https://github.com/makeab
 * [Sound Level Time Series 2: Axes](https://makeabilitylab.github.io/p5js/Sound/SoundLevelTimesSeries2-Axes): Builds on the previous example but adds in axes. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelTimesSeries2-Axes)
 
 #### Waveform Visualizations
+
+* [Waveform Vis 1: Simple](https://makeabilitylab.github.io/p5js/Sound/WaveformVis1-Simple): Visualizes the waveform currently in the sound buffer. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/WaveformVis1-Simple)
 
 ### Visualizing Sound Frequency
 
