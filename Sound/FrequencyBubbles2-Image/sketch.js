@@ -1,5 +1,5 @@
 /**
- * A basic sound frequency bar graph for p5js
+ * A simple artistic rendering of sound frequency using bubbles and an image
  * 
  * By Professor Jon E. Froehlich
  * https://jonfroehlich.github.io/
@@ -92,6 +92,23 @@ function draw() {
     }
   }
   
+  // Draw FPS
+  drawFps();
+}
+
+function drawFps(){
+  // Draw fps
+  push();
+  const fpsLblTextSize = 10;
+  textSize(fpsLblTextSize);
+  const fpsLbl = nf(frameRate(), 0, 1) + " fps";
+  const fpsLblWidth = textWidth(fpsLbl);
+  const xFpsLbl = 4;
+  const yFpsLbl = 10;
+
+  fill(255);
+  text(fpsLbl, xFpsLbl, yFpsLbl);
+  pop();
 }
 
 // In 2017, Chrome and other browsers started adding additional protection to browsers
