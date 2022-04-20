@@ -12,7 +12,20 @@ You can see all of this code at our [p5js GitHub repo](https://github.com/makeab
 
 ### Visualizing Sound Level
 
-* [Sound Level 1: Circle Size Meter](/Sound/SoundLevel1-CircleSizeMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) as a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel1-CircleSizeMeter)
+* [Sound Level 1: Circle Size Meter](https://makeabilitylab.github.io/p5js/Sound/SoundLevel1-CircleSizeMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) as a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel1-CircleSizeMeter)
+
+* [Sound Level 2: Circle Y Location Meter](https://makeabilitylab.github.io/p5js/Sound/SoundLevel2-CircleYLocationMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) by changing the y-location of a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel2-CircleYLocationMeter)
+
+### Visualizing Sound Frequency
+
+You can learn more about analyzing sound frequency using Fast Fourier Transforms [here](https://makeabilitylab.github.io/physcomp/signals/frequency-analysis.html). But you don't need to understand the underlying mathematics to extract and visualize the underlying frequencies of sound waves in p5js, their [FFT library](https://p5js.org/reference/#/p5.FFT) and examples make it easy!
+
+* [Frequency Bar Graph 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph1-Simple): Visualizes the average underlying frequency amplitudes of sound (as measured by microphone input) using logarithmically-sized bins. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph1-Simple)
+
+* [Frequency Bar Graph 2: Axes](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph2-Axes): Builds on the previous example but adds in axes. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph2-Axes)
+
+* [Frequency Bar Graph 3: With Classes](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph3-WithClasses): Builds on the previous example but uses a more object-oriented approach. Also visualizes and animates peaks. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph3-WithClasses)
+
 
 ### Visualizing Multiple Sound Properties
 
