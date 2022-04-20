@@ -154,6 +154,24 @@ function draw() {
 
     xBar += maxBarWidth;
   }
+  
+  // Draw FPS
+  drawFps();
+}
+
+function drawFps(){
+  // Draw fps
+  push();
+  const fpsLblTextSize = 10;
+  textSize(fpsLblTextSize);
+  const fpsLbl = nf(frameRate(), 0, 1) + " fps";
+  const fpsLblWidth = textWidth(fpsLbl);
+  const xFpsLbl = 4;
+  const yFpsLbl = 10;
+
+  fill(255);
+  text(fpsLbl, xFpsLbl, yFpsLbl);
+  pop();
 }
 
 function getYPixelValueForFrequencyIntensity(frequencyIntensity){
