@@ -50,7 +50,7 @@ You can learn more about analyzing sound frequency using Fast Fourier Transforms
 
 #### Frequency Spectrum Line Graphs
 
-* [Frequency Spectrum 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencySpectrum1-Simple): Visualizes the current frequency spectrum in real-time [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencySpectrum1-Simple)
+* [Frequency Spectrum 1: Sound Level](https://makeabilitylab.github.io/p5js/Sound/FrequencySpectrum1-Simple): Visualizes the current frequency spectrum in real-time [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencySpectrum1-Simple)
 
 #### Abstract Frequency Visualizations
 
