@@ -87,10 +87,10 @@ function draw() {
   }
   
   // Draw FPS
-  drawFps();
+  drawMenu();
 }
 
-function drawFps(){
+function drawMenu(){
   // Draw fps
   push();
   const fpsLblTextSize = 10;
@@ -98,11 +98,25 @@ function drawFps(){
   const fpsLbl = nf(frameRate(), 0, 1) + " fps";
   const fpsLblWidth = textWidth(fpsLbl);
   const xFpsLbl = 4;
-  const yFpsLbl = 10;
+  let yFpsLbl = 10;
 
   fill(255);
   text(fpsLbl, xFpsLbl, yFpsLbl);
+
+  fill(255, 200);
+  const gKeyLbl = "Hit 'g' key to switch to grayscale";
+  yFpsLbl += fpsLblTextSize + 2;
+  text(gKeyLbl, xFpsLbl, yFpsLbl);
+
   pop();
+}
+
+function keyPressed(){
+  if(key === 'g'){
+    for (const [freqBin, bubble] of mapFreqToBubble.entries()) {
+      bubble.drawGrayscale = !bubble.drawGrayscale;
+    }
+  }
 }
 
 // In 2017, Chrome and other browsers started adding additional protection to browsers

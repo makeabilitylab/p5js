@@ -48,8 +48,6 @@ You can learn more about analyzing sound frequency using Fast Fourier Transforms
 
 * [Sound Visualization](https://makeabilitylab.github.io/p5js/Sound/SoundVis4-ImprovedPerformance/): Processes microphone input in realtime and shows a scrolling waveform and various frequency visualizations (spectrogram, spectral graph). Writes to an off-screen graphics buffer for performance. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundVis4-ImprovedPerformance).
 
-
-
 ## Perlin Noise
 
 * [NoiseGraph](https://makeabilitylab.github.io/p5js/PerlinNoise/NoiseGraph): Compare random to [Perlin Noise](https://en.wikipedia.org/wiki/Perlin_noise) in a scrolling graph. [Code link](https://github.com/makeabilitylab/p5js/tree/master/PerlinNoise/Noise2D).
