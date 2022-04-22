@@ -1,5 +1,5 @@
 /**
- * A basic sound frequency bar graph for p5js
+ * A basic visualization of sound level over time
  * 
  * By Professor Jon E. Froehlich
  * https://jonfroehlich.github.io/
