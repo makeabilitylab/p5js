@@ -44,7 +44,7 @@ let imgBackground;
 let hasGameBegun = false;
 let isGameOver = false;
 let drawDebugInfo = false; // set to true to turn on debug
-let isInvincible = true; // set to true to make avatar invincible
+let isInvincible = false; // set to true to make avatar invincible
 
 let maxCookies = 4;
 
@@ -212,6 +212,14 @@ function keyPressed() {
     hasGameBegun = true;
     loop();
     return;
+  }
+
+  if(key == 'i'){
+    isInvincible = !isInvincible;
+    print("isInvincible=" + isInvincible);
+  }else if(key == 'd'){
+    drawDebugInfo = !drawDebugInfo;
+    print("drawDebugInfo=" + drawDebugInfo);
   }
 
   if (key == ' ' && isGameOver == true) {
