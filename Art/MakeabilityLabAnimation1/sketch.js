@@ -54,4 +54,12 @@ function keyPressed() {
   if(key == 'm'){
     makeLabLogo.isMOutlineVisible = !makeLabLogo.isMOutlineVisible;
   }
+
+  if(key == 'l'){
+    makeLabLogo.isLOutlineVisible = !makeLabLogo.isLOutlineVisible;
+  }
+
+  if(key == 'k'){
+    makeLabLogo.areLTrianglesVisible = !makeLabLogo.areLTrianglesVisible;
+  }
 }

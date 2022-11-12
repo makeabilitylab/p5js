@@ -1,11 +1,17 @@
 class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
-    this.makeLabLogo = MakeabilityLabLogo.createMakeabilityLabLogo(x, y, triangleSize);
-    this.visible = true;
+    this.makeLabLogoArray = MakeabilityLabLogo.createMakeabilityLabLogo(x, y, triangleSize);
 
+    this.visible = true;
     this.isMOutlineVisible = true;
     this.isLOutlineVisible = true;
+
+    this.areLTrianglesVisible = false;
+
+    for(const tri of this.getMShadowTriangles()){
+      tri.fillColor = tri.strokeColor;
+    }
   }
 
   /**
@@ -18,22 +24,73 @@ class MakeabilityLabLogo {
    */
   static get numCols() { return 6; }
 
-  get x(){ return this.makeLabLogo[0][0].x }
+  get x(){ return this.makeLabLogoArray[0][0].x }
 
-  get y(){ return this.makeLabLogo[0][0].y }
+  get y(){ return this.makeLabLogoArray[0][0].y }
 
-  get cellSize(){ return this.makeLabLogo[0][0].size }
+  get cellSize(){ return this.makeLabLogoArray[0][0].size }
 
-  get width(){ return MakeabilityLabLogo.numCols * this.makeLabLogo[0][0].size }
+  get width(){ return MakeabilityLabLogo.numCols * this.makeLabLogoArray[0][0].size }
 
-  get height(){ return MakeabilityLabLogo.numRows * this.makeLabLogo[0][0].size }
+  get height(){ return MakeabilityLabLogo.numRows * this.makeLabLogoArray[0][0].size }
+
+  set areLTrianglesVisible(visible){ 
+    for(const tri of this.getLTriangles()){
+      tri.visible = visible;
+    }
+  }
+  
+  get areLTrianglesVisible(){
+    let visible = true;
+    for(const tri of this.getLTriangles()){
+      visible &= tri.visible;
+    }
+    return visible;
+  }
+
+  getMShadowTriangles(){
+    let mShadowTriangles = new Array();
+    
+    // left side
+    mShadowTriangles.push(this.makeLabLogoArray[2][1].tri2);
+    mShadowTriangles.push(this.makeLabLogoArray[3][1].tri1);
+    
+    // right side
+    mShadowTriangles.push(this.makeLabLogoArray[2][4].tri2);
+    mShadowTriangles.push(this.makeLabLogoArray[3][4].tri1);
+
+    return mShadowTriangles;
+  }
+
+  getLTriangles(){
+    let lTriangles = new Array();
+    lTriangles.push(this.makeLabLogoArray[0][0].tri2);
+    lTriangles.push(this.makeLabLogoArray[0][1].tri2);
+    lTriangles.push(this.makeLabLogoArray[1][0].tri1);
+    lTriangles.push(this.makeLabLogoArray[1][1].tri1);
+    lTriangles.push(this.makeLabLogoArray[1][1].tri2);
+    lTriangles.push(this.makeLabLogoArray[1][2].tri2);
+    lTriangles.push(this.makeLabLogoArray[2][1].tri1);
+    lTriangles.push(this.makeLabLogoArray[2][2].tri1);
+    lTriangles.push(this.makeLabLogoArray[2][2].tri2);
+    lTriangles.push(this.makeLabLogoArray[3][2].tri1);
+    lTriangles.push(this.makeLabLogoArray[3][3].tri1);
+
+    lTriangles.push(this.makeLabLogoArray[2][3].tri1);
+    lTriangles.push(this.makeLabLogoArray[2][3].tri2);
+
+    lTriangles.push(this.makeLabLogoArray[1][3].tri2);
+    lTriangles.push(this.makeLabLogoArray[2][4].tri1);
+    lTriangles.push(this.makeLabLogoArray[1][4].tri2);
+    return lTriangles;
+  }
 
   draw() {
-    for (let row = 0; row < this.makeLabLogo.length; row++) {
-      if (this.makeLabLogo[row]) {
-        for (let col = 0; col < this.makeLabLogo[row].length; col++) {
-          if (this.makeLabLogo[row][col]) {
-            this.makeLabLogo[row][col].draw();
+    for (let row = 0; row < this.makeLabLogoArray.length; row++) {
+      if (this.makeLabLogoArray[row]) {
+        for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
+          if (this.makeLabLogoArray[row][col]) {
+            this.makeLabLogoArray[row][col].draw();
           }
         }
       }
@@ -52,18 +109,41 @@ class MakeabilityLabLogo {
       endShape();
       pop();
     }
+
+    if(this.isLOutlineVisible){
+      push();
+      noFill();
+      stroke(255);
+      strokeWeight(4);
+      beginShape();
+      let lPoints = this.getLOutlinePoints();
+      for (const [x, y] of lPoints) { 
+        vertex(x, y);
+      }
+      endShape();
+      pop();
+    }
   }
 
   getLOutlinePoints(){
     let lPoints = new Array();
 
+    // Top part
     lPoints.push([this.x, this.y + this.cellSize]);
     lPoints.push([this.x + this.cellSize, this.y]);
     lPoints.push([this.x + 2 * this.cellSize, this.y + this.cellSize]);
     lPoints.push([this.x + 3 * this.cellSize, this.y + 2 * this.cellSize]);
     lPoints.push([this.x + 4 * this.cellSize, this.y + this.cellSize]);
-    lPoints.push([this.x + 5 * this.cellSize, this.y + 2 * this.cellSize]);
 
+    // Right side
+    lPoints.push([this.x + 5 * this.cellSize, this.y + 2 * this.cellSize]);
+    lPoints.push([this.x + 4 * this.cellSize, this.y + 3 * this.cellSize]);
+    lPoints.push([this.x + 3 * this.cellSize, this.y + 4 * this.cellSize]);
+
+    // Bottom part
+    lPoints.push([this.x + 2 * this.cellSize, this.y + 3 * this.cellSize]);
+    lPoints.push([this.x + 1 * this.cellSize, this.y + 2 * this.cellSize]);
+    lPoints.push([this.x + 0 * this.cellSize, this.y + 1 * this.cellSize]);
 
     return lPoints
   }
@@ -147,7 +227,7 @@ class MakeabilityLabLogo {
   static createMakeabilityLab2ndRow(x, y, triangleSize) {
     let row2 = new Array(MakeabilityLabLogo.numCols);
     let col = 0;
-    row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.BottomLeft, TriangleDir.TopRight);
+    row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.TopRight, TriangleDir.BottomLeft);
 
     x += triangleSize;
     row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.TopLeft, TriangleDir.BottomRight);
@@ -159,7 +239,7 @@ class MakeabilityLabLogo {
     row2[col++] = Cell.createCellWithBottomTriangleOnly(x, y, triangleSize, TriangleDir.BottomRight);
 
     x += triangleSize;
-    row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.BottomLeft, TriangleDir.TopRight);
+    row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.TopRight, TriangleDir.BottomLeft);
 
     x += triangleSize;
     row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.TopLeft, TriangleDir.BottomRight);
