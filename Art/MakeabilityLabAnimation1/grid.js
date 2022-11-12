@@ -12,6 +12,25 @@ class Grid{
     }
   }
 
+  setStrokeColor(strokeColor){
+    for(let row = 0; row < this.gridArray.length; row++){
+      for(let col = 0; col < this.gridArray[row].length; col++){
+        this.gridArray[row][col].tri1.strokeColor = strokeColor;
+        this.gridArray[row][col].tri2.strokeColor = strokeColor;
+      }
+    }
+  }
+  
+  setFillColor(fillColor){
+    for(let row = 0; row < this.gridArray.length; row++){
+      for(let col = 0; col < this.gridArray[row].length; col++){
+        this.gridArray[row][col].tri1.fillColor = fillColor;
+        this.gridArray[row][col].tri2.fillColor = fillColor;
+      }
+    }
+  }
+
+
   static createGrid(triangleSize, strokeColor, fillColor){
 
     const numGridRows = floor(width / triangleSize);

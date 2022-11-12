@@ -1,3 +1,10 @@
+const TriangleDir = {
+  TopLeft: 'TopLeft',
+  TopRight: 'TopRight',
+  BottomLeft: 'BottomLeft',
+  BottomRight: 'BottomRight'
+};
+
 class Cell {
   constructor(triangle1, triangle2) {
     this.tri1 = triangle1;

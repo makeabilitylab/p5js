@@ -9,12 +9,7 @@
  * http://makeabilitylab.cs.washington.edu
  **/
 
-const TriangleDir = {
-  TopLeft: 'TopLeft',
-  TopRight: 'TopRight',
-  BottomLeft: 'BottomLeft',
-  BottomRight: 'BottomRight'
-};
+
 
 const TRIANGLE_SIZE = 50;
 
@@ -32,7 +27,16 @@ function setup() {
 
 
 function draw() {
-  background(10);
+
+  switch(makeLabLogo.colorScheme){
+    case ColorScheme.BlackOnWhite:
+      background(250);
+      break;
+    case ColorScheme.WhiteOnBlack:
+      background(10);
+      break;
+  } 
+
   // makeLabGrid[0][0].draw();
   // makeLabGrid[0][1].draw();
 
@@ -61,5 +65,18 @@ function keyPressed() {
 
   if(key == 'k'){
     makeLabLogo.areLTrianglesVisible = !makeLabLogo.areLTrianglesVisible;
+  }
+
+  if(key == 'c'){
+    switch(makeLabLogo.colorScheme){
+      case ColorScheme.BlackOnWhite:
+        makeLabLogo.colorScheme = ColorScheme.WhiteOnBlack;
+        makeLabLogo.areLTrianglesVisible = true;
+        break;
+      case ColorScheme.WhiteOnBlack:
+        makeLabLogo.colorScheme = ColorScheme.BlackOnWhite;
+        makeLabLogo.areLTrianglesVisible = true;
+        break;
+    } 
   }
 }

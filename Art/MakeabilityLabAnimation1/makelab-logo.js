@@ -1,3 +1,8 @@
+const ColorScheme = {
+  WhiteOnBlack: 'WhiteOnBlack',
+  BlackOnWhite: 'BlackOnWhite',
+};
+
 class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
@@ -12,6 +17,9 @@ class MakeabilityLabLogo {
     for(const tri of this.getMShadowTriangles()){
       tri.fillColor = tri.strokeColor;
     }
+
+    this._colorScheme = ColorScheme.WhiteOnBlack;
+    //this.setColorScheme(ColorScheme.BlackOnWhite);
   }
 
   /**
@@ -46,6 +54,41 @@ class MakeabilityLabLogo {
       visible &= tri.visible;
     }
     return visible;
+  }
+
+  get colorScheme() { return this._colorScheme; }
+
+  set colorScheme(colorScheme){
+   
+    let fillColor = null;
+    let strokeColor = null;
+    switch(colorScheme){
+      case ColorScheme.BlackOnWhite:
+        fillColor = color(255);
+        strokeColor = color(0);
+        break;
+      case ColorScheme.WhiteOnBlack:
+      default:
+        fillColor = color(0);
+        strokeColor = color(255);
+        break;
+    }
+
+    for (let row = 0; row < this.makeLabLogoArray.length; row++) {
+      for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
+        this.makeLabLogoArray[row][col].tri1.fillColor = fillColor;
+        this.makeLabLogoArray[row][col].tri1.strokeColor = strokeColor;
+
+        this.makeLabLogoArray[row][col].tri2.fillColor = fillColor;
+        this.makeLabLogoArray[row][col].tri2.strokeColor = strokeColor;
+      }
+    }  
+
+    for(const tri of this.getMShadowTriangles()){
+      tri.fillColor = tri.strokeColor;
+    }
+
+    this._colorScheme = colorScheme;
   }
 
   getMShadowTriangles(){
@@ -87,19 +130,15 @@ class MakeabilityLabLogo {
 
   draw() {
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
-      if (this.makeLabLogoArray[row]) {
-        for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
-          if (this.makeLabLogoArray[row][col]) {
-            this.makeLabLogoArray[row][col].draw();
-          }
-        }
+      for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
+          this.makeLabLogoArray[row][col].draw();
       }
     }
 
     if(this.isMOutlineVisible){
       push();
       noFill();
-      stroke(255);
+      stroke(this.makeLabLogoArray[0][0].tri1.strokeColor);
       strokeWeight(4);
       beginShape();
       let mPoints = this.getMOutlinePoints();
@@ -113,7 +152,7 @@ class MakeabilityLabLogo {
     if(this.isLOutlineVisible){
       push();
       noFill();
-      stroke(255);
+      stroke(this.makeLabLogoArray[0][0].tri1.strokeColor);
       strokeWeight(4);
       beginShape();
       let lPoints = this.getLOutlinePoints();
