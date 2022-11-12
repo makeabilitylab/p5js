@@ -2,7 +2,10 @@ class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
     this.makeLabLogo = MakeabilityLabLogo.createMakeabilityLabLogo(x, y, triangleSize);
+    this.visible = true;
 
+    this.isMOutlineVisible = true;
+    this.isLOutlineVisible = true;
   }
 
   /**
@@ -15,6 +18,16 @@ class MakeabilityLabLogo {
    */
   static get numCols() { return 6; }
 
+  get x(){ return this.makeLabLogo[0][0].x }
+
+  get y(){ return this.makeLabLogo[0][0].y }
+
+  get cellSize(){ return this.makeLabLogo[0][0].size }
+
+  get width(){ return MakeabilityLabLogo.numCols * this.makeLabLogo[0][0].size }
+
+  get height(){ return MakeabilityLabLogo.numRows * this.makeLabLogo[0][0].size }
+
   draw() {
     for (let row = 0; row < this.makeLabLogo.length; row++) {
       if (this.makeLabLogo[row]) {
@@ -25,6 +38,65 @@ class MakeabilityLabLogo {
         }
       }
     }
+
+    if(this.isMOutlineVisible){
+      push();
+      noFill();
+      stroke(255);
+      strokeWeight(4);
+      beginShape();
+      let mPoints = this.getMOutlinePoints();
+      for (const [x, y] of mPoints) { 
+        vertex(x, y);
+      }
+      endShape();
+      pop();
+    }
+  }
+
+  getLOutlinePoints(){
+    let lPoints = new Array();
+
+    lPoints.push([this.x, this.y + this.cellSize]);
+    lPoints.push([this.x + this.cellSize, this.y]);
+    lPoints.push([this.x + 2 * this.cellSize, this.y + this.cellSize]);
+    lPoints.push([this.x + 3 * this.cellSize, this.y + 2 * this.cellSize]);
+    lPoints.push([this.x + 4 * this.cellSize, this.y + this.cellSize]);
+    lPoints.push([this.x + 5 * this.cellSize, this.y + 2 * this.cellSize]);
+
+
+    return lPoints
+  }
+
+  getMOutlinePoints(){
+    let mPoints = new Array();
+
+    // Top part
+    mPoints.push([this.x, this.y + this.cellSize]);
+    mPoints.push([this.x + this.cellSize, this.y]);
+    mPoints.push([this.x + 2 * this.cellSize, this.y + this.cellSize]);
+    mPoints.push([this.x + 3 * this.cellSize, this.y + 2 * this.cellSize]);
+    mPoints.push([this.x + 4 * this.cellSize, this.y + this.cellSize]);
+    mPoints.push([this.x + 5 * this.cellSize, this.y]);
+    mPoints.push([this.x + 6 * this.cellSize, this.y + this.cellSize]);
+
+    // Right part
+    mPoints.push([this.x + 6 * this.cellSize, this.y + 2 * this.cellSize]);
+    mPoints.push([this.x + 6 * this.cellSize, this.y + 3 * this.cellSize]);
+    mPoints.push([this.x + 5 * this.cellSize, this.y + 4 * this.cellSize]);
+
+    // Bottom part
+    mPoints.push([this.x + 4 * this.cellSize, this.y + 3 * this.cellSize]);
+    mPoints.push([this.x + 3 * this.cellSize, this.y + 4 * this.cellSize]);
+    mPoints.push([this.x + 2 * this.cellSize, this.y + 3 * this.cellSize]);
+    mPoints.push([this.x + 1 * this.cellSize, this.y + 4 * this.cellSize]);
+    mPoints.push([this.x + 0 * this.cellSize, this.y + 3 * this.cellSize]);
+
+    // Left part
+    mPoints.push([this.x + 0 * this.cellSize, this.y + 2 * this.cellSize]);
+    mPoints.push([this.x + 0 * this.cellSize, this.y + 1 * this.cellSize]);
+   
+    return mPoints;
   }
 
   static createMakeabilityLabLogo(x, y, triangleSize) {

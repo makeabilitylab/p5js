@@ -35,8 +35,23 @@ function draw() {
   background(10);
   // makeLabGrid[0][0].draw();
   // makeLabGrid[0][1].draw();
-  makeLabGrid.draw();
 
-  makeLabLogo.draw();
+  if(makeLabGrid.visible){
+    makeLabGrid.draw();
+  }
+
+  if(makeLabLogo.visible){
+    makeLabLogo.draw();
+  }
   
+}
+
+function keyPressed() {
+  if(key == 'g'){
+    makeLabGrid.visible = !makeLabGrid.visible;
+  }
+
+  if(key == 'm'){
+    makeLabLogo.isMOutlineVisible = !makeLabLogo.isMOutlineVisible;
+  }
 }
