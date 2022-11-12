@@ -17,12 +17,15 @@ class MakeabilityLabLogo {
     }
   }
 
+  static get numRows() { return 4; }
+  static get numCols() { return 6; }
+
   static createMakeabilityLabLogo(x, y, triangleSize) {
-    let mlLogo = new Array(MAKELAB_GRID_ROWS);
+    let mlLogo = new Array(MakeabilityLabLogo.numRows);
 
     // Initialize the make lab logo grid
     for (let row = 0; row < mlLogo.length; row++) {
-      mlLogo[row] = new Array(MAKELAB_GRID_COLS);
+      mlLogo[row] = new Array(MakeabilityLabLogo.numCols);
     }
 
     mlLogo[0] = MakeabilityLabLogo.createMakeabilityLabTopRow(x, y, triangleSize);
@@ -40,7 +43,7 @@ class MakeabilityLabLogo {
   }
 
   static createMakeabilityLabTopRow(x, y, triangleSize) {
-    let topRow = new Array(MAKELAB_GRID_COLS);
+    let topRow = new Array(MakeabilityLabLogo.numCols);
     let col = 0;
     topRow[col++] = Cell.createCellWithBottomTriangleOnly(x, y, triangleSize, TriangleDir.BottomRight);
 
@@ -63,7 +66,7 @@ class MakeabilityLabLogo {
   }
 
   static createMakeabilityLab2ndRow(x, y, triangleSize) {
-    let row2 = new Array(MAKELAB_GRID_COLS);
+    let row2 = new Array(MakeabilityLabLogo.numCols);
     let col = 0;
     row2[col++] = Cell.createCell(x, y, triangleSize, TriangleDir.BottomLeft, TriangleDir.TopRight);
 
@@ -86,7 +89,7 @@ class MakeabilityLabLogo {
   }
 
   static createMakeabilityLab3rdRow(x, y, triangleSize) {
-    let row3 = new Array(MAKELAB_GRID_COLS);
+    let row3 = new Array(MakeabilityLabLogo.numCols);
     for (let col = 0; col < row3.length; col++) {
       let triDir = TriangleDir.TopLeft;
       if (col % 2 != 0) {
@@ -99,7 +102,7 @@ class MakeabilityLabLogo {
   }
 
   static createMakeabilityLabBottomRow(x, y, triangleSize) {
-    let botRow = new Array(MAKELAB_GRID_COLS);
+    let botRow = new Array(MakeabilityLabLogo.numCols);
     for (let col = 0; col < botRow.length; col++) {
       let triDir = TriangleDir.TopRight;
       if (col % 2 != 0) {

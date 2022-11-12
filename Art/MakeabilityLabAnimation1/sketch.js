@@ -27,7 +27,7 @@ function setup() {
   
   angleMode(DEGREES); 
 
-  makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE);
+  makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabGrid = createMakeabilityLabGrid();
 }
 
