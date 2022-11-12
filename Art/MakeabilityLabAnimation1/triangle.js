@@ -10,6 +10,8 @@ class Triangle {
     this.fillColor = fillColor;
     this.strokeWeight = strokeWeight;
     this.visible = visible;
+
+    this.drawCellOutline = false;
   }
 
   draw() {
@@ -28,6 +30,7 @@ class Triangle {
 
     translate(this.x, this.y);
 
+    // draw the triangle
     push();
     switch (this.direction) {
       case TriangleDir.BottomLeft:
@@ -46,8 +49,8 @@ class Triangle {
     }
     pop();
 
-
-    if (DEBUG) {
+    // useful for debugging
+    if (this.drawCellOutline) {
       stroke(128, 128, 128, 50);
       rect(0, 0, this.size, this.size);
     }

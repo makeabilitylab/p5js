@@ -5,6 +5,16 @@ class MakeabilityLabLogo {
 
   }
 
+  /**
+   * The logo has 6 cols and 4 rows
+   */
+  static get numRows() { return 4; }
+
+  /**
+   * The logo has 6 cols and 4 rows
+   */
+  static get numCols() { return 6; }
+
   draw() {
     for (let row = 0; row < this.makeLabLogo.length; row++) {
       if (this.makeLabLogo[row]) {
@@ -16,9 +26,6 @@ class MakeabilityLabLogo {
       }
     }
   }
-
-  static get numRows() { return 4; }
-  static get numCols() { return 6; }
 
   static createMakeabilityLabLogo(x, y, triangleSize) {
     let mlLogo = new Array(MakeabilityLabLogo.numRows);
