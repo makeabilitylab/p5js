@@ -67,6 +67,10 @@ function keyPressed() {
     makeLabLogo.areLTrianglesVisible = !makeLabLogo.areLTrianglesVisible;
   }
 
+  if(key == 'h'){
+    makeLabLogo.visible = !makeLabLogo.visible;
+  }
+
   if(key == 'b'){
     switch(makeLabLogo.colorScheme){
       case ColorScheme.BlackOnWhite:
