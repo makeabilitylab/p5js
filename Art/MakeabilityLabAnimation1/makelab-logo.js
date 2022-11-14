@@ -196,6 +196,8 @@ class MakeabilityLabLogo {
   }
 
   draw() {
+    if(!this.visible){ return; }
+
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
       for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
           this.makeLabLogoArray[row][col].draw();
