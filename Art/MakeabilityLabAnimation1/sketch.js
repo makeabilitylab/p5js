@@ -67,7 +67,7 @@ function keyPressed() {
     makeLabLogo.areLTrianglesVisible = !makeLabLogo.areLTrianglesVisible;
   }
 
-  if(key == 'c'){
+  if(key == 'b'){
     switch(makeLabLogo.colorScheme){
       case ColorScheme.BlackOnWhite:
         makeLabLogo.colorScheme = ColorScheme.WhiteOnBlack;
@@ -78,5 +78,9 @@ function keyPressed() {
         makeLabLogo.areLTrianglesVisible = true;
         break;
     } 
+  }
+
+  if(key == 'c'){
+    makeLabLogo.setDefaultColoredTriangleVisibility(!makeLabLogo.areDefaultColorsOn);
   }
 }

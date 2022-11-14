@@ -3,6 +3,19 @@ const ColorScheme = {
   BlackOnWhite: 'BlackOnWhite',
 };
 
+const OriginalColorPaletteRGB ={
+  Blue: [135, 202, 228],
+  BlueGray: [147, 169, 207],
+  Purple: [171, 147, 197],
+  Green: [148, 206, 146],
+  Orange: [235, 185, 130],
+  RedPurple: [207, 145, 166],
+  Pink: [237, 162, 163],
+  YellowGreen: [239, 226, 127],
+  LightGreen: [209, 226, 133],
+  BlueGreen: [147, 211, 202]
+}
+
 class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
@@ -18,7 +31,10 @@ class MakeabilityLabLogo {
       tri.fillColor = tri.strokeColor;
     }
 
-    this._colorScheme = ColorScheme.WhiteOnBlack;
+    this.colorScheme = ColorScheme.BlackOnWhite;
+
+    this._defaultColorsOn = true;
+    this.setDefaultColoredTriangleVisibility(this._defaultColorsOn);
     //this.setColorScheme(ColorScheme.BlackOnWhite);
   }
 
@@ -42,6 +58,8 @@ class MakeabilityLabLogo {
 
   get height(){ return MakeabilityLabLogo.numRows * this.makeLabLogoArray[0][0].size }
 
+  get areDefaultColorsOn(){ return this._defaultColorsOn; }
+
   set areLTrianglesVisible(visible){ 
     for(const tri of this.getLTriangles()){
       tri.visible = visible;
@@ -59,7 +77,8 @@ class MakeabilityLabLogo {
   get colorScheme() { return this._colorScheme; }
 
   set colorScheme(colorScheme){
-   
+    this._colorScheme = colorScheme;
+
     let fillColor = null;
     let strokeColor = null;
     switch(colorScheme){
@@ -88,9 +107,14 @@ class MakeabilityLabLogo {
       tri.fillColor = tri.strokeColor;
     }
 
-    this._colorScheme = colorScheme;
+    if(this.areDefaultColorsOn){
+      this.setDefaultColoredTriangleVisibility(this.areDefaultColorsOn);
+    }
   }
 
+  /**
+   * Gets the triangles that are black/darkened in the logo
+   */
   getMShadowTriangles(){
     let mShadowTriangles = new Array();
     
@@ -105,6 +129,9 @@ class MakeabilityLabLogo {
     return mShadowTriangles;
   }
 
+  /**
+   * Gets the triangles that compose the L in the Makeability Lab logo
+   */
   getLTriangles(){
     let lTriangles = new Array();
     lTriangles.push(this.makeLabLogoArray[0][0].tri2);
@@ -126,6 +153,46 @@ class MakeabilityLabLogo {
     lTriangles.push(this.makeLabLogoArray[2][4].tri1);
     lTriangles.push(this.makeLabLogoArray[1][4].tri2);
     return lTriangles;
+  }
+
+  /**
+   * Gets the triangles that are colored in the ML logo by default
+   */
+  getDefaultColoredTriangles(){
+    let cTriangles = new Array();
+    cTriangles.push(this.makeLabLogoArray[0][4].tri2);
+    cTriangles.push(this.makeLabLogoArray[0][5].tri2);
+    cTriangles.push(this.makeLabLogoArray[1][0].tri2);
+    cTriangles.push(this.makeLabLogoArray[1][4].tri1);
+    cTriangles.push(this.makeLabLogoArray[1][5].tri1);
+    cTriangles.push(this.makeLabLogoArray[1][5].tri2);
+    cTriangles.push(this.makeLabLogoArray[2][0].tri1);
+    cTriangles.push(this.makeLabLogoArray[2][0].tri2);
+    cTriangles.push(this.makeLabLogoArray[2][5].tri1);
+    cTriangles.push(this.makeLabLogoArray[2][5].tri2);
+    cTriangles.push(this.makeLabLogoArray[3][0].tri1);
+    cTriangles.push(this.makeLabLogoArray[3][5].tri1);
+    return cTriangles;
+  }
+
+  setDefaultColoredTriangleVisibility(visible){
+    this._defaultColorsOn = visible;
+    if(visible){
+      this.makeLabLogoArray[0][4].tri2.fillColor = OriginalColorPaletteRGB.Blue; 
+      this.makeLabLogoArray[0][5].tri2.fillColor = OriginalColorPaletteRGB.BlueGray
+      this.makeLabLogoArray[1][0].tri2.fillColor = OriginalColorPaletteRGB.YellowGreen;
+      this.makeLabLogoArray[1][4].tri1.fillColor = OriginalColorPaletteRGB.Purple;
+      this.makeLabLogoArray[1][5].tri1.fillColor = OriginalColorPaletteRGB.Green;
+      this.makeLabLogoArray[1][5].tri2.fillColor = OriginalColorPaletteRGB.Orange;
+      this.makeLabLogoArray[2][0].tri1.fillColor = OriginalColorPaletteRGB.YellowGreen;
+      this.makeLabLogoArray[2][0].tri2.fillColor = OriginalColorPaletteRGB.LightGreen;
+      this.makeLabLogoArray[2][5].tri1.fillColor = OriginalColorPaletteRGB.Orange;
+      this.makeLabLogoArray[2][5].tri2.fillColor = OriginalColorPaletteRGB.RedPurple;
+      this.makeLabLogoArray[3][0].tri1.fillColor = OriginalColorPaletteRGB.BlueGreen;
+      this.makeLabLogoArray[3][5].tri1.fillColor = OriginalColorPaletteRGB.Pink;
+    }else{
+      this.colorScheme = this.colorScheme;
+    }
   }
 
   draw() {

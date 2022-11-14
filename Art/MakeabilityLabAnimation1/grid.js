@@ -1,5 +1,5 @@
 class Grid{
-  constructor(triangleSize, strokeColor = color(100, 100, 100, 100), fillColor = null){
+  constructor(triangleSize, strokeColor = color(100, 100, 100, 50), fillColor = null){
     this.gridArray = Grid.createGrid(triangleSize, strokeColor, fillColor);
     this.visible = true;
   }
