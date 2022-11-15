@@ -15,6 +15,24 @@ const TRIANGLE_SIZE = 50;
 
 let makeLabLogo = null;
 let makeLabGrid = null;
+let colorScheme =  null;
+let defaultColorsOn = true;
+let transparent = false;
+
+const originalColorArray = [
+  OriginalColorPaletteRGB.Blue, 
+  OriginalColorPaletteRGB.BlueGray,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.Purple,
+  OriginalColorPaletteRGB.Green,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.LightGreen,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.RedPurple,
+  OriginalColorPaletteRGB.BlueGreen,
+  OriginalColorPaletteRGB.Pink
+];
 
 function setup() {
   createCanvas(800, 600);
@@ -23,12 +41,18 @@ function setup() {
 
   makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabGrid = new Grid(TRIANGLE_SIZE);
+  makeLabGrid.setFillColor(null);
+  colorScheme = ColorScheme.BlackOnWhite;
+
+
+  defaultColorsOn = true;
+  makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
 }
 
 
 function draw() {
 
-  switch(makeLabLogo.colorScheme){
+  switch(colorScheme){
     case ColorScheme.BlackOnWhite:
       background(250);
       break;
@@ -64,7 +88,7 @@ function keyPressed() {
   }
 
   if(key == 'k'){
-    makeLabLogo.areLTrianglesVisible = !makeLabLogo.areLTrianglesVisible;
+    makeLabLogo.areLTriangleStrokesVisible = !makeLabLogo.areLTriangleStrokesVisible;
   }
 
   if(key == 'h'){
@@ -72,19 +96,56 @@ function keyPressed() {
   }
 
   if(key == 'b'){
-    switch(makeLabLogo.colorScheme){
-      case ColorScheme.BlackOnWhite:
-        makeLabLogo.colorScheme = ColorScheme.WhiteOnBlack;
-        makeLabLogo.areLTrianglesVisible = true;
-        break;
-      case ColorScheme.WhiteOnBlack:
-        makeLabLogo.colorScheme = ColorScheme.BlackOnWhite;
-        makeLabLogo.areLTrianglesVisible = true;
-        break;
-    } 
+    toggleColorScheme();
+  }
+
+  if(key == 't'){
+    transparent = !transparent;
+    for(const tri of makeLabLogo.getAllTriangles(false)){
+      tri.isFillVisible = !transparent;
+    }
+
+    // for(const tri of makeLabLogo.getLTriangles()){
+    //   tri.isStrokeVisible = !transparent; 
+    // }
   }
 
   if(key == 'c'){
-    makeLabLogo.setDefaultColoredTriangleVisibility(!makeLabLogo.areDefaultColorsOn);
+    defaultColorsOn = !defaultColorsOn;
+    if(defaultColorsOn){
+      makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+    }else{
+      switch(colorScheme){
+        case ColorScheme.BlackOnWhite:
+          makeLabLogo.setDefaultColoredTrianglesFillColor(color(255));
+          break;
+        case ColorScheme.WhiteOnBlack:
+        default:
+          makeLabLogo.setDefaultColoredTrianglesFillColor(color(0));
+          break;
+      } 
+    }
   }
+}
+
+function toggleColorScheme(){
+  let fillColor = null;
+  let strokeColor = null;
+
+  switch(colorScheme){
+    case ColorScheme.BlackOnWhite:
+      colorScheme = ColorScheme.WhiteOnBlack;
+      fillColor = color(0);
+      strokeColor = color(255);
+      makeLabLogo.setColors(fillColor, strokeColor);
+
+      break;
+    case ColorScheme.WhiteOnBlack:
+    default:
+      colorScheme = ColorScheme.BlackOnWhite;
+      fillColor = color(255);
+      strokeColor = color(0);
+      makeLabLogo.setColors(fillColor, strokeColor);
+      break;
+  } 
 }

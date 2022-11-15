@@ -25,17 +25,12 @@ class MakeabilityLabLogo {
     this.isMOutlineVisible = true;
     this.isLOutlineVisible = true;
 
-    this.areLTrianglesVisible = false;
-
     for(const tri of this.getMShadowTriangles()){
       tri.fillColor = tri.strokeColor;
     }
 
-    this.colorScheme = ColorScheme.BlackOnWhite;
-
-    this._defaultColorsOn = true;
-    this.setDefaultColoredTriangleVisibility(this._defaultColorsOn);
     //this.setColorScheme(ColorScheme.BlackOnWhite);
+    this.areLTriangleStrokesVisible = false;
   }
 
   /**
@@ -60,39 +55,26 @@ class MakeabilityLabLogo {
 
   get areDefaultColorsOn(){ return this._defaultColorsOn; }
 
-  set areLTrianglesVisible(visible){ 
+  set areLTriangleStrokesVisible(visible){ 
     for(const tri of this.getLTriangles()){
-      tri.visible = visible;
+      tri.isStrokeVisible = visible;
     }
   }
   
-  get areLTrianglesVisible(){
+  get areLTriangleStrokesVisible(){
     let visible = true;
     for(const tri of this.getLTriangles()){
-      visible &= tri.visible;
+      visible &= tri.isStrokeVisible;
     }
     return visible;
   }
 
-  get colorScheme() { return this._colorScheme; }
-
-  set colorScheme(colorScheme){
-    this._colorScheme = colorScheme;
-
-    let fillColor = null;
-    let strokeColor = null;
-    switch(colorScheme){
-      case ColorScheme.BlackOnWhite:
-        fillColor = color(255);
-        strokeColor = color(0);
-        break;
-      case ColorScheme.WhiteOnBlack:
-      default:
-        fillColor = color(0);
-        strokeColor = color(255);
-        break;
-    }
-
+  /**
+   * Convenience method to set fill and stroke colors
+   * @param {*} fillColor 
+   * @param {*} strokeColor 
+   */
+  setColors(fillColor, strokeColor,){
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
       for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
         this.makeLabLogoArray[row][col].tri1.fillColor = fillColor;
@@ -106,10 +88,22 @@ class MakeabilityLabLogo {
     for(const tri of this.getMShadowTriangles()){
       tri.fillColor = tri.strokeColor;
     }
+  }
 
-    if(this.areDefaultColorsOn){
-      this.setDefaultColoredTriangleVisibility(this.areDefaultColorsOn);
-    }
+  getAllTriangles(includeMShadowTriangles=true){
+    let allTriangles = new Array();
+    for (let row = 0; row < this.makeLabLogoArray.length; row++) {
+      for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
+        if(includeMShadowTriangles || !MakeabilityLabLogo.isMShadowTriangle(row, col, 1)){
+          allTriangles.push(this.makeLabLogoArray[row][col].tri1);
+        }
+
+        if(includeMShadowTriangles || !MakeabilityLabLogo.isMShadowTriangle(row, col, 2)){
+          allTriangles.push(this.makeLabLogoArray[row][col].tri2);
+        }
+      }
+    }  
+    return allTriangles;
   }
 
   /**
@@ -175,23 +169,16 @@ class MakeabilityLabLogo {
     return cTriangles;
   }
 
-  setDefaultColoredTriangleVisibility(visible){
-    this._defaultColorsOn = visible;
-    if(visible){
-      this.makeLabLogoArray[0][4].tri2.fillColor = OriginalColorPaletteRGB.Blue; 
-      this.makeLabLogoArray[0][5].tri2.fillColor = OriginalColorPaletteRGB.BlueGray
-      this.makeLabLogoArray[1][0].tri2.fillColor = OriginalColorPaletteRGB.YellowGreen;
-      this.makeLabLogoArray[1][4].tri1.fillColor = OriginalColorPaletteRGB.Purple;
-      this.makeLabLogoArray[1][5].tri1.fillColor = OriginalColorPaletteRGB.Green;
-      this.makeLabLogoArray[1][5].tri2.fillColor = OriginalColorPaletteRGB.Orange;
-      this.makeLabLogoArray[2][0].tri1.fillColor = OriginalColorPaletteRGB.YellowGreen;
-      this.makeLabLogoArray[2][0].tri2.fillColor = OriginalColorPaletteRGB.LightGreen;
-      this.makeLabLogoArray[2][5].tri1.fillColor = OriginalColorPaletteRGB.Orange;
-      this.makeLabLogoArray[2][5].tri2.fillColor = OriginalColorPaletteRGB.RedPurple;
-      this.makeLabLogoArray[3][0].tri1.fillColor = OriginalColorPaletteRGB.BlueGreen;
-      this.makeLabLogoArray[3][5].tri1.fillColor = OriginalColorPaletteRGB.Pink;
+  setDefaultColoredTrianglesFillColor(fillColorOrColorArray){
+    const cTriangles = this.getDefaultColoredTriangles();
+    if(Array.isArray(fillColorOrColorArray)){
+      for(let i=0; i<cTriangles.length; i++){
+        cTriangles[i].fillColor = fillColorOrColorArray[i];
+      }
     }else{
-      this.colorScheme = this.colorScheme;
+      for(let i=0; i<cTriangles.length; i++){
+        cTriangles[i].fillColor = fillColorOrColorArray;
+      }
     }
   }
 
@@ -379,5 +366,12 @@ class MakeabilityLabLogo {
       x += triangleSize;
     }
     return botRow;
+  }
+
+  static isMShadowTriangle(row, col, triNum){
+    return (row == 2 && col == 1 && triNum == 2) ||
+          (row == 3 && col == 1 && triNum == 1) ||
+          (row == 2 && col == 4 && triNum == 2) ||
+          (row == 3 && col == 4 && triNum == 1);
   }
 }
