@@ -16,10 +16,26 @@ const OriginalColorPaletteRGB = {
   BlueGreen: [147, 211, 202]
 }
 
+const OriginalColorArray = [
+  OriginalColorPaletteRGB.Blue, 
+  OriginalColorPaletteRGB.BlueGray,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.Purple,
+  OriginalColorPaletteRGB.Green,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.LightGreen,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.RedPurple,
+  OriginalColorPaletteRGB.BlueGreen,
+  OriginalColorPaletteRGB.Pink
+];
+
+
 class Colorer{
 
   static getRandomOriginalColor(){
-    return Colorer.getRandomColor(OriginalColorPaletteRGB);
+    return Colorer.getRandomColorFromPalette(OriginalColorPaletteRGB);
   }
 
   static getRandomColorFromPalette(palette){

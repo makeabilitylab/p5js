@@ -1,6 +1,6 @@
 class Triangle {
-  constructor(x, y, size, direction, fillColor = null,
-    strokeColor = color(255), strokeWeight = 1, visible = true) {
+  constructor(x, y, size, direction, fillColor = color(255),
+    strokeColor = color(0), strokeWeight = 1, visible = true) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -11,18 +11,23 @@ class Triangle {
     this.strokeWeight = strokeWeight;
     this.visible = visible;
 
-    this.drawCellOutline = false;
+    this.isFillVisible = true;
+    this.isStrokeVisible = true;
+
+    this.drawCellOutline = false; // for debugging
   }
 
   draw() {
+    if(!this.visible){ return; }
+
     push();
-    if (this.fillColor) {
+    if (this.fillColor && this.isFillVisible) {
       fill(this.fillColor);
     } else {
       noFill();
     }
 
-    if (this.strokeColor) {
+    if (this.strokeColor && this.isStrokeVisible) {
       stroke(this.strokeColor);
     } else {
       noStroke();

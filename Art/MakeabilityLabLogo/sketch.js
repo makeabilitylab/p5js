@@ -148,4 +148,8 @@ function toggleColorScheme(){
       makeLabLogo.setColors(fillColor, strokeColor);
       break;
   } 
+
+  if(defaultColorsOn){
+    makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+  }
 }

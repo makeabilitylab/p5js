@@ -6,10 +6,10 @@ class Grid{
     for(let row = 0; row < this.gridArray.length; row++){
       for(let col = 0; col < this.gridArray[row].length; col++){
         this.gridArray[row][col].tri1.strokeColor = null;
-        this.gridArray[row][col].tri1.fillColor = Colorer.getRandomColorFromPalette();
+        this.gridArray[row][col].tri1.fillColor = fillColor;
 
         this.gridArray[row][col].tri2.strokeColor = null;
-        this.gridArray[row][col].tri2.fillColor = Colorer.getRandomColorFromPalette();
+        this.gridArray[row][col].tri2.fillColor = fillColor;
       }
     }
   }
