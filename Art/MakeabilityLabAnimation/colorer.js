@@ -35,7 +35,7 @@ const OriginalColorArray = [
 class Colorer{
 
   static getRandomOriginalColor(){
-    return Colorer.getRandomColorFromPalette(OriginalColorPaletteRGB);
+    return color(Colorer.getRandomColorFromPalette(OriginalColorPaletteRGB));
   }
 
   static getRandomColorFromPalette(palette){
@@ -45,6 +45,6 @@ class Colorer{
 
     const keys = Object.keys(palette);
     const randKey = keys[Math.floor(Math.random() * keys.length)];
-    return palette[randKey];
+    return color(palette[randKey]);
   }
 }

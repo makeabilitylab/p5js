@@ -1,8 +1,13 @@
 /**
  * TODO
  * Some ideas:
- *  * all triangles in grid illuminate and fade before ML logo emerges
+ *  * all triangles in grid illuminate at slightly different times and fade before ML logo emerges
  *  * blank canvas and triangles rotate and move to final location
+ * 
+ * See:
+ *  - https://sighack.com/post/easing-functions-in-processing
+ *  - https://www.youtube.com/watch?v=1lW-NLel1G8&list=PLsGCUnpinsDnejs6Jx8cF2qauZaj3JMxu&index=8&t=8s
+ *  - https://stackoverflow.com/a/38498793
  * 
  * By Professor Jon E. Froehlich
  * https://jonfroehlich.github.io/
@@ -25,20 +30,22 @@ function setup() {
   angleMode(DEGREES);
 
   makeLabLogo = new MakeabilityLabLogo(5 * TRIANGLE_SIZE, 4 * TRIANGLE_SIZE, TRIANGLE_SIZE);
+  makeLabLogo.visible = false;
   makeLabGrid = new Grid(TRIANGLE_SIZE);
-  makeLabGrid.setFillColor(null);
+  //makeLabGrid.setFillColor(color(255));
+  //makeLabGrid.setStrokeColor(color(200, 200, 200, 150));
   colorScheme = ColorScheme.BlackOnWhite;
 
 
   defaultColorsOn = true;
   makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
 
-  for (let row = 0; row < makeLabGrid.gridArray.length; row++) {
-    for (let col = 0; col < makeLabGrid.gridArray[row].length; col++) {
-      makeLabGrid.gridArray[row][col].tri1.fillColor = Colorer.getRandomOriginalColor();
-      makeLabGrid.gridArray[row][col].tri2.fillColor = Colorer.getRandomOriginalColor();
-    }
-  }
+  // for (let row = 0; row < makeLabGrid.gridArray.length; row++) {
+  //   for (let col = 0; col < makeLabGrid.gridArray[row].length; col++) {
+  //     makeLabGrid.gridArray[row][col].tri1.fillColor = Colorer.getRandomOriginalColor();
+  //     makeLabGrid.gridArray[row][col].tri2.fillColor = Colorer.getRandomOriginalColor();
+  //   }
+  // }
 }
 
 

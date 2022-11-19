@@ -15,10 +15,25 @@ class Triangle {
     this.isStrokeVisible = true;
 
     this.drawCellOutline = false; // for debugging
+
+    this.startFillColor = color(255);
+    this.endFillColor = Colorer.getRandomOriginalColor();
+    this.animationDuration = 1.5; // in seconds
+    this.startAnimationTimestamp = millis() + random() * 2000;
+    this.fillColor = this.startFillColor;
+    this.strokeColor = this.fillColor;
   }
 
   draw() {
     if(!this.visible){ return; }
+
+    if(millis() > this.startAnimationTimestamp){
+      let currentT = millis() - this.startAnimationTimestamp;
+      let pct = map(currentT, 0, this.animationDuration * 1000, 0, 1);
+      let fillColor = lerpColor(this.startFillColor, this.endFillColor, pct);
+      this.fillColor = fillColor;
+      this.strokeColor = fillColor;
+    }
 
     push();
     if (this.fillColor && this.isFillVisible) {
