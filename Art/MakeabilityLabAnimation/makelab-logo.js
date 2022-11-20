@@ -51,12 +51,29 @@ class MakeabilityLabLogo {
     return visible;
   }
 
+  setStrokeTransparent(isTransparent, includeMShadowTriangles=true){
+    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+      tri.isStrokeVisible = !isTransparent;
+    }
+  }
+
+  /**
+   * Sets the internal triangles to transparent
+   * @param {Boolean} isTransparent 
+   * @param {Boolean} includeMShadowTriangles 
+   */
+  setFillTransparent(isTransparent, includeMShadowTriangles=true){
+    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+      tri.isFillVisible = !isTransparent;
+    }
+  }
+
   /**
    * Convenience method to set fill and stroke colors
    * @param {*} fillColor 
    * @param {*} strokeColor 
    */
-  setColors(fillColor, strokeColor,){
+  setColors(fillColor, strokeColor){
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
       for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
         this.makeLabLogoArray[row][col].tri1.fillColor = fillColor;
@@ -254,6 +271,17 @@ class MakeabilityLabLogo {
     mPoints.push([this.x + 0 * this.cellSize, this.y + 1 * this.cellSize]);
    
     return mPoints;
+  }
+
+  static setColors(triangles, fillColor, strokeColor, isFillVisible=true, isStrokeVisible=true){
+    for(const tri of triangles){
+      tri.fillColor = fillColor;
+      tri.startFillColor = fillColor;
+      tri.endFillColor = fillColor;
+      tri.strokeColor = strokeColor;
+      tri.isFillVisible = isFillVisible;
+      tri.isStrokeVisible = isStrokeVisible;
+    }
   }
 
   static createMakeabilityLabLogo(x, y, triangleSize) {
