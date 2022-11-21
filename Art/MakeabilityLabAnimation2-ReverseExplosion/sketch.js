@@ -69,8 +69,9 @@ function setup() {
   for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
     tri.x = random(0, width - TRIANGLE_SIZE);
     tri.y = random(0, height - TRIANGLE_SIZE);
+    tri.angle = random(0, 360);
 
-    originalRandomTriLocs.push({x: tri.x, y: tri.y});
+    originalRandomTriLocs.push({x: tri.x, y: tri.y, angle: tri.angle});
   }
 }
 
@@ -80,14 +81,18 @@ function mouseMoved(){
   let staticTriangles = makeLabLogo.getAllTriangles(true);
   let animatedTriangles = makeLabLogoAnimated.getAllTriangles(true);
   for(let i = 0; i < originalRandomTriLocs.length; i++){
-    let endX = staticTriangles[i].x;
-    let endY = staticTriangles[i].y;
-    let startX = originalRandomTriLocs[i].x;
-    let startY = originalRandomTriLocs[i].y;
-    let newX = lerp(startX, endX, lerpAmt);
-    let newY = lerp(startY, endY, lerpAmt);
+    const endX = staticTriangles[i].x;
+    const endY = staticTriangles[i].y;
+    const endAngle = 0;
+    const startX = originalRandomTriLocs[i].x;
+    const startY = originalRandomTriLocs[i].y;
+    const startAngle = originalRandomTriLocs[i].angle;
+    const newX = lerp(startX, endX, lerpAmt);
+    const newY = lerp(startY, endY, lerpAmt);
+    const newAngle = lerp(startAngle, endAngle, lerpAmt);
     animatedTriangles[i].x = newX;
     animatedTriangles[i].y = newY;
+    animatedTriangles[i].angle = newAngle;
   }
 
   // This changes the inner L back to solid when almost complete shape

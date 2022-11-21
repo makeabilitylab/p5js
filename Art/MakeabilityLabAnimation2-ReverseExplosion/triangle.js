@@ -5,6 +5,7 @@ class Triangle {
     this.y = y;
     this.size = size;
     this.direction = direction;
+    this.angle = 0;
 
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
@@ -37,6 +38,7 @@ class Triangle {
 
     // draw the triangle
     push();
+    rotate(this.angle);
     switch (this.direction) {
       case TriangleDir.BottomLeft:
         triangle(0, 0, 0, this.size, this.size, this.size);
