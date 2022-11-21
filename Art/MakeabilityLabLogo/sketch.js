@@ -87,22 +87,27 @@ function draw() {
 function keyPressed() {
   if(key == 'g'){
     makeLabGrid.visible = !makeLabGrid.visible;
+    print("Grid visibility is set to: ", makeLabGrid.visible);
   }
 
   if(key == 'm'){
     makeLabLogo.isMOutlineVisible = !makeLabLogo.isMOutlineVisible;
+    print("M outline visible: ", makeLabLogo.isMOutlineVisible);
   }
 
   if(key == 'l'){
     makeLabLogo.isLOutlineVisible = !makeLabLogo.isLOutlineVisible;
+    print("L outline visible: ", makeLabLogo.isLOutlineVisible);
   }
 
   if(key == 'k'){
     makeLabLogo.areLTriangleStrokesVisible = !makeLabLogo.areLTriangleStrokesVisible;
+    print("L triangle strokes visible: ", makeLabLogo.areLTriangleStrokesVisible);
   }
 
   if(key == 'h'){
     makeLabLogo.visible = !makeLabLogo.visible;
+    print("Makeability Lab logo visible: ", makeLabLogo.visible);
   }
 
   if(key == 'b'){
@@ -115,9 +120,7 @@ function keyPressed() {
       tri.isFillVisible = !transparent;
     }
 
-    // for(const tri of makeLabLogo.getLTriangles()){
-    //   tri.isStrokeVisible = !transparent; 
-    // }
+    print("Transparent set to: ", transparent);
   }
 
   if(key == 'c'){
@@ -135,6 +138,7 @@ function keyPressed() {
           break;
       } 
     }
+    print("Default colors on: ", defaultColorsOn);
   }
 }
 
@@ -162,4 +166,6 @@ function toggleColorScheme(){
   if(defaultColorsOn){
     makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
   }
+
+  print("Color scheme set to: ", colorScheme);
 }
