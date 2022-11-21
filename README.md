@@ -103,4 +103,4 @@ The Makeability Lab logo is precisely geometric in its foundation, composed sole
 
 * [Makeability Lab - Animation1 - Grid Fade Appearance](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation1-GridFade): a triangle-based grid appears and the ML logo emerges
 
-* [Makeability Lab Logo - Animation2 - Reverse Explosion](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation2-RandomMove): the ML logos start in random places and animate towards their final composition
+* [Makeability Lab Logo - Animation2 - Reverse Explosion](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation2-ReverseExplosion): the ML logos start in random places and animate towards their final composition
