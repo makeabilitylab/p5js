@@ -71,6 +71,16 @@ function draw() {
   if(makeLabLogo.visible){
     makeLabLogo.draw();
   }
+
+  if(makeLabLogo.isLOutlineVisible){
+    for(const lLineSegment of makeLabLogo.getLOutlineLineSegments()){
+      lLineSegment.draw();
+    }
+  }
+
+  for(const mLineSegment of makeLabLogo.getMOutlineLineSegments()){
+    mLineSegment.draw();
+  }
   
 }
 

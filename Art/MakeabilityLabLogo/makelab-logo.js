@@ -220,6 +220,33 @@ class MakeabilityLabLogo {
     }
   }
 
+  /**
+   * 
+   * @returns gets the L outline as an array of line segments
+   */
+  getLOutlineLineSegments(){
+    let lLineSegments = new Array();
+    
+    lLineSegments.push(new LineSegment(this.x + this.cellSize, this.y, 
+      this.x + 3 * this.cellSize, this.y + 2 * this.cellSize));
+    lLineSegments.push(new LineSegment(this.x + 3 * this.cellSize, 
+      this.y + 2 * this.cellSize, this.x + 4 * this.cellSize, this.y + this.cellSize));
+    lLineSegments.push(new LineSegment(this.x + 4 * this.cellSize, this.y + this.cellSize,
+      this.x + 5 * this.cellSize, this.y + 2 * this.cellSize));
+    lLineSegments.push(new LineSegment(this.x + 5 * this.cellSize, this.y + 2 * this.cellSize,
+      this.x + 3 * this.cellSize, this.y + 4 * this.cellSize));
+    lLineSegments.push(new LineSegment(this.x + 3 * this.cellSize, this.y + 4 * this.cellSize,
+      this.x, this.y + 1 * this.cellSize));
+    lLineSegments.push(new LineSegment(this.x, this.y + this.cellSize,
+      this.x + this.cellSize, this.y));
+
+    return lLineSegments;
+  }
+
+  /**
+   * 
+   * @returns Gets the L outline as an array of points (each point is [x, y])
+   */
   getLOutlinePoints(){
     let lPoints = new Array();
 
@@ -243,6 +270,56 @@ class MakeabilityLabLogo {
     return lPoints
   }
 
+  /**
+   * 
+   * @returns gets the M outline as an array of line segments
+   */
+   getMOutlineLineSegments(){
+    let mLineSegments = new Array();
+    
+    mLineSegments.push(new LineSegment(this.x + this.cellSize, this.y, 
+      this.x + 3 * this.cellSize, this.y + 2 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 3 * this.cellSize, this.y + 2 * this.cellSize, 
+      this.x + 5 * this.cellSize, this.y));
+
+    mLineSegments.push(new LineSegment(this.x + 5 * this.cellSize, this.y, 
+      this.x + 6 * this.cellSize, this.y + this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 6 * this.cellSize, this.y + this.cellSize, 
+      this.x + 6 * this.cellSize, this.y + 3 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 6 * this.cellSize, this.y + 3 * this.cellSize, 
+      this.x + 5 * this.cellSize, this.y + 4 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 5 * this.cellSize, this.y + 4 * this.cellSize, 
+      this.x + 4 * this.cellSize, this.y + 3 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 4 * this.cellSize, this.y + 3 * this.cellSize, 
+      this.x + 3 * this.cellSize, this.y + 4 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 3 * this.cellSize, this.y + 4 * this.cellSize, 
+      this.x + 2 * this.cellSize, this.y + 3 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + 2 * this.cellSize, this.y + 3 * this.cellSize, 
+      this.x + this.cellSize, this.y + 4 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x + this.cellSize, this.y + 4 * this.cellSize, 
+      this.x, this.y + 3 * this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x, this.y + 3 * this.cellSize, 
+      this.x, this.y + this.cellSize));
+
+    mLineSegments.push(new LineSegment(this.x, this.y + this.cellSize, 
+      this.x + this.cellSize, this.y));
+
+    return mLineSegments;
+  }
+
+  /**
+   * 
+   * @returns Gets the M outline as an array of points (each point is [x, y])
+   */
   getMOutlinePoints(){
     let mPoints = new Array();
 
@@ -374,4 +451,8 @@ class MakeabilityLabLogo {
           (row == 2 && col == 4 && triNum == 2) ||
           (row == 3 && col == 4 && triNum == 1);
   }
+}
+
+class LOutline{
+
 }
