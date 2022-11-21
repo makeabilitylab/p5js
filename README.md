@@ -94,3 +94,13 @@ Many of these games were created in 2020 when I first started learning p5js.
 ### Sound as input
 
 * [FFTGame](https://makeabilitylab.github.io/p5js/Games/FFTGame/): use different frequencies (pitches) of sound to launch a ball into the air. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/FFTGame)
+
+## Makeability Lab Logos
+
+The Makeability Lab logo is precisely geometric in its foundation, composed solely of triangles and 45 degree angles. I've long wanted to programmatically play with this form. Here are some of my experiments:
+
+* [Makeability Lab Logo](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabLogo): a programmatically built logo. Use keyboard commands to turn certain features/layers off.
+
+* [Makeability Lab - Animation1 - Grid Fade Appearance](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation1-GridFade): a triangle-based grid appears and the ML logo emerges
+
+* [Makeability Lab Logo](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation2-RandomMove): the ML logos start in random places and animate towards their final composition
