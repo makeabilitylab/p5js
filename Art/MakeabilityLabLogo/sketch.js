@@ -18,6 +18,7 @@ let makeLabGrid = null;
 let colorScheme =  null;
 let defaultColorsOn = true;
 let transparent = false;
+let angleOverlays = false;
 
 const originalColorArray = [
   OriginalColorPaletteRGB.Blue, 
@@ -72,19 +73,26 @@ function draw() {
     makeLabLogo.draw();
   }
 
-  if(makeLabLogo.isLOutlineVisible){
-    for(const lLineSegment of makeLabLogo.getLOutlineLineSegments()){
-      lLineSegment.draw();
+  if(angleOverlays){
+    if(makeLabLogo.isLOutlineVisible){
+      for(const lLineSegment of makeLabLogo.getLOutlineLineSegments()){
+        lLineSegment.draw();
+      }
     }
-  }
 
-  for(const mLineSegment of makeLabLogo.getMOutlineLineSegments()){
-    mLineSegment.draw();
+    for(const mLineSegment of makeLabLogo.getMOutlineLineSegments()){
+      mLineSegment.draw();
+    }
   }
   
 }
 
 function keyPressed() {
+  if(key == 'a'){
+    angleOverlays = !angleOverlays;
+    print("Angle overlays set to: ", angleOverlays);
+  }
+
   if(key == 'g'){
     makeLabGrid.visible = !makeLabGrid.visible;
     print("Grid visibility is set to: ", makeLabGrid.visible);
