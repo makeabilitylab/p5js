@@ -74,6 +74,8 @@ function setup() {
     tri.angle = random(0, 360);
     originalRandomTriLocs.push({x: tri.x, y: tri.y, angle: tri.angle});
   }
+
+  setStaticLogoTransparent(true);
 }
 
 function mouseMoved(){
@@ -177,12 +179,7 @@ function keyPressed() {
   }
 
   if(key == 't'){
-    transparent = !transparent;
-    for(const tri of makeLabLogo.getAllTriangles(false)){
-      tri.isFillVisible = !transparent;
-    }
-
-    print("Transparent set to: ", transparent);
+    setStaticLogoTransparent(!transparent);
   }
 
   if(key == 'c'){
@@ -202,6 +199,15 @@ function keyPressed() {
     }
     print("Default colors on: ", defaultColorsOn);
   }
+}
+
+function setStaticLogoTransparent(trans){
+  transparent = trans;
+  for(const tri of makeLabLogo.getAllTriangles(false)){
+    tri.isFillVisible = !trans;
+  }
+
+  print("Transparent set to: ", trans);
 }
 
 function toggleColorScheme(){
