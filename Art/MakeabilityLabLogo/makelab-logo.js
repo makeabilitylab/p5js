@@ -452,7 +452,3 @@ class MakeabilityLabLogo {
           (row == 3 && col == 4 && triNum == 1);
   }
 }
-
-class LOutline{
-
-}

@@ -51,6 +51,7 @@ function setup() {
   makeLabLogoAnimated = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabLogoAnimated.isLOutlineVisible = false;
   makeLabLogoAnimated.isMOutlineVisible = false;
+  //makeLabLogoAnimated.setDefaultColoredTrianglesFillColor(originalColorArray);
 
   for(const tri of makeLabLogoAnimated.getLTriangles()){
     tri.strokeColor = color(0);
@@ -71,7 +72,6 @@ function setup() {
     tri.x = random(0, width - TRIANGLE_SIZE);
     tri.y = random(0, height - TRIANGLE_SIZE);
     tri.angle = random(0, 360);
-
     originalRandomTriLocs.push({x: tri.x, y: tri.y, angle: tri.angle});
   }
 }
@@ -85,27 +85,34 @@ function mouseMoved(){
     const endX = staticTriangles[i].x;
     const endY = staticTriangles[i].y;
     const endAngle = 0;
+
     const startX = originalRandomTriLocs[i].x;
     const startY = originalRandomTriLocs[i].y;
     const startAngle = originalRandomTriLocs[i].angle;
+
     const newX = lerp(startX, endX, lerpAmt);
     const newY = lerp(startY, endY, lerpAmt);
     const newAngle = lerp(startAngle, endAngle, lerpAmt);
+
     animatedTriangles[i].x = newX;
     animatedTriangles[i].y = newY;
     animatedTriangles[i].angle = newAngle;
   }
 
-  // This changes the inner L back to solid when almost complete shape
-  // let lStrokeColor = color(0);
-  // if(lerpAmt > 0.999){
-  //   lStrokeColor = color(255);
-  // }
-
-  // for(const tri of makeLabLogoAnimated.getLTriangles()){
-  //   tri.strokeColor = lStrokeColor;
-  //   tri.isStrokeVisible = true;
-  // }
+  if(defaultColorsOn){
+    const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
+    for(let i = 0; i < cTriangles.length; i++){
+      const startColor = color(255);
+      const endColor = color(originalColorArray[i]);
+      const newColor = lerpColor(startColor, endColor, lerpAmt);
+      cTriangles[i].fillColor = newColor;
+    }
+  }else{
+    const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
+    for(let i = 0; i < cTriangles.length; i++){
+      cTriangles[i].fillColor = color(255);
+    }
+  }
 }
 
 
@@ -127,12 +134,14 @@ function draw() {
     makeLabGrid.draw();
   }
 
-  if(makeLabLogo.visible){
-    makeLabLogo.draw();
-  }
+  
 
   if(makeLabLogoAnimated.visible){
     makeLabLogoAnimated.draw();
+  }
+
+  if(makeLabLogo.visible){
+    makeLabLogo.draw();
   }
   
 }
