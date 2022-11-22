@@ -3,6 +3,7 @@
  * Some ideas:
  *  * all triangles in grid illuminate and fade before ML logo emerges
  *  * blank canvas and triangles rotate and move to final location
+ *  * animate between JEF and ML logo
  * 
  * By Professor Jon E. Froehlich
  * https://jonfroehlich.github.io/
