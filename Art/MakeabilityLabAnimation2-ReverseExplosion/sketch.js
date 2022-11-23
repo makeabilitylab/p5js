@@ -78,6 +78,10 @@ function setup() {
   setStaticLogoTransparent(true);
 }
 
+function touchMoved(){
+  mouseMoved();
+}
+
 function mouseMoved(){
   const lerpAmt = map(mouseX, 0, width, 0, 1, true);
 
