@@ -131,7 +131,7 @@ class ColorUtils {
   /**
    * 
    * @param {*} c can be a p5.Color, an object with r, g, b, or a 24-bit RGB value
-   * @param {*} includeAlpha 
+   * @param {Boolean} includeAlpha 
    */
   static rgbToHexString(c, includeAlpha = true) {
     // code from https://stackoverflow.com/a/24390910

@@ -20,34 +20,18 @@ let defaultColorsOn = true;
 let transparent = false;
 let angleOverlays = false;
 
-const originalColorArray = [
-  OriginalColorPaletteRGB.Blue, 
-  OriginalColorPaletteRGB.BlueGray,
-  OriginalColorPaletteRGB.YellowGreen,
-  OriginalColorPaletteRGB.Purple,
-  OriginalColorPaletteRGB.Green,
-  OriginalColorPaletteRGB.Orange,
-  OriginalColorPaletteRGB.YellowGreen,
-  OriginalColorPaletteRGB.LightGreen,
-  OriginalColorPaletteRGB.Orange,
-  OriginalColorPaletteRGB.RedPurple,
-  OriginalColorPaletteRGB.BlueGreen,
-  OriginalColorPaletteRGB.Pink
-];
-
 function setup() {
   createCanvas(800, 600);
   
   angleMode(DEGREES); 
 
   makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
-  makeLabGrid = new Grid(TRIANGLE_SIZE);
+  makeLabGrid = new Grid(width, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
-  colorScheme = ColorScheme.BlackOnWhite;
-
+  setColorScheme(ColorScheme.BlackOnWhite);
 
   defaultColorsOn = true;
-  makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+  makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
 }
 
 
@@ -150,30 +134,44 @@ function keyPressed() {
   }
 }
 
-function toggleColorScheme(){
+function setColorScheme(cScheme){
+  colorScheme = cScheme;
   let fillColor = null;
   let strokeColor = null;
 
   switch(colorScheme){
     case ColorScheme.BlackOnWhite:
-      colorScheme = ColorScheme.WhiteOnBlack;
-      fillColor = color(0);
-      strokeColor = color(255);
-      makeLabLogo.setColors(fillColor, strokeColor);
-
-      break;
-    case ColorScheme.WhiteOnBlack:
-    default:
-      colorScheme = ColorScheme.BlackOnWhite;
       fillColor = color(255);
       strokeColor = color(0);
       makeLabLogo.setColors(fillColor, strokeColor);
       break;
+    case ColorScheme.WhiteOnBlack:
+    default:
+      fillColor = color(0);
+      strokeColor = color(255);
+      makeLabLogo.setColors(fillColor, strokeColor);
+      break;
   } 
 
+  makeLabLogo.mOutlineColor = strokeColor;
+  makeLabLogo.lOutlineColor = strokeColor;
+
   if(defaultColorsOn){
-    makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+    makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
   }
 
   print("Color scheme set to: ", colorScheme);
+}
+
+function toggleColorScheme(){
+
+  switch(colorScheme){
+    case ColorScheme.BlackOnWhite:
+      setColorScheme(ColorScheme.WhiteOnBlack);
+      break;
+    case ColorScheme.WhiteOnBlack:
+    default:
+      setColorScheme(ColorScheme.BlackOnWhite);
+      break;
+  } 
 }

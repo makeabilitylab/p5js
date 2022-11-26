@@ -1,17 +1,7 @@
 class Grid{
-  constructor(triangleSize, strokeColor = color(100, 100, 100, 50), fillColor = null){
-    this.gridArray = Grid.createGrid(triangleSize, strokeColor, fillColor);
+  constructor(gridWidth, triangleSize, strokeColor = color(100, 100, 100, 50), fillColor = null){
+    this.gridArray = Grid.createGrid(gridWidth, triangleSize, strokeColor, fillColor);
     this.visible = true;
-
-    for(let row = 0; row < this.gridArray.length; row++){
-      for(let col = 0; col < this.gridArray[row].length; col++){
-        this.gridArray[row][col].tri1.strokeColor = null;
-        this.gridArray[row][col].tri1.fillColor = fillColor;
-
-        this.gridArray[row][col].tri2.strokeColor = null;
-        this.gridArray[row][col].tri2.fillColor = fillColor;
-      }
-    }
   }
 
   draw(){
@@ -41,10 +31,10 @@ class Grid{
   }
 
 
-  static createGrid(triangleSize, strokeColor, fillColor){
+  static createGrid(gridWidth, triangleSize, strokeColor, fillColor){
 
-    const numGridRows = floor(width / triangleSize);
-    const numGridColumns = floor(width / triangleSize);
+    const numGridRows = floor(gridWidth / triangleSize);
+    const numGridColumns = floor(gridWidth / triangleSize);
   
     let grid = new Array(numGridRows);
   

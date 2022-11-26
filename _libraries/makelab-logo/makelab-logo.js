@@ -1,21 +1,3 @@
-const ColorScheme = {
-  WhiteOnBlack: 'WhiteOnBlack',
-  BlackOnWhite: 'BlackOnWhite',
-};
-
-const OriginalColorPaletteRGB ={
-  Blue: [135, 202, 228],
-  BlueGray: [147, 169, 207],
-  Purple: [171, 147, 197],
-  Green: [148, 206, 146],
-  Orange: [235, 185, 130],
-  RedPurple: [207, 145, 166],
-  Pink: [237, 162, 163],
-  YellowGreen: [239, 226, 127],
-  LightGreen: [209, 226, 133],
-  BlueGreen: [147, 211, 202]
-}
-
 class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
@@ -24,6 +6,8 @@ class MakeabilityLabLogo {
     this.visible = true;
     this.isMOutlineVisible = true;
     this.isLOutlineVisible = true;
+    this.mOutlineColor = color(255);
+    this.lOutlineColor = color(255);
 
     for(const tri of this.getMShadowTriangles()){
       tri.fillColor = tri.strokeColor;
@@ -69,12 +53,29 @@ class MakeabilityLabLogo {
     return visible;
   }
 
+  setStrokeTransparent(isTransparent, includeMShadowTriangles=true){
+    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+      tri.isStrokeVisible = !isTransparent;
+    }
+  }
+
+  /**
+   * Sets the internal triangles to transparent
+   * @param {Boolean} isTransparent 
+   * @param {Boolean} includeMShadowTriangles 
+   */
+  setFillTransparent(isTransparent, includeMShadowTriangles=true){
+    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+      tri.isFillVisible = !isTransparent;
+    }
+  }
+
   /**
    * Convenience method to set fill and stroke colors
    * @param {*} fillColor 
    * @param {*} strokeColor 
    */
-  setColors(fillColor, strokeColor,){
+  setColors(fillColor, strokeColor){
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
       for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
         this.makeLabLogoArray[row][col].tri1.fillColor = fillColor;
@@ -194,7 +195,7 @@ class MakeabilityLabLogo {
     if(this.isMOutlineVisible){
       push();
       noFill();
-      stroke(this.makeLabLogoArray[0][0].tri1.strokeColor);
+      stroke(this.mOutlineColor);
       strokeWeight(4);
       beginShape();
       let mPoints = this.getMOutlinePoints();
@@ -208,7 +209,7 @@ class MakeabilityLabLogo {
     if(this.isLOutlineVisible){
       push();
       noFill();
-      stroke(this.makeLabLogoArray[0][0].tri1.strokeColor);
+      stroke(this.lOutlineColor);
       strokeWeight(4);
       beginShape();
       let lPoints = this.getLOutlinePoints();
@@ -349,6 +350,29 @@ class MakeabilityLabLogo {
     mPoints.push([this.x + 0 * this.cellSize, this.y + 1 * this.cellSize]);
    
     return mPoints;
+  }
+
+  static setRandomColors(triangles, isFillVisible=true, isStrokeVisible=true){
+    for(const tri of triangles){
+      const fillColor = Colorer.getRandomOriginalColor();
+      tri.fillColor = fillColor;
+      tri.startFillColor = fillColor;
+      tri.endFillColor = fillColor;
+      tri.strokeColor = fillColor;
+      tri.isFillVisible = isFillVisible;
+      tri.isStrokeVisible = isStrokeVisible;
+    }
+  }
+
+  static setColors(triangles, fillColor, strokeColor, isFillVisible=true, isStrokeVisible=true){
+    for(const tri of triangles){
+      tri.fillColor = fillColor;
+      tri.startFillColor = fillColor;
+      tri.endFillColor = fillColor;
+      tri.strokeColor = strokeColor;
+      tri.isFillVisible = isFillVisible;
+      tri.isStrokeVisible = isStrokeVisible;
+    }
   }
 
   static createMakeabilityLabLogo(x, y, triangleSize) {

@@ -22,22 +22,6 @@ let makeLabGrid = null;
 let colorScheme =  null;
 let defaultColorsOn = true;
 let transparent = false;
-
-const originalColorArray = [
-  OriginalColorPaletteRGB.Blue, 
-  OriginalColorPaletteRGB.BlueGray,
-  OriginalColorPaletteRGB.YellowGreen,
-  OriginalColorPaletteRGB.Purple,
-  OriginalColorPaletteRGB.Green,
-  OriginalColorPaletteRGB.Orange,
-  OriginalColorPaletteRGB.YellowGreen,
-  OriginalColorPaletteRGB.LightGreen,
-  OriginalColorPaletteRGB.Orange,
-  OriginalColorPaletteRGB.RedPurple,
-  OriginalColorPaletteRGB.BlueGreen,
-  OriginalColorPaletteRGB.Pink
-];
-
 let originalRandomTriLocs = [];
 
 function setup() {
@@ -58,7 +42,7 @@ function setup() {
     tri.isStrokeVisible = true;
   }
 
-  makeLabGrid = new Grid(TRIANGLE_SIZE);
+  makeLabGrid = new Grid(width, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
   makeLabGrid.visible = false;
 
@@ -66,7 +50,7 @@ function setup() {
 
 
   defaultColorsOn = true;
-  makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+  makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
 
   for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
     tri.x = random(0, width - TRIANGLE_SIZE);
@@ -109,7 +93,7 @@ function mouseMoved(){
     const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
     for(let i = 0; i < cTriangles.length; i++){
       const startColor = color(255);
-      const endColor = color(originalColorArray[i]);
+      const endColor = color(OriginalColorArray[i]);
       const newColor = lerpColor(startColor, endColor, lerpAmt);
       cTriangles[i].fillColor = newColor;
     }

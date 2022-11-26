@@ -16,7 +16,7 @@ const OriginalColorPaletteRGB = {
   BlueGreen: [147, 211, 202]
 }
 
-const OriginalColorArray = [
+const ORIGINAL_COLOR_ARRAY = [
   OriginalColorPaletteRGB.Blue, 
   OriginalColorPaletteRGB.BlueGray,
   OriginalColorPaletteRGB.YellowGreen,

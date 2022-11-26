@@ -33,17 +33,25 @@ function setup() {
   makeLabLogo.visible = false;
   makeLabLogo.setStrokeTransparent(true, false);
 
+  MakeabilityLabLogo.setRandomColors(makeLabLogo.getAllTriangles(), true, false);  
   MakeabilityLabLogo.setColors(makeLabLogo.getMShadowTriangles(), color(255), color(255));
-
-  makeLabGrid = new Grid(TRIANGLE_SIZE);
+  
+  makeLabGrid = new Grid(width, TRIANGLE_SIZE, null, null);
   makeLabGrid.visible = true;
-  //makeLabGrid.setFillColor(color(255));
-  //makeLabGrid.setStrokeColor(color(200, 200, 200, 150));
+
+  for(let row = 0; row < makeLabGrid.gridArray.length; row++){
+    for(let col = 0; col < makeLabGrid.gridArray[row].length; col++){
+      const tri1 = makeLabGrid.gridArray[row][col].tri1;
+      initializeGridTriangle(tri1);
+      const tri2 = makeLabGrid.gridArray[row][col].tri2;
+      initializeGridTriangle(tri2);
+    }
+  }
+
   colorScheme = ColorScheme.WhiteOnBlack;
 
-
   defaultColorsOn = true;
-  makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
+  makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
   makeLabLogo.setFillTransparent(true, false);
   transparent = true;
 
@@ -63,6 +71,18 @@ function setup() {
 function draw() {
   background(250);
 
+  for(let row = 0; row < makeLabGrid.gridArray.length; row++){
+    for(let col = 0; col < makeLabGrid.gridArray[row].length; col++){
+      const tri1 = makeLabGrid.gridArray[row][col].tri1;
+      const tri2 = makeLabGrid.gridArray[row][col].tri2;
+   
+      updateGridAnimation(tri1);
+      updateGridAnimation(tri2);
+    }
+  }
+
+  
+
   if (makeLabGrid.visible) {
     makeLabGrid.draw();
   }
@@ -71,6 +91,25 @@ function draw() {
     makeLabLogo.draw();
   }
 
+}
+
+function initializeGridTriangle(tri){
+  tri.startFillColor = color(255);
+  tri.endFillColor = Colorer.getRandomOriginalColor();
+  tri.animationDuration = 1.5; // in seconds
+  tri.startAnimationTimestamp = millis() + random() * 2000;
+  tri.fillColor = this.startFillColor;
+  tri.strokeColor = this.fillColor;
+}
+
+function updateGridAnimation(tri){
+  if(millis() > tri.startAnimationTimestamp){
+    const currentT = millis() - tri.startAnimationTimestamp;
+    const pct = map(currentT, 0, tri.animationDuration * 1000, 0, 1);
+    const fillColor = lerpColor(tri.startFillColor, tri.endFillColor, pct);
+    tri.fillColor = fillColor;
+    tri.strokeColor = fillColor;
+  }
 }
 
 function keyPressed() {
@@ -115,7 +154,7 @@ function keyPressed() {
   if (key == 'c') {
     defaultColorsOn = !defaultColorsOn;
     if (defaultColorsOn) {
-      makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
+      makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
     } else {
       switch (colorScheme) {
         case ColorScheme.BlackOnWhite:
@@ -153,7 +192,7 @@ function toggleColorScheme() {
   }
 
   if (defaultColorsOn) {
-    makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
+    makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
   }
   print("Set color scheme to: ", colorScheme);
 }
