@@ -50,7 +50,7 @@ function setup() {
 
 
   defaultColorsOn = true;
-  makeLabLogo.setDefaultColoredTrianglesFillColor(OriginalColorArray);
+  makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
 
   for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
     tri.x = random(0, width - TRIANGLE_SIZE);
@@ -93,7 +93,7 @@ function mouseMoved(){
     const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
     for(let i = 0; i < cTriangles.length; i++){
       const startColor = color(255);
-      const endColor = color(OriginalColorArray[i]);
+      const endColor = color(ORIGINAL_COLOR_ARRAY[i]);
       const newColor = lerpColor(startColor, endColor, lerpAmt);
       cTriangles[i].fillColor = newColor;
     }
