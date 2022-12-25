@@ -54,7 +54,7 @@ class MakeabilityLabLogo {
   }
 
   setStrokeTransparent(isTransparent, includeMShadowTriangles=true){
-    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+    for (const tri of this.getAllTriangles(includeMShadowTriangles)) {
       tri.isStrokeVisible = !isTransparent;
     }
   }
@@ -65,7 +65,7 @@ class MakeabilityLabLogo {
    * @param {Boolean} includeMShadowTriangles 
    */
   setFillTransparent(isTransparent, includeMShadowTriangles=true){
-    for (const tri of makeLabLogo.getAllTriangles(includeMShadowTriangles)) {
+    for (const tri of this.getAllTriangles(includeMShadowTriangles)) {
       tri.isFillVisible = !isTransparent;
     }
   }

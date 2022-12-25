@@ -36,7 +36,7 @@ function setup() {
   MakeabilityLabLogo.setRandomColors(makeLabLogo.getAllTriangles(), true, false);  
   MakeabilityLabLogo.setColors(makeLabLogo.getMShadowTriangles(), color(255), color(255));
   
-  makeLabGrid = new Grid(width, TRIANGLE_SIZE, null, null);
+  makeLabGrid = new Grid(width, height, TRIANGLE_SIZE, null, null);
   makeLabGrid.visible = true;
 
   for(let row = 0; row < makeLabGrid.gridArray.length; row++){

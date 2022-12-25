@@ -42,7 +42,7 @@ function setup() {
     tri.isStrokeVisible = true;
   }
 
-  makeLabGrid = new Grid(width, TRIANGLE_SIZE);
+  makeLabGrid = new Grid(width, height, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
   makeLabGrid.visible = false;
 

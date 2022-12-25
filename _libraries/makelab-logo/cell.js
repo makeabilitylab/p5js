@@ -23,6 +23,31 @@ class Cell {
     return this.tri1.size;
   }
 
+  setColors(fillColor, strokeColor){
+    this.setFillColor(fillColor);
+
+    if(strokeColor){
+      this.setStrokeColor(strokeColor);
+    }else{
+      this.setStrokeColor(fillColor);
+    }
+  }
+
+  setFillColor(fillColor){
+    this.tri1.fillColor = fillColor;
+    this.tri2.fillColor = fillColor;
+  }
+
+  setStrokeColor(strokeColor){
+    this.tri1.strokeColor = strokeColor;
+    this.tri2.strokeColor = strokeColor;
+  }
+
+  setVisibility(isVisible){
+    this.tri1.visible = isVisible;
+    this.tri2.visible = isVisible;
+  }
+
   draw() {
     if (this.tri1.visible) {
       this.tri1.draw();

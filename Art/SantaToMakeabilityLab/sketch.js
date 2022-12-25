@@ -19,12 +19,15 @@ let colorScheme =  null;
 let defaultColorsOn = true;
 let transparent = false;
 let angleOverlays = false;
+let triangleSanta = null;
 
 function setup() {
-  createCanvas(800, 600);
+  createCanvas(800, 650);
   
   angleMode(DEGREES); 
 
+  triangleSanta = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
+  //triangleSanta.setStrokeColors(color(128, 128, 128));
   makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabGrid = new Grid(width, height, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
@@ -32,6 +35,7 @@ function setup() {
 
   defaultColorsOn = true;
   makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
+  makeLabLogo.visible = false;
 }
 
 
@@ -53,6 +57,10 @@ function draw() {
     makeLabGrid.draw();
   }
 
+  if(triangleSanta.visible){
+    triangleSanta.draw();
+  }
+
   if(makeLabLogo.visible){
     makeLabLogo.draw();
   }
@@ -68,7 +76,6 @@ function draw() {
       mLineSegment.draw();
     }
   }
-  
 }
 
 function keyPressed() {

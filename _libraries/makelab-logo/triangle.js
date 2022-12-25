@@ -18,6 +18,16 @@ class Triangle {
     this.drawCellOutline = false; // for debugging
   }
 
+  setColors(fillColor, strokeColor){
+    this.fillColor = fillColor;
+
+    if(strokeColor){
+      this.strokeColor = strokeColor;
+    }else{
+      this.strokeColor = fillColor;
+    }
+  }
+
   draw() {
     if(!this.visible){ return; }
 
