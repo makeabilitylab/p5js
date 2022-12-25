@@ -351,8 +351,8 @@ class TriangleSanta {
           row5[col].tri1.setColors(santaSuitColor1);
           row5[col].tri2.setColors(santaSuitColor2);
         }else if(col === 1 || col === 8){
-          row5[col].tri1.visible = false;
-          row5[col].tri1.setColors(santaSuitColor1);
+        
+          row5[col].tri1.setColors(santaWhiteColor1);
           row5[col].tri2.setColors(santaSuitColor2);
         }
         
