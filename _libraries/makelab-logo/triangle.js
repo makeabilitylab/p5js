@@ -87,4 +87,9 @@ class Triangle {
         return TriangleDir.BottomRight;
     }
   }
+
+  static createTriangle(tri){
+    return new Triangle(tri.x, tri.y, tri.size, tri.direction,
+      tri.fillColor, tri.strokeColor, tri.strokeWeight, tri.visible);
+  }
 }

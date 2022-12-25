@@ -13,29 +13,99 @@
 
 const TRIANGLE_SIZE = 50;
 
-let makeLabLogo = null;
+let makeLabLogoStatic = null;
 let makeLabGrid = null;
 let colorScheme =  null;
 let defaultColorsOn = true;
 let transparent = false;
 let angleOverlays = false;
-let triangleSanta = null;
+let triangleSantaAnimated = null;
 
 function setup() {
   createCanvas(800, 650);
   
   angleMode(DEGREES); 
 
-  triangleSanta = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
+  triangleSantaAnimated = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
   //triangleSanta.setStrokeColors(color(128, 128, 128));
-  makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
+  
+  makeLabLogoStatic = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
+  
   makeLabGrid = new Grid(width, height, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
   setColorScheme(ColorScheme.BlackOnWhite);
 
   defaultColorsOn = true;
-  makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
-  makeLabLogo.visible = false;
+  
+  makeLabLogoStatic.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
+  makeLabLogoStatic.visible = false;
+
+  let allSantaTrianglesAnimated = triangleSantaAnimated.getAllTriangles();
+  let allMakeLabTriangles = makeLabLogoStatic.getAllTriangles();
+
+  ArrayUtils.shuffle(allSantaTrianglesAnimated);
+  ArrayUtils.shuffle(allMakeLabTriangles);
+
+  // TODO: update this so that you get all triangles of a certain orientation
+  for(let santaTriIndex = 0; santaTriIndex <  allSantaTrianglesAnimated.length; santaTriIndex++){
+    let tri = allSantaTrianglesAnimated[santaTriIndex];
+    tri.original = Triangle.createTriangle(tri);
+
+    let makeLabTriIndex = santaTriIndex % allMakeLabTriangles.length;
+    tri.destination = allMakeLabTriangles[makeLabTriIndex];
+    tri.destination.fillColor = color(tri.destination.fillColor);
+    tri.destination.strokeColor = color(tri.destination.strokeColor);
+  }
+
+  // print("Num triangles visible in Santa " + triangleSantaAnimated.getAllTriangles(true).length);
+  // print("Num all triangles in Santa " + triangleSantaAnimated.getAllTriangles(false).length);
+}
+
+function mouseMoved(){
+  const lerpAmt = map(mouseX, 0, width, 0, 1, true);
+
+  let allSantaTrianglesAnimated = triangleSantaAnimated.getAllTriangles();
+  for(let i = 0; i < allSantaTrianglesAnimated.length; i++){
+
+    const newX = lerp(allSantaTrianglesAnimated[i].original.x,
+      allSantaTrianglesAnimated[i].destination.x,
+      lerpAmt);
+
+    const newY = lerp(allSantaTrianglesAnimated[i].original.y,
+      allSantaTrianglesAnimated[i].destination.y,
+      lerpAmt);
+
+    let newFillColor = lerpColor(allSantaTrianglesAnimated[i].original.fillColor,
+      allSantaTrianglesAnimated[i].destination.fillColor,
+      lerpAmt);
+
+    let newStrokeColor = lerpColor(allSantaTrianglesAnimated[i].original.strokeColor,
+      allSantaTrianglesAnimated[i].destination.strokeColor,
+      lerpAmt);
+    
+    const newAngle = 0;
+
+    allSantaTrianglesAnimated[i].x = newX;
+    allSantaTrianglesAnimated[i].y = newY;
+    allSantaTrianglesAnimated[i].angle = newAngle;
+    allSantaTrianglesAnimated[i].fillColor = newFillColor;
+    allSantaTrianglesAnimated[i].strokeColor = newStrokeColor;
+  }
+
+  // if(defaultColorsOn){
+  //   const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
+  //   for(let i = 0; i < cTriangles.length; i++){
+  //     const startColor = color(255);
+  //     const endColor = color(ORIGINAL_COLOR_ARRAY[i]);
+  //     const newColor = lerpColor(startColor, endColor, lerpAmt);
+  //     cTriangles[i].fillColor = newColor;
+  //   }
+  // }else{
+  //   const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
+  //   for(let i = 0; i < cTriangles.length; i++){
+  //     cTriangles[i].fillColor = color(255);
+  //   }
+  // }
 }
 
 
@@ -57,22 +127,22 @@ function draw() {
     makeLabGrid.draw();
   }
 
-  if(triangleSanta.visible){
-    triangleSanta.draw();
+  if(triangleSantaAnimated.visible){
+    triangleSantaAnimated.draw();
   }
 
-  if(makeLabLogo.visible){
-    makeLabLogo.draw();
+  if(makeLabLogoStatic.visible){
+    makeLabLogoStatic.draw();
   }
 
   if(angleOverlays){
-    if(makeLabLogo.isLOutlineVisible){
-      for(const lLineSegment of makeLabLogo.getLOutlineLineSegments()){
+    if(makeLabLogoStatic.isLOutlineVisible){
+      for(const lLineSegment of makeLabLogoStatic.getLOutlineLineSegments()){
         lLineSegment.draw();
       }
     }
 
-    for(const mLineSegment of makeLabLogo.getMOutlineLineSegments()){
+    for(const mLineSegment of makeLabLogoStatic.getMOutlineLineSegments()){
       mLineSegment.draw();
     }
   }
@@ -90,23 +160,23 @@ function keyPressed() {
   }
 
   if(key == 'm'){
-    makeLabLogo.isMOutlineVisible = !makeLabLogo.isMOutlineVisible;
-    print("M outline visible: ", makeLabLogo.isMOutlineVisible);
+    makeLabLogoStatic.isMOutlineVisible = !makeLabLogoStatic.isMOutlineVisible;
+    print("M outline visible: ", makeLabLogoStatic.isMOutlineVisible);
   }
 
   if(key == 'l'){
-    makeLabLogo.isLOutlineVisible = !makeLabLogo.isLOutlineVisible;
-    print("L outline visible: ", makeLabLogo.isLOutlineVisible);
+    makeLabLogoStatic.isLOutlineVisible = !makeLabLogoStatic.isLOutlineVisible;
+    print("L outline visible: ", makeLabLogoStatic.isLOutlineVisible);
   }
 
   if(key == 'k'){
-    makeLabLogo.areLTriangleStrokesVisible = !makeLabLogo.areLTriangleStrokesVisible;
-    print("L triangle strokes visible: ", makeLabLogo.areLTriangleStrokesVisible);
+    makeLabLogoStatic.areLTriangleStrokesVisible = !makeLabLogoStatic.areLTriangleStrokesVisible;
+    print("L triangle strokes visible: ", makeLabLogoStatic.areLTriangleStrokesVisible);
   }
 
   if(key == 'h'){
-    makeLabLogo.visible = !makeLabLogo.visible;
-    print("Makeability Lab logo visible: ", makeLabLogo.visible);
+    makeLabLogoStatic.visible = !makeLabLogoStatic.visible;
+    print("Makeability Lab logo visible: ", makeLabLogoStatic.visible);
   }
 
   if(key == 'b'){
@@ -115,7 +185,7 @@ function keyPressed() {
 
   if(key == 't'){
     transparent = !transparent;
-    for(const tri of makeLabLogo.getAllTriangles(false)){
+    for(const tri of makeLabLogoStatic.getAllTriangles(false)){
       tri.isFillVisible = !transparent;
     }
 
@@ -125,15 +195,15 @@ function keyPressed() {
   if(key == 'c'){
     defaultColorsOn = !defaultColorsOn;
     if(defaultColorsOn){
-      makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+      makeLabLogoStatic.setDefaultColoredTrianglesFillColor(originalColorArray);
     }else{
       switch(colorScheme){
         case ColorScheme.BlackOnWhite:
-          makeLabLogo.setDefaultColoredTrianglesFillColor(color(255));
+          makeLabLogoStatic.setDefaultColoredTrianglesFillColor(color(255));
           break;
         case ColorScheme.WhiteOnBlack:
         default:
-          makeLabLogo.setDefaultColoredTrianglesFillColor(color(0));
+          makeLabLogoStatic.setDefaultColoredTrianglesFillColor(color(0));
           break;
       } 
     }
@@ -150,21 +220,21 @@ function setColorScheme(cScheme){
     case ColorScheme.BlackOnWhite:
       fillColor = color(255);
       strokeColor = color(0);
-      makeLabLogo.setColors(fillColor, strokeColor);
+      makeLabLogoStatic.setColors(fillColor, strokeColor);
       break;
     case ColorScheme.WhiteOnBlack:
     default:
       fillColor = color(0);
       strokeColor = color(255);
-      makeLabLogo.setColors(fillColor, strokeColor);
+      makeLabLogoStatic.setColors(fillColor, strokeColor);
       break;
   } 
 
-  makeLabLogo.mOutlineColor = strokeColor;
-  makeLabLogo.lOutlineColor = strokeColor;
+  makeLabLogoStatic.mOutlineColor = strokeColor;
+  makeLabLogoStatic.lOutlineColor = strokeColor;
 
   if(defaultColorsOn){
-    makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
+    makeLabLogoStatic.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
   }
 
   print("Color scheme set to: ", colorScheme);

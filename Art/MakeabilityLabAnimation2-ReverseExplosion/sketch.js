@@ -124,8 +124,6 @@ function draw() {
     makeLabGrid.draw();
   }
 
-  
-
   if(makeLabLogoAnimated.visible){
     makeLabLogoAnimated.draw();
   }

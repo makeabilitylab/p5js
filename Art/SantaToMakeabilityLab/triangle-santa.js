@@ -72,12 +72,18 @@ class TriangleSanta {
       } 
     }
   
-    getAllTriangles(){
+    getAllTriangles(onlyVisible=true){
       let allTriangles = new Array();
       for (let row = 0; row < this.santaArray.length; row++) {
-        for (let col = 0; col < this.santaArray[row].length; col++) {         
-          allTriangles.push(this.santaArray[row][col].tri1);
-          allTriangles.push(this.santaArray[row][col].tri2);
+        for (let col = 0; col < this.santaArray[row].length; col++) { 
+          if((onlyVisible && this.santaArray[row][col].tri1.visible) || !onlyVisible){
+            allTriangles.push(this.santaArray[row][col].tri1);
+          }        
+          
+          if((onlyVisible && this.santaArray[row][col].tri2.visible) || !onlyVisible){
+            allTriangles.push(this.santaArray[row][col].tri2);
+          } 
+          
         }
       }  
       return allTriangles;
