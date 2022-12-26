@@ -23,6 +23,16 @@ let transparent = false;
 let angleOverlays = false;
 let triangleSantaAnimated = null;
 let originalSantaTriangles = null;
+let holidayFont;
+let holidayTextSize = 45;
+
+function preload() {
+  holidayFont = loadFont('fonts/MerryChristmasFlake.ttf'); // text size 45
+  holidayTextSize = 45;
+  //holidayFont = loadFont('fonts/HomeChristmas.otf'); // text size 30
+  //holidayFont = loadFont('fonts/PlayfulChristmas.otf'); // text size 45
+  //holidayFont = loadFont('fonts/MagicChristmas.otf'); // text size 30
+}
 
 function setup() {
   createCanvas(800, 650);
@@ -147,16 +157,18 @@ function draw() {
   // Draw holiday message
   push();
   const lerpAmt = map(mouseX, 0, width, 0, 1, true);
-  textSize(25);
+  textFont(holidayFont);
+  textSize(holidayTextSize);
   const startTextColor = color(128);
   const endTextcolor = color(0);
   const holidayMsg = "Happy holidays from the Makeability Lab!";
   const msgWidth = textWidth(holidayMsg);
 
   let textColor = lerpColor(startTextColor, endTextcolor, lerpAmt);
+  let yLoc = lerp(60, 150, lerpAmt);
   fill(textColor);
   noStroke();
-  text(holidayMsg, width / 2 - msgWidth / 2, 50);
+  text(holidayMsg, width / 2 - msgWidth / 2, yLoc);
   pop();
 }
 
