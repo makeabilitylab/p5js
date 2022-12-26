@@ -58,9 +58,9 @@ class Cell {
     }
   }
 
-  static createEmptyCell(x, y, size) {
-    let tri1 = new Triangle(x, y, size, TriangleDir.TopLeft);
-    let tri2 = new Triangle(x, y, size, Triangle.getOppositeDirection(TriangleDir.TopLeft));
+  static createEmptyCell(x, y, size, topTriangleDir=TriangleDir.TopLeft) {
+    let tri1 = new Triangle(x, y, size, topTriangleDir);
+    let tri2 = new Triangle(x, y, size, Triangle.getOppositeDirection(topTriangleDir));
     tri1.visible = false;
     tri2.visible = false;
     return new Cell(tri1, tri2);

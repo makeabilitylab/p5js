@@ -1,8 +1,10 @@
 /**
- * TODO
- * Some ideas:
- *  * all triangles in grid illuminate and fade before ML logo emerges
- *  * blank canvas and triangles rotate and move to final location
+ * An interactive holiday greeting card from the Makeability Lab
+ * 
+ * Future ideas:
+ *  - Have snow falling (and possibly accumulating on bottom)
+ *  - Have scenery in background like trees/mountains
+ *  - Have triangles also rotate into place
  * 
  * By Professor Jon E. Froehlich
  * https://jonfroehlich.github.io/
@@ -20,6 +22,7 @@ let defaultColorsOn = true;
 let transparent = false;
 let angleOverlays = false;
 let triangleSantaAnimated = null;
+let originalSantaTriangles = null;
 
 function setup() {
   createCanvas(800, 650);
@@ -27,6 +30,7 @@ function setup() {
   angleMode(DEGREES); 
 
   triangleSantaAnimated = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
+  originalSantaTriangles = triangleSantaAnimated.getAllTriangles();
   //triangleSanta.setStrokeColors(color(128, 128, 128));
   
   makeLabLogoStatic = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
@@ -34,37 +38,57 @@ function setup() {
   makeLabGrid = new Grid(width, height, TRIANGLE_SIZE);
   makeLabGrid.setFillColor(null);
   setColorScheme(ColorScheme.BlackOnWhite);
+  makeLabGrid.visible = false;
 
   defaultColorsOn = true;
   
   makeLabLogoStatic.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
   makeLabLogoStatic.visible = false;
 
+  createTriangleAnimationMapping();
+}
+
+function getMapOfTriangleDirectionToTriangles(triangles){
+  let mapDirToTriangles = new Map();
+  for(let i = 0; i <  triangles.length; i++){
+    const tri = triangles[i];
+    if(!mapDirToTriangles.has(tri.direction)){
+      mapDirToTriangles.set(tri.direction, new Array());
+    }
+    let trianglesWithThisDir = mapDirToTriangles.get(tri.direction);
+    trianglesWithThisDir.push(tri);
+  }
+  return mapDirToTriangles;
+}
+
+function createTriangleAnimationMapping(){
   let allSantaTrianglesAnimated = triangleSantaAnimated.getAllTriangles();
   let allMakeLabTriangles = makeLabLogoStatic.getAllTriangles();
+  const allVisibleMakeLabTriangles = allMakeLabTriangles.filter(tri => tri.visible);
 
-  ArrayUtils.shuffle(allSantaTrianglesAnimated);
-  ArrayUtils.shuffle(allMakeLabTriangles);
+  let mapDirToSantaTris = getMapOfTriangleDirectionToTriangles(allSantaTrianglesAnimated);
+  let mapDirToMakeLabTris = getMapOfTriangleDirectionToTriangles(allVisibleMakeLabTriangles);
 
-  // TODO: update this so that you get all triangles of a certain orientation
-  for(let santaTriIndex = 0; santaTriIndex <  allSantaTrianglesAnimated.length; santaTriIndex++){
-    let tri = allSantaTrianglesAnimated[santaTriIndex];
-    tri.original = Triangle.createTriangle(tri);
-
-    let makeLabTriIndex = santaTriIndex % allMakeLabTriangles.length;
-    tri.destination = allMakeLabTriangles[makeLabTriIndex];
-    tri.destination.fillColor = color(tri.destination.fillColor);
-    tri.destination.strokeColor = color(tri.destination.strokeColor);
+  for (let [triDir, santaTriangles] of mapDirToSantaTris) {
+    let makeLabTriangles = mapDirToMakeLabTris.get(triDir);
+    ArrayUtils.shuffle(santaTriangles);
+    ArrayUtils.shuffle(makeLabTriangles);
+    for(let santaTriIndex = 0; santaTriIndex <  santaTriangles.length; santaTriIndex++){
+      let santaTriangle = santaTriangles[santaTriIndex];
+      santaTriangle.original = Triangle.createTriangle(santaTriangle);
+  
+      let makeLabTriIndex = santaTriIndex % makeLabTriangles.length;
+      santaTriangle.destination = makeLabTriangles[makeLabTriIndex];
+      santaTriangle.destination.fillColor = color(santaTriangle.destination.fillColor);
+      santaTriangle.destination.strokeColor = color(santaTriangle.destination.strokeColor);
+    }
   }
-
-  // print("Num triangles visible in Santa " + triangleSantaAnimated.getAllTriangles(true).length);
-  // print("Num all triangles in Santa " + triangleSantaAnimated.getAllTriangles(false).length);
 }
 
 function mouseMoved(){
   const lerpAmt = map(mouseX, 0, width, 0, 1, true);
 
-  let allSantaTrianglesAnimated = triangleSantaAnimated.getAllTriangles();
+  let allSantaTrianglesAnimated = originalSantaTriangles;
   for(let i = 0; i < allSantaTrianglesAnimated.length; i++){
 
     const newX = lerp(allSantaTrianglesAnimated[i].original.x,
@@ -91,21 +115,6 @@ function mouseMoved(){
     allSantaTrianglesAnimated[i].fillColor = newFillColor;
     allSantaTrianglesAnimated[i].strokeColor = newStrokeColor;
   }
-
-  // if(defaultColorsOn){
-  //   const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
-  //   for(let i = 0; i < cTriangles.length; i++){
-  //     const startColor = color(255);
-  //     const endColor = color(ORIGINAL_COLOR_ARRAY[i]);
-  //     const newColor = lerpColor(startColor, endColor, lerpAmt);
-  //     cTriangles[i].fillColor = newColor;
-  //   }
-  // }else{
-  //   const cTriangles = makeLabLogoAnimated.getDefaultColoredTriangles();
-  //   for(let i = 0; i < cTriangles.length; i++){
-  //     cTriangles[i].fillColor = color(255);
-  //   }
-  // }
 }
 
 
@@ -135,24 +144,23 @@ function draw() {
     makeLabLogoStatic.draw();
   }
 
-  if(angleOverlays){
-    if(makeLabLogoStatic.isLOutlineVisible){
-      for(const lLineSegment of makeLabLogoStatic.getLOutlineLineSegments()){
-        lLineSegment.draw();
-      }
-    }
+  // Draw holiday message
+  push();
+  const lerpAmt = map(mouseX, 0, width, 0, 1, true);
+  textSize(25);
+  const startTextColor = color(128);
+  const endTextcolor = color(0);
+  const holidayMsg = "Happy holidays from the Makeability Lab!";
+  const msgWidth = textWidth(holidayMsg);
 
-    for(const mLineSegment of makeLabLogoStatic.getMOutlineLineSegments()){
-      mLineSegment.draw();
-    }
-  }
+  let textColor = lerpColor(startTextColor, endTextcolor, lerpAmt);
+  fill(textColor);
+  noStroke();
+  text(holidayMsg, width / 2 - msgWidth / 2, 50);
+  pop();
 }
 
 function keyPressed() {
-  if(key == 'a'){
-    angleOverlays = !angleOverlays;
-    print("Angle overlays set to: ", angleOverlays);
-  }
 
   if(key == 'g'){
     makeLabGrid.visible = !makeLabGrid.visible;

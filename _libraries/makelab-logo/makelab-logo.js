@@ -406,10 +406,10 @@ class MakeabilityLabLogo {
     topRow[col++] = Cell.createCellWithBottomTriangleOnly(x, y, triangleSize, TriangleDir.BottomLeft);
 
     x += triangleSize;
-    topRow[col++] = Cell.createEmptyCell(x, y, triangleSize);
+    topRow[col++] = Cell.createEmptyCell(x, y, triangleSize, TriangleDir.TopLeft);
 
     x += triangleSize;
-    topRow[col++] = Cell.createEmptyCell(x, y, triangleSize);
+    topRow[col++] = Cell.createEmptyCell(x, y, triangleSize, TriangleDir.TopRight);
 
     x += triangleSize;
     topRow[col++] = Cell.createCellWithBottomTriangleOnly(x, y, triangleSize, TriangleDir.BottomRight);
