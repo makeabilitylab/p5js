@@ -104,3 +104,7 @@ The Makeability Lab logo is precisely geometric in its foundation, composed sole
 * [Makeability Lab - Animation1 - Grid Fade Appearance](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation1-GridFade): a triangle-based grid appears and the ML logo emerges
 
 * [Makeability Lab Logo - Animation2 - Reverse Explosion](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation2-ReverseExplosion): the ML logos start in random places and animate towards their final composition
+
+### Makeability Lab Holiday Cards
+
+* [Holiday Card 2023](https://makeabilitylab.github.io/p5js/Art/SantaToMakeabilityLab/): The interactive Makeability Lab holiday card for 2023 morphs a triangular Santa into the Makeability Lab logo. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Art/SantaToMakeabilityLab)
