@@ -164,6 +164,31 @@ class LineSegment {
     return p5.Vector.dist(p, op);
   }
 
+  /**
+   * Returns the magnitude of this vector as a floating point
+   * 
+   * @returns a floating point number of the magnitude
+   */
+  getMagnitude(){
+    let diffVector = p5.Vector.sub(this.pt2, this.pt1);
+    return diffVector.mag();
+  }
+
+  /**
+   * Sets the magnitude of the Line Segment to the given number
+   * 
+   * @param {Number} magnitude of the Line Segment 
+   */
+  setMagnitude(len){
+    // Set the magnitude of the vector between points
+    let diffVector = p5.Vector.sub(this.pt2, this.pt1);
+    diffVector.setMag(len);
+
+    // Add the new diffVector to the original pt
+    let newPt2 = p5.Vector.add(this.pt1, diffVector);
+    this.pt2 = newPt2;
+  }
+
   draw() {
     push();
     stroke(this.strokeColor);

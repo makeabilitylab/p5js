@@ -7,6 +7,59 @@
 //
 
 class ColorUtils {
+
+  static changeColorSaturationAndBrightness(p5Color, newSaturationAmt, newBrightnessAmt){
+    push();
+
+    // By default, this is colorMode(HSB, 360, 100, 100, 1). You can also use HSL.
+    colorMode(HSB);
+    let cHue = hue(p5Color);
+
+    // Saturation is scaled differently in HSB and HSL. This function will return 
+    // the HSB saturation when supplied with an HSB color object (or when supplied 
+    // with a pixel array while the color mode is HSB), but will default to the HSL 
+    // saturation otherwise.
+    let cSaturation = saturation(p5Color);
+    let cBrightness = brightness(p5Color);
+    let cAlpha = alpha(p5Color);
+
+    let newP5Color = color(cHue, newSaturationAmt, newBrightnessAmt, cAlpha);
+
+    pop();
+    return newP5Color;
+  }
+
+  /**
+   * 
+   * @param {*} p5Color 
+   * @param {*} newBrightnessAmt should be within 0 - 100
+   * @returns 
+   */
+  static changeColorBrightness(p5Color, newBrightnessAmt){
+    
+    // lightness should be between 0 - 100
+    // https://p5js.org/reference/#/p5/lightness
+
+    push();
+
+    // By default, this is colorMode(HSB, 360, 100, 100, 1). You can also use HSL.
+    colorMode(HSB);
+    let cHue = hue(p5Color);
+
+    // Saturation is scaled differently in HSB and HSL. This function will return 
+    // the HSB saturation when supplied with an HSB color object (or when supplied 
+    // with a pixel array while the color mode is HSB), but will default to the HSL 
+    // saturation otherwise.
+    let cSaturation = saturation(p5Color);
+    let cBrightness = brightness(p5Color);
+    let cAlpha = alpha(p5Color);
+
+    let newP5Color = color(cHue, cSaturation, newBrightnessAmt, cAlpha);
+
+    pop();
+    return newP5Color;
+  }
+
   /**
    * Converts a HSV (hue, saturation, value) (also known as HSB for hue,
    * saturation, brightness) to RGB (red, green, blue). The HSV values
@@ -131,7 +184,7 @@ class ColorUtils {
   /**
    * 
    * @param {*} c can be a p5.Color, an object with r, g, b, or a 24-bit RGB value
-   * @param {*} includeAlpha 
+   * @param {Boolean} includeAlpha 
    */
   static rgbToHexString(c, includeAlpha = true) {
     // code from https://stackoverflow.com/a/24390910
