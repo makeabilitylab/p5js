@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<!-- 
+  
+Color picker originally written by Curran Kelleher:
+ * https://gist.github.com/curran/c130b1d3d68a375c8eb41371f2c2a75b
+ * https://web.archive.org/web/20210618111226/https://bl.ocks.org/curran/c130b1d3d68a375c8eb41371f2c2a75b
+
+ And modified by Jon E. Froehlich on Mar 23, 2023
+-->
+
+
+<head>
+  <meta charset="utf-8">
+  <script src="https://unpkg.com/d3@4.7.4/build/d3.min.js"></script>
+  <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/jquery-minicolors@2.1.10/jquery.minicolors.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.0.0-alpha.6/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/jquery-minicolors@2.1.10/jquery.minicolors.css">
+  <style>
+    body {
+      margin:0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid" style="width:960px">
+  <div class="row">
+    <div class="col">
+      <input type="text" id="a" class="form-control picker" value="#ff6161">
+    </div>
+    <div class="col">
+      <input type="text" id="b" class="form-control picker" value="#ff0f0f">
+    </div>
+    <svg width="960" height="470">
+      <filter id="grayscale">
+        <feColorMatrix type="matrix" values="0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0"/>
+      </filter>
+    </svg>
+  </div>
+  <script>
+    var svg = d3.select("svg"),
+        width = svg.attr("width"),
+        height = svg.attr("height"),
+        y;
+    
+    var rectEnter = svg
+      .selectAll("rect")
+      .data(["a", "b"])
+      .enter();
+    
+    // Small rectangles at the top.
+    var rectWidth = 90;
+    var rectHeight = 90;
+    y = 50;
+    rectEnter
+      .append("rect")
+    		.attr("class", function (d) { return "color-rect-" + d; })
+    	  .attr("x", function (d, i){ return i * width/2 + width/4 - rectWidth/2; })
+    	  .attr("y", y)
+    		.attr("width", rectWidth)
+    		.attr("height", rectHeight);
+    
+    // Large rectangles at the bottom.
+    y = 200;
+    rectEnter
+      .append("rect")
+    		.attr("class", function (d) { return "color-rect-" + d; })
+    	  .attr("x", function (d, i){ return i * width/2; })
+    		.attr("y", y)
+    		.attr("width", width/2)
+    		.attr("height", height);
+    
+    // Grayscale filter for comparing luminance.
+    // y = 335;
+    // rectEnter
+    //   .append("rect")
+    // 		.attr("class", function (d) { return "color-rect-" + d; })
+    // 	  .attr("x", function (d, i){ return i * width/2; })
+    // 		.attr("y", y)
+    // 		.attr("width", width/2)
+    // 		.attr("height", height)
+    //     .attr("filter", "url(#grayscale)");
+    
+    function change (value) {
+      var id = d3.select(this).attr("id");
+      d3.selectAll(".color-rect-" + id).attr("fill", value);
+    }
+    
+    $(".picker")
+      .minicolors({
+        change: change,
+        theme: "bootstrap"
+      })
+      .each(function (d){
+      	change.call(this, d3.select(this).attr("value"));
+      });
+  </script>
+</body>
