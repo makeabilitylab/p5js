@@ -32,6 +32,7 @@ function setup() {
 
   defaultColorsOn = true;
   makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
+  printMenu();
 }
 
 
@@ -69,6 +70,21 @@ function draw() {
     }
   }
   
+}
+
+function printMenu(){
+  print("Press 'a' to toggle angle overlays. Currently set to: ", angleOverlays);
+  print("Press 'g' to toggle grid. Currently set to: ", makeLabGrid.visible);
+  print("Press 'm' to toggle M outline. Currently set to: ", makeLabLogo.isMOutlineVisible);
+  print("Press 'l' to toggle L outline. Currently set to: ", makeLabLogo.isLOutlineVisible);
+  print("Press 'k' to toggle L triangle strokes. Currently set to: ", makeLabLogo.areLTriangleStrokesVisible);
+  print("Press 'h' to toggle Makeability Lab logo. Currently set to: ", makeLabLogo.visible);
+  print("Press 'b' to toggle color scheme. Currently set to: ", colorScheme);
+  print("Press 't' to toggle transparency. Currently set to: ", transparent);
+  print("Press 'c' to toggle default colors. Currently set to: ", defaultColorsOn);
+  print("Color scheme is: ", colorScheme);
+  print("");
+  print("Type printMenu() to see this menu again.");
 }
 
 function keyPressed() {
