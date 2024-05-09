@@ -1,17 +1,14 @@
 // Class to handle serial communications. Currently, only supports text input/output rather than binary data
 // Based on https://web.dev/serial/
 //
-// Currently, this code only works on Chrome and *only* if you enable an experimental flag:
-// 1. First, type chrome://flags in the address bar
-// 2. Then, in the search box, type "experimental-web-platform-features"
-// 3. This flag should be set to "Enabled"
-// 4. Restart your browser
+// As of May 2024, Web Serial is only supported in Chrome, Edge, and Opera. See:
+// https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API
 // 
-// To test that this worked
-// 1. Open Chrome to any webpage
+// To test if your browser supports Web Serial, do the following:
+// 1. Open your web browser
 // 2. Open the dev console (cmd-option-i on Mac or ctrl-shift-i on Windows) and type: > navigator.serial
 // 3. If you see something like "Serial {onconnect:null, ondisconnect: null}" then it worked!
-//    If, instead, it says "undefined" then it didn't work. Try restarting your computer and then Chrome.
+//    If, instead, it says "undefined" then it didn't work. 
 //
 // TODOs:
 //  - Support binary in addition to text
@@ -42,6 +39,7 @@ class Serial {
     // event handling https://stackoverflow.com/a/56612753
     this.events = new Map();
 
+    // Set of known events to subscribe to
     this.knownEvents = new Set(
       [SerialEvents.CONNECTION_OPENED,
       SerialEvents.CONNECTION_CLOSED,
@@ -60,6 +58,18 @@ class Serial {
     }
   }
 
+  /**
+   * Registers an event listener for a specific event.
+   *
+   * @param {string} label - The name of the event. Should be one of this.knownEvents.
+   * @param {function} callback - The function to be called when the event is fired.
+   *
+   * @example
+   * // To listen for the 'CONNECTION_OPENED' event
+   * serial.on(SerialEvents.CONNECTION_OPENED, (serial, data) => {
+   *   console.log('Connection opened');
+   * });
+   */
   on(label, callback) {
     if (this.knownEvents.has(label)) {
       if (!this.events.has(label)) {
@@ -71,6 +81,16 @@ class Serial {
     }
   }
 
+  /**
+   * Triggers an event and calls all its registered handlers.
+   *
+   * @param {string} event - The name of the event to be fired.
+   * @param {any} [data=null] - Optional data to be passed to the event handlers.
+   *
+   * @example
+   * // To fire the 'CONNECTION_OPENED' event
+   * serial.fireEvent(SerialEvents.CONNECTION_OPENED);
+   */
   fireEvent(event, data = null) {
     if (this.events.has(event)) {
       for (let callback of this.events.get(event)) {
@@ -82,6 +102,8 @@ class Serial {
   /**
    * Automatically connects and opens the previously approved port
    * If there are more than one, it takes the top port in the approved port list
+   * 
+   * @param {dictionary} serialOptions see: https://developer.mozilla.org/en-US/docs/Web/API/SerialPort/open#options
    */
   async autoConnectAndOpenPreviouslyApprovedPort(serialOptions = { baudRate: 9600 }) {
     if (navigator.serial) {
@@ -248,7 +270,7 @@ class Serial {
 
       // Open the serial port
       // This function takes in a SerialOptions dictionary where baudRate is the only required member
-      // https://reillyeon.github.io/serial/#dom-serialoptions
+      // https://developer.mozilla.org/en-US/docs/Web/API/SerialPort/open
       await this.serialPort.open(serialOptions);
       console.log("Opened serial port with settings:", serialOptions);
 
