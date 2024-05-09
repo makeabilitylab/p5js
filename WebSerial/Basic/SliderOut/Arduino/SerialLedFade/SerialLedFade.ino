@@ -37,9 +37,14 @@ void loop() {
 
     // Convert the data into an integer
     int val = rcvdSerialData.toInt();
-    val = constrain(val, 0, 255); // make sure we contrain to 0, 255
+    val = constrain(val, 0, 255); // make sure we constrain to 0, 255
     analogWrite(LED_PIN, val);
   }
 
   delay(DELAY_MS);
 }
+
+
+
+
+
