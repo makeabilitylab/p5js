@@ -1,0 +1,17 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100vh; /* Ensure the body takes the full viewport height */
+}
+
+canvas {
+  display: block;
+  margin: 0px;
+  width: 100%; /* Ensure the canvas takes the full width of the container */
+  height: 100%; /* Ensure the canvas takes the full height of the container */
+}
+
+.container{
+  margin: 20px;
+  height: calc(100vh - 40px); /* Subtract 20px from top and 20px from bottom */
+}
