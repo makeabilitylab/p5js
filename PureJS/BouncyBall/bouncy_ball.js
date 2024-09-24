@@ -46,25 +46,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// function resizeCanvas() {
-//   const computedStyle = getComputedStyle(canvas);
-//   const marginTop = parseInt(computedStyle.marginTop, 10);
-//   const marginRight = parseInt(computedStyle.marginRight, 10);
-//   const marginBottom = parseInt(computedStyle.marginBottom, 10);
-//   const marginLeft = parseInt(computedStyle.marginLeft, 10);
-
-//   canvas.width = window.innerWidth - marginLeft - marginRight;
-//   canvas.height = window.innerHeight - marginTop - marginBottom;
-
-//   // Reset ball position and speed
-//   ballX = canvas.width / 2;
-//   ballY = canvas.height / 2;
-
-//   maxSpeed = Math.max(3, canvas.height * 0.01);
-//   xSpeed = Math.random() * maxSpeed * initialDir; // Random x velocity
-//   ySpeed = Math.random() * maxSpeed * initialDir; // Random y velocity
-// }
-
 function resizeCanvas() {
   const container = document.querySelector('.container');
   const canvas = document.getElementById('myCanvas');
