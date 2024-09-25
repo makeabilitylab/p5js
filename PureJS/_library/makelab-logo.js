@@ -916,6 +916,7 @@ export class Grid{
   constructor(gridWidth, gridHeight, triangleSize, strokeColor = 'rgba(100, 100, 100, 0.5)', fillColor = null){
     this.gridArray = Grid.createGrid(gridWidth, gridHeight, triangleSize, strokeColor, fillColor);
     this.visible = true;
+    this.setFillColor(fillColor);
   }
 
   /**
@@ -925,7 +926,7 @@ export class Grid{
    */
   draw(ctx){
     if(!this.visible){ return; }
-    
+
     for(let row = 0; row < this.gridArray.length; row++){
       for(let col = 0; col < this.gridArray[row].length; col++){
         this.gridArray[row][col].draw(ctx);

@@ -1,18 +1,16 @@
 import { MakeabilityLabLogo, Grid } from '../_library/makelab-logo.js';
 
 const canvas = document.getElementById('myCanvas');
-canvas.width = 800;
-canvas.height = 800;
+canvas.width = 1000;
+canvas.height = 1000;
 const ctx = canvas.getContext('2d');
 
 ctx.fillStyle = "rgb(250, 250, 250)"; // Set the fill style to gray
 ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas with the gray color
 
-const TRIANGLE_SIZE = 80;
+const TRIANGLE_SIZE = 100;
 let makeLabGrid = new Grid(canvas.width, canvas.height, TRIANGLE_SIZE);
-makeLabGrid.setFillColor(null);
-
-let makeLabLogo = new MakeabilityLabLogo(TRIANGLE_SIZE, TRIANGLE_SIZE, TRIANGLE_SIZE);
+let makeLabLogo = new MakeabilityLabLogo(TRIANGLE_SIZE*2, TRIANGLE_SIZE*3, TRIANGLE_SIZE);
 
 draw(ctx);
 printMenuToConsole();
@@ -22,10 +20,8 @@ function draw(ctx){
   ctx.fillStyle = "rgb(250, 250, 250)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if(makeLabGrid.visible){
-    makeLabGrid.draw(ctx);
-  }
-  
+  // draw grid and logo
+  makeLabGrid.draw(ctx);
   makeLabLogo.draw(ctx);
 }
 
