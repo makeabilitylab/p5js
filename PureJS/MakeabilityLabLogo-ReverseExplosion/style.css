@@ -6,6 +6,6 @@ body {
 canvas {
   display: block;
   margin: 0px;
-  width: 400px;
-  height: 400px;
+  width: 1000;
+  height: 1000;
 }

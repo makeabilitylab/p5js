@@ -16,12 +16,14 @@ let modifyAngle = true;
 ctx.fillStyle = "rgb(250, 250, 250)"; // Set the fill style to gray
 ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas with the gray color
 
-const TRIANGLE_SIZE = 100;
+const TRIANGLE_SIZE = 50;
+let xLogo = MakeabilityLabLogo.getXCenterPosition(TRIANGLE_SIZE, canvas.width);
+let yLogo = MakeabilityLabLogo.getYCenterPosition(TRIANGLE_SIZE, canvas.height);
 let makeLabGrid = new Grid(canvas.width, canvas.height, TRIANGLE_SIZE);
-let makeLabLogo = new MakeabilityLabLogo(TRIANGLE_SIZE*2, TRIANGLE_SIZE*3, TRIANGLE_SIZE);
+let makeLabLogo = new MakeabilityLabLogo(xLogo, yLogo, TRIANGLE_SIZE);
 makeLabLogo.visible = false;
 
-let makeLabLogoAnimated = new MakeabilityLabLogo(TRIANGLE_SIZE*2, TRIANGLE_SIZE*3, TRIANGLE_SIZE);
+let makeLabLogoAnimated = new MakeabilityLabLogo(xLogo, yLogo, TRIANGLE_SIZE);
 makeLabLogoAnimated.isLOutlineVisible = false;
 makeLabLogoAnimated.isMOutlineVisible = false;
 resetRandomTriLocs();
@@ -59,8 +61,13 @@ function mouseMoved(event) {
   const rect = canvas.getBoundingClientRect();
   console.log(`rect`, rect);
   const mouseX = event.clientX - rect.left; // Mouse X relative to the canvas
-  const width = rect.width;
-  const lerpAmt = mouseX / width; // Normalize to range [0.0, 1.0]
+  const width = rect.width - 50;
+  const lerpAmt = Math.min(mouseX / width, 1); // Normalize to range [0.0, 1.0]
+  if(lerpAmt >= 1){
+    makeLabLogoAnimated.isLOutlineVisible = true;
+  }else{
+    makeLabLogoAnimated.isLOutlineVisible = false;
+  }
   console.log(`mouseX: ${mouseX}, width: ${width}, lerpAmt: ${lerpAmt}`);
 
   let staticTriangles = makeLabLogo.getAllTriangles(true);
@@ -131,20 +138,20 @@ document.addEventListener('keydown', function(event) {
       break;
 
     case 'm':
-      makeLabLogo.isMOutlineVisible = !makeLabLogo.isMOutlineVisible;
-      console.log("M outline visible: ", makeLabLogo.isMOutlineVisible);
+      makeLabLogoAnimated.isMOutlineVisible = !makeLabLogoAnimated.isMOutlineVisible;
+      console.log("M outline visible: ", makeLabLogoAnimated.isMOutlineVisible);
       draw(ctx);
       break;
 
     case 'l':
-      makeLabLogo.isLOutlineVisible = !makeLabLogo.isLOutlineVisible;
-      console.log("L outline visible: ", makeLabLogo.isLOutlineVisible);
+      makeLabLogoAnimated.isLOutlineVisible = !makeLabLogoAnimated.isLOutlineVisible;
+      console.log("L outline visible: ", makeLabLogoAnimated.isLOutlineVisible);
       draw(ctx);
       break;
 
     case 'k':
-      makeLabLogo.areLTriangleStrokesVisible = !makeLabLogo.areLTriangleStrokesVisible;
-      console.log("L triangle strokes visible: ", makeLabLogo.areLTriangleStrokesVisible);
+      makeLabLogoAnimated.areLTriangleStrokesVisible = !makeLabLogoAnimated.areLTriangleStrokesVisible;
+      console.log("L triangle strokes visible: ", makeLabLogoAnimated.areLTriangleStrokesVisible);
       draw(ctx);
       break;
 
@@ -153,6 +160,27 @@ document.addEventListener('keydown', function(event) {
       console.log("Makeability Lab logo visible: ", makeLabLogo.visible);
       draw(ctx);
       break;
+
+    case 'r':
+      console.log("Resetting random triangle locations");
+      resetRandomTriLocs();
+      draw(ctx);
+      break;
       
   }
 });
+
+// const div = document.querySelector('.container');
+
+// function resizeCanvas() {
+//   console.log(`resizeCanvas: ${div.clientWidth}, ${div.clientHeight} and prev canvas: ${canvas.width}, ${canvas.height}`);
+//   canvas.width = div.clientWidth;
+//   canvas.height = div.clientHeight;
+//   draw(ctx);
+// }
+
+// // Initial resize
+// resizeCanvas();
+
+// // Event listener for window resize
+// window.addEventListener('resize', resizeCanvas);

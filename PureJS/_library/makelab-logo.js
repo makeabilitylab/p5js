@@ -35,6 +35,50 @@ export class MakeabilityLabLogo {
   static get numCols() { return 6; }
 
   /**
+   * Calculates the width of the MakeabilityLabLogo based on the size of the triangles.
+   *
+   * @param {number} triangleSize - The size of each triangle.
+   * @returns {number} The total width of the MakeabilityLabLogo.
+   */
+  static getWidth(triangleSize){
+    return MakeabilityLabLogo.numCols * triangleSize;
+  }
+
+  /**
+   * Calculates the height of the MakeabilityLabLogo based on the size of the triangles.
+   *
+   * @param {number} triangleSize - The size of each triangle.
+   * @returns {number} The total height of the logo.
+   */
+  static getHeight(triangleSize){
+    return MakeabilityLabLogo.numRows * triangleSize;
+  }
+
+  /**
+   * Calculates the x-coordinate for centering the MakeabilityLabLogo on the canvas.
+   *
+   * @param {number} triangleSize - The size of each triangle.
+   * @param {number} canvasWidth - The width of the canvas.
+   * @returns {number} The x-coordinate for centering the logo.
+   */
+  static getXCenterPosition(triangleSize, canvasWidth){
+    const xCenter = (canvasWidth - MakeabilityLabLogo.getWidth(triangleSize)) / 2;
+    return Math.round(xCenter / triangleSize) * triangleSize;
+  }
+
+  /**
+   * Calculates the y-coordinate for centering the MakeabilityLabLogo on the canvas.
+   *
+   * @param {number} triangleSize - The size of each triangle.
+   * @param {number} canvasHeight - The width of the canvas.
+   * @returns {number} The y-coordinate for centering the logo.
+   */
+  static getYCenterPosition(triangleSize, canvasHeight){
+    const yCenter = (canvasHeight - MakeabilityLabLogo.getHeight(triangleSize)) / 2;
+    return Math.round(yCenter / triangleSize) * triangleSize;
+  }
+
+  /**
    * Gets the far left x-coordinate of the Makeability Lab logo
    * 
    * @returns {number} The x-coordinate of the first element.
@@ -913,7 +957,7 @@ export class Grid{
    * @param {string} [strokeColor='rgba(100, 100, 100, 0.5)'] - The color of the stroke for the grid lines.
    * @param {string|null} [fillColor=null] - The fill color for the grid triangles.
    */
-  constructor(gridWidth, gridHeight, triangleSize, strokeColor = 'rgba(100, 100, 100, 0.5)', fillColor = null){
+  constructor(gridWidth, gridHeight, triangleSize, strokeColor = 'rgba(200, 200, 200, 0.5)', fillColor = null){
     this.gridArray = Grid.createGrid(gridWidth, gridHeight, triangleSize, strokeColor, fillColor);
     this.visible = true;
     this.setFillColor(fillColor);
