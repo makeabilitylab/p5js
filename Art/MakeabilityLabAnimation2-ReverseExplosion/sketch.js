@@ -23,6 +23,8 @@ let colorScheme =  null;
 let defaultColorsOn = true;
 let transparent = false;
 let originalRandomTriLocs = [];
+let modifySize = true;
+let modifyAngle = true;
 
 function setup() {
   createCanvas(800, 600);
@@ -35,7 +37,6 @@ function setup() {
   makeLabLogoAnimated = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabLogoAnimated.isLOutlineVisible = false;
   makeLabLogoAnimated.isMOutlineVisible = false;
-  //makeLabLogoAnimated.setDefaultColoredTrianglesFillColor(originalColorArray);
 
   for(const tri of makeLabLogoAnimated.getLTriangles()){
     tri.strokeColor = color(0);
@@ -51,15 +52,22 @@ function setup() {
 
   defaultColorsOn = true;
   makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
-
-  for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
-    tri.x = random(0, width - TRIANGLE_SIZE);
-    tri.y = random(0, height - TRIANGLE_SIZE);
-    tri.angle = random(0, 360);
-    originalRandomTriLocs.push({x: tri.x, y: tri.y, angle: tri.angle});
-  }
+  resetRandomTriLocs();
+  
 
   setStaticLogoTransparent(true);
+}
+
+function resetRandomTriLocs(){
+  originalRandomTriLocs = [];
+  for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
+    let randSize = modifySize ? random(TRIANGLE_SIZE/2, TRIANGLE_SIZE*3) : TRIANGLE_SIZE;
+    tri.x = random(randSize, width - randSize);
+    tri.y = random(randSize, height - randSize);
+    tri.angle = modifyAngle ? random(0, 360) : 0;
+    tri.size = randSize;
+    originalRandomTriLocs.push({x: tri.x, y: tri.y, angle: tri.angle, size: randSize});
+  }
 }
 
 function touchMoved(){
@@ -75,18 +83,22 @@ function mouseMoved(){
     const endX = staticTriangles[i].x;
     const endY = staticTriangles[i].y;
     const endAngle = 0;
+    const endSize = staticTriangles[i].size;
 
     const startX = originalRandomTriLocs[i].x;
     const startY = originalRandomTriLocs[i].y;
     const startAngle = originalRandomTriLocs[i].angle;
+    const startSize = originalRandomTriLocs[i].size;
 
     const newX = lerp(startX, endX, lerpAmt);
     const newY = lerp(startY, endY, lerpAmt);
     const newAngle = lerp(startAngle, endAngle, lerpAmt);
+    const newSize = lerp(startSize, endSize, lerpAmt);
 
     animatedTriangles[i].x = newX;
     animatedTriangles[i].y = newY;
     animatedTriangles[i].angle = newAngle;
+    animatedTriangles[i].size = newSize;
   }
 
   if(defaultColorsOn){
@@ -135,6 +147,16 @@ function draw() {
 }
 
 function keyPressed() {
+
+  if(key == ' '){
+    resetRandomTriLocs();
+  }
+
+  if(key == 's'){
+    modifySize = !modifySize;
+    print("Modify size: ", modifySize);
+  }
+
   if(key == 'g'){
     makeLabGrid.visible = !makeLabGrid.visible;
     print("Grid visibility is set to: ", makeLabGrid.visible);

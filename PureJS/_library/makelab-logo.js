@@ -446,7 +446,7 @@ export class MakeabilityLabLogo {
 
   static setRandomColors(triangles, isFillVisible=true, isStrokeVisible=true){
     for(const tri of triangles){
-      const fillColor = Colorer.getRandomOriginalColor();
+      const fillColor = MakeabilityLabLogoColorer.getRandomOriginalColor();
       tri.fillColor = fillColor;
       tri.startFillColor = fillColor;
       tri.endFillColor = fillColor;
@@ -569,14 +569,14 @@ export class MakeabilityLabLogo {
   }
 }
 
-const TriangleDir = {
+export const TriangleDir = {
   TopLeft: 'TopLeft',
   TopRight: 'TopRight',
   BottomLeft: 'BottomLeft',
   BottomRight: 'BottomRight'
 };
 
-class Cell {
+export class Cell {
   /**
    * Creates an instance of the class with two triangles.
    * @constructor
@@ -745,7 +745,7 @@ class Cell {
   }
 }
 
-class Triangle {
+export class Triangle {
   /**
    * Creates an instance of the triangle.
    * 
@@ -1004,12 +1004,7 @@ export class Grid{
   }
 }
 
-const ColorScheme = {
-  WhiteOnBlack: 'WhiteOnBlack',
-  BlackOnWhite: 'BlackOnWhite',
-};
-
-const OriginalColorPaletteRGB = {
+export const OriginalColorPaletteRGB = {
   Blue: "rgb(135, 202, 228)",
   BlueGray: "rgb(147, 169, 207)",
   Purple: "rgb(171, 147, 197)",
@@ -1022,7 +1017,7 @@ const OriginalColorPaletteRGB = {
   BlueGreen: "rgb(147, 211, 202)"
 };
 
-const ORIGINAL_COLOR_ARRAY = [
+export const ORIGINAL_COLOR_ARRAY = [
   OriginalColorPaletteRGB.Blue, 
   OriginalColorPaletteRGB.BlueGray,
   OriginalColorPaletteRGB.YellowGreen,
@@ -1038,12 +1033,25 @@ const ORIGINAL_COLOR_ARRAY = [
 ];
 
 
-class Colorer{
+/**
+ * Class representing a colorer for the Makeability Lab logo.
+ */
+export class MakeabilityLabLogoColorer {
 
+  /**
+   * Gets a random color from the original color palette.
+   * @returns {string} A random color in RGB format from the original color palette.
+   */
   static getRandomOriginalColor(){
-    return Colorer.getRandomColorFromPalette(OriginalColorPaletteRGB);
+    return MakeabilityLabLogoColorer.getRandomColorFromPalette(OriginalColorPaletteRGB);
   }
 
+  /**
+   * Gets a random color from the specified color palette.
+   * If no palette is provided, it defaults to the original color palette.
+   * @param {Object} [palette] - An optional color palette object where keys are color names and values are RGB strings.
+   * @returns {string} A random color in RGB format from the specified or default color palette.
+   */
   static getRandomColorFromPalette(palette){
     if(!palette){
       palette = OriginalColorPaletteRGB;
