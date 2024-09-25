@@ -169,18 +169,3 @@ document.addEventListener('keydown', function(event) {
       
   }
 });
-
-// const div = document.querySelector('.container');
-
-// function resizeCanvas() {
-//   console.log(`resizeCanvas: ${div.clientWidth}, ${div.clientHeight} and prev canvas: ${canvas.width}, ${canvas.height}`);
-//   canvas.width = div.clientWidth;
-//   canvas.height = div.clientHeight;
-//   draw(ctx);
-// }
-
-// // Initial resize
-// resizeCanvas();
-
-// // Event listener for window resize
-// window.addEventListener('resize', resizeCanvas);
