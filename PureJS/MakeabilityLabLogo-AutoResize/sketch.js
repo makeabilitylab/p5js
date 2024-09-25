@@ -16,7 +16,7 @@ let makeLabGrid, xLogo, yLogo, makeLabLogo;
 
 // Initial resize
 resizeCanvas();
-printMenuToConsole();
+printMenu();
 
 function draw(ctx){
   // clear canvas
@@ -28,7 +28,7 @@ function draw(ctx){
   makeLabLogo.draw(ctx);
 }
 
-function printMenuToConsole(){
+function printMenu(){
   console.log("Press '+' to increase triangle size. Currently set to: ", triangleSize);
   console.log("Press '-' to decrease triangle size. Currently set to: ", triangleSize);
   console.log("Press 'g' to toggle grid. Currently set to: ", makeLabGrid.visible);
