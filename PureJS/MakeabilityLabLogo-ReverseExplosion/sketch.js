@@ -54,12 +54,12 @@ function resetRandomTriLocs(){
 }
 
 function mouseMoved(event) {
-  console.log(`mouseMoved: ${event.clientX}, ${event.clientY}`);
+  //console.log(`mouseMoved: ${event.clientX}, ${event.clientY}`);
   // const mouseX = event.clientX;
   // const width = canvas.width;
   // const lerpAmt = (mouseX - 0) / (width - 0);
   const rect = canvas.getBoundingClientRect();
-  console.log(`rect`, rect);
+  //console.log(`rect`, rect);
   const mouseX = event.clientX - rect.left; // Mouse X relative to the canvas
   const width = rect.width - 50;
   const lerpAmt = Math.min(mouseX / width, 1); // Normalize to range [0.0, 1.0]
@@ -68,11 +68,11 @@ function mouseMoved(event) {
   }else{
     makeLabLogoAnimated.isLOutlineVisible = false;
   }
-  console.log(`mouseX: ${mouseX}, width: ${width}, lerpAmt: ${lerpAmt}`);
+  //console.log(`mouseX: ${mouseX}, width: ${width}, lerpAmt: ${lerpAmt}`);
 
   let staticTriangles = makeLabLogo.getAllTriangles(true);
   let animatedTriangles = makeLabLogoAnimated.getAllTriangles(true);
-  console.log(`originalRandomTriLocs.length: ${originalRandomTriLocs.length}`);
+  //console.log(`originalRandomTriLocs.length: ${originalRandomTriLocs.length}`);
   for (let i = 0; i < originalRandomTriLocs.length; i++) {
     const endX = staticTriangles[i].x;
     const endY = staticTriangles[i].y;

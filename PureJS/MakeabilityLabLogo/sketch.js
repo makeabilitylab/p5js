@@ -10,7 +10,9 @@ ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas with 
 
 const TRIANGLE_SIZE = 100;
 let makeLabGrid = new Grid(canvas.width, canvas.height, TRIANGLE_SIZE);
-let makeLabLogo = new MakeabilityLabLogo(TRIANGLE_SIZE*2, TRIANGLE_SIZE*3, TRIANGLE_SIZE);
+let xLogo = MakeabilityLabLogo.getXCenterPosition(TRIANGLE_SIZE, canvas.width);
+let yLogo = MakeabilityLabLogo.getYCenterPosition(TRIANGLE_SIZE, canvas.height);
+let makeLabLogo = new MakeabilityLabLogo(xLogo, yLogo, TRIANGLE_SIZE);
 
 draw(ctx);
 printMenuToConsole();
