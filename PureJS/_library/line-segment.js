@@ -6,6 +6,7 @@
 // http://makeabilitylab.io/
 //
 import { Vector } from './vector.js';
+import { convertToRadians, convertToDegrees } from './math-utils.js';
 
 export class LineSegment {
   /**
@@ -131,13 +132,13 @@ export class LineSegment {
   }
 
   /**
-   * Gets the angle between this line segment and the given vector or line segment.
-   * Returns the angle in radians between 0 and 2*PI.
+   * Gets the angles between this line segment and the given vector or line segment.
+   * Returns both the counterclockwise and clockwise angles in radians.
    *
    * @param {Vector|LineSegment} vectorOrLineSegment The other vector or line segment.
-   * @returns {number} The angle between the two line segments in radians.
+   * @returns {Object} An object containing both the counterclockwise and clockwise angles in radians.
    */
-  getAngleBetween(vectorOrLineSegment) {
+  getAnglesBetween(vectorOrLineSegment) {
     const v1 = this.getVectorAtOrigin();
     let v2;
 
@@ -147,8 +148,22 @@ export class LineSegment {
       v2 = vectorOrLineSegment;
     }
 
-    const angleBetweenRadians = v1.angleBetween(v2);
-    return angleBetweenRadians + (angleBetweenRadians < 0 ? 2 * Math.PI : 0);
+    let angleBetweenRadians = v1.angleBetween(v2);
+    console.log(`angleBetweenDegrees: ${convertToDegrees(angleBetweenRadians).toFixed(1)}`);
+
+    // Ensure the angle is between 0 and 2*PI
+    if (angleBetweenRadians < 0) {
+      angleBetweenRadians += 2 * Math.PI;
+    }
+
+    // Calculate the counterclockwise and clockwise angles
+    const clockwiseAngle = angleBetweenRadians;
+    const counterclockwiseAngle = 2 * Math.PI - angleBetweenRadians;
+    
+    return {
+      counterclockwiseAngle,
+      clockwiseAngle
+    };
   }
 
   /**
@@ -283,63 +298,65 @@ export class LineSegment {
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    * @param {Object} lineSegment1 - The first line segment.
    * @param {Object} lineSegment2 - The second line segment.
-   * @param {string} negArcAngleColor - The color of arc1
-   * @param {string} posArcAngleColor - The color of arc2
-   * @param {number} [arcSizePositiveAngle=50] - The size of the positive angle arc.
-   * @param {number} [arcSizeNegativeAngle=30] - The size of the negative angle arc.
+   * @param {string} clockwiseArcColor - The color of arc1
+   * @param {string} counterclockwiseArcColor - The color of arc2
+   * @param {number} [clockwiseArcRadius=50] - The size of the positive angle arc.
+   * @param {number} [counterclockwiseArcRadius=30] - The size of the negative angle arc.
    */
-  static drawAngleArcs(ctx, lineSegment1, lineSegment2, negArcAngleColor='blue', 
-    posArcAngleColor='red', arcSizePositiveAngle = 50, arcSizeNegativeAngle = 30) {
+  static drawAngleArcs(ctx, lineSegment1, lineSegment2, clockwiseArcColor='blue', 
+    counterclockwiseArcColor='red', clockwiseArcRadius = 50, counterclockwiseArcRadius = 30) {
+    
     const lineSeg1AngleRadians = lineSegment1.getHeading();
-    const angleBetweenRadians = lineSegment1.getAngleBetween(lineSegment2);
-  
+    const angles = lineSegment1.getAnglesBetween(lineSegment2);
+
+    console.log(`CW angle ${convertToDegrees(angles.clockwiseAngle).toFixed(1)} CCW angle ${convertToDegrees(angles.counterclockwiseAngle).toFixed(1)}`);
+    //console.log(`Counterclockwise Angle: ${angles.counterclockwiseAngle} radians (${convertToDegrees(angles.counterclockwiseAngle).toFixed(1)}°)`);
+    //console.log(`Clockwise Angle: ${angles.clockwiseAngle} radians (${convertToDegrees(angles.clockwiseAngle).toFixed(1)}°)`);
+    // console.log(`Old angle Between: ${angleBetweenLineSegmentsInRadians} radians (${convertToDegrees(angleBetweenLineSegmentsInRadians).toFixed(1)}°)`);
+    
     ctx.save();
+
+    // Draw the clockwise arc
+    // arc(x, y, radius, startAngle, endAngle, counterclockwise)
     ctx.beginPath();
-    ctx.arc(lineSegment1.pt1.x, lineSegment1.pt1.y, arcSizePositiveAngle, 0, 2 * Math.PI, true);
-    ctx.strokeStyle = negArcAngleColor;
+    ctx.arc(lineSegment1.pt1.x, lineSegment1.pt1.y, clockwiseArcRadius, 
+      lineSeg1AngleRadians, lineSeg1AngleRadians + angles.clockwiseAngle, false);
+    ctx.strokeStyle = clockwiseArcColor;
+    //ctx.setLineDash([2, 5]);
     ctx.stroke();
-  
-    // Draw the arc of size arcSize from the angle of the first line segment
-    // to the beginning of the next line segment
-    ctx.beginPath();
-    ctx.arc(lineSegment1.pt1.x, lineSegment1.pt1.y, arcSizePositiveAngle, lineSeg1AngleRadians, lineSeg1AngleRadians + angleBetweenRadians, false);
-    ctx.strokeStyle = posArcAngleColor;
-    ctx.stroke();
-  
-    // Get the middle of this angle (which is where we will draw the angle text)
-    const positiveArcMiddleV = new Vector(
-      lineSegment1.pt1.x + arcSizePositiveAngle * 0.55 * Math.cos(lineSeg1AngleRadians + angleBetweenRadians / 2),
-      lineSegment1.pt1.y + arcSizePositiveAngle * 0.55 * Math.sin(lineSeg1AngleRadians + angleBetweenRadians / 2)
+
+    // Draw the clockwise angle text
+    const clockwiseArcMiddleVector = new Vector(
+      lineSegment1.pt1.x + clockwiseArcRadius * 1.35 * Math.cos(lineSeg1AngleRadians + angles.clockwiseAngle / 2),
+      lineSegment1.pt1.y + clockwiseArcRadius * 1.35 * Math.sin(lineSeg1AngleRadians + angles.clockwiseAngle / 2)
     );
   
     ctx.font = "12px Arial"; // Replace with your desired font and size
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = posArcAngleColor;
+    ctx.fillStyle = clockwiseArcColor;
   
-    const posAngleBetweenDegrees = Math.round(angleBetweenRadians * 180 / Math.PI);
-    const posAngleDegreesLabel = `${posAngleBetweenDegrees}°`;
-    ctx.fillText(posAngleDegreesLabel, positiveArcMiddleV.x, positiveArcMiddleV.y);
-  
-    // Now draw negative angle
-    const negativeReadAngle = -(2 * Math.PI - angleBetweenRadians);
-    const negativeArcMiddleV = new Vector(
-      lineSegment1.pt1.x + arcSizeNegativeAngle * 0.55 * Math.cos(lineSeg1AngleRadians + negativeReadAngle / 2),
-      lineSegment1.pt1.y + arcSizeNegativeAngle * 0.55 * Math.sin(lineSeg1AngleRadians + negativeReadAngle / 2)
-    );
-  
-    ctx.setLineDash([2, 5]);
+    const clockwiseAngleDegrees = convertToDegrees(angles.clockwiseAngle);
+    const clockwiseAngleDegreesLabel = `${clockwiseAngleDegrees.toFixed(1)}°`;
+    ctx.fillText(clockwiseAngleDegreesLabel, clockwiseArcMiddleVector.x, clockwiseArcMiddleVector.y);
+
+    // Draw the counterclockwise arc
     ctx.beginPath();
-    ctx.arc(lineSegment1.pt1.x, lineSegment1.pt1.y, arcSizeNegativeAngle, lineSeg1AngleRadians + angleBetweenRadians, lineSeg1AngleRadians, true);
-    ctx.strokeStyle = "rgba(200, 200, 200, 0.8)";
+    ctx.arc(lineSegment1.pt1.x, lineSegment1.pt1.y, counterclockwiseArcRadius,
+      lineSeg1AngleRadians, lineSeg1AngleRadians - angles.counterclockwiseAngle, true);
+    ctx.strokeStyle = counterclockwiseArcColor;
     ctx.stroke();
-  
-    ctx.fillStyle = negArcAngleColor;
-    ctx.fillText(
-      `${Math.round(-negativeReadAngle * 180 / Math.PI)}°`,
-      negativeArcMiddleV.x,
-      negativeArcMiddleV.y
+
+    // Draw the counterclockwise angle text
+    const counterclockwiseArcMiddleVector = new Vector(
+      lineSegment1.pt1.x + counterclockwiseArcRadius * 1.5 * Math.cos(lineSeg1AngleRadians - angles.counterclockwiseAngle / 2),
+      lineSegment1.pt1.y + counterclockwiseArcRadius * 1.5 * Math.sin(lineSeg1AngleRadians - angles.counterclockwiseAngle / 2)
     );
+
+    const counterclockwiseAngleDegrees = convertToDegrees(angles.counterclockwiseAngle);
+    const counterclockwiseAngleDegreesLabel = `${counterclockwiseAngleDegrees.toFixed(1)}°`;
+    ctx.fillStyle = counterclockwiseArcColor;
+    ctx.fillText(counterclockwiseAngleDegreesLabel, counterclockwiseArcMiddleVector.x, counterclockwiseArcMiddleVector.y);
   
     ctx.restore();
   }

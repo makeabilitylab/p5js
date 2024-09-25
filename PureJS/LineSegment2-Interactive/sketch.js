@@ -22,32 +22,41 @@ canvas.addEventListener('click', (event) => {
   const x = event.clientX;
   const y = event.clientY;
 
-  if (!firstLineSegmentCreated) {
+  if (!firstClickPoint) {
     // Store the first click point
     firstClickPoint = new Vector(x, y);
 
     // Draw a circle at the first click point
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = 'blue'; // Change the color as needed
+    ctx.arc(x, y, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = 'black'; // Change the color as needed
     ctx.fill();
-  } else {
+
+    console.log(`First click point: (${x}, ${y})`);
+  } else if (!lineSegment1) {
     // Create the first line segment with the stored first click point and the current click point
     lineSegment1 = new LineSegment(firstClickPoint.x, firstClickPoint.y, x, y);
+    lineSegment1.strokeColor = 'gray';
     firstLineSegmentCreated = true;
+    console.log(`First line segment created: (${lineSegment1.pt1.x}, ${lineSegment1.pt1.y}) to (${lineSegment1.pt2.x}, ${lineSegment1.pt2.y})`);
   }
 
   draw();
 });
 
 canvas.addEventListener('mousemove', (event) => {
-  if (lineSegment2) {
-    // Update the endpoint of the second line segment to the mouse position
-    lineSegment2.pt2.x = event.clientX;
-    lineSegment2.pt2.y = event.clientY;
-
-    draw();
+  if (!lineSegment1) {
+    return;
   }
+
+  if (!lineSegment2) {
+    lineSegment2 = new LineSegment(firstClickPoint.x, firstClickPoint.y, event.clientX, event.clientY);
+  }
+  // Update the endpoint of the second line segment to the mouse position
+  lineSegment2.pt2.x = event.clientX;
+  lineSegment2.pt2.y = event.clientY;
+
+  draw();
 });
 
 function draw() {
@@ -66,5 +75,13 @@ function draw() {
 
   if (lineSegment1 && lineSegment2) {
     LineSegment.drawAngleArcs(ctx, lineSegment1, lineSegment2);
+  }
+
+  // Draw the circle last
+  if (firstClickPoint) {
+    ctx.beginPath();
+    ctx.arc(firstClickPoint.x, firstClickPoint.y, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = 'black'; // Change the color as needed
+    ctx.fill();
   }
 }

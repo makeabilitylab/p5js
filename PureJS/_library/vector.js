@@ -80,8 +80,32 @@ export class Vector {
    * @returns {number} The angle in radians.
    */
   angleBetween(other) {
-    const cosTheta = this.dotProduct(other) / (this.magnitude() * other.magnitude());
-    return Math.acos(cosTheta);
+    // const cosTheta = this.dotProduct(other) / (this.magnitude() * other.magnitude());
+    // return Math.acos(cosTheta);
+
+    const dotProduct = this.dotProduct(other);
+    const magnitudeProduct = this.magnitude() * other.magnitude();
+
+    // Handle parallel vectors (dotProduct ≈ magnitudeProduct)
+    if (Math.abs(dotProduct - magnitudeProduct) < Number.EPSILON) {
+      return dotProduct >= 0 ? 0 : Math.PI;
+    }
+
+    // Handle zero vectors
+    if (magnitudeProduct === 0) {
+      return 0; // Or return NaN if you prefer
+    }
+
+    const cosTheta = dotProduct / magnitudeProduct;
+    let angle = Math.acos(cosTheta);
+
+    // Use the cross product to determine the sign of the angle
+    const crossProductZ = this.x * other.y - this.y * other.x; // 2D cross product
+    if (crossProductZ < 0) {
+      angle = 2 * Math.PI - angle;
+    }
+
+    return angle;
   }
 
   /**
