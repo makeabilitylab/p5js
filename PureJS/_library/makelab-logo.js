@@ -1,15 +1,20 @@
-class MakeabilityLabLogo {
+import { Vector } from './vector.js';
+import { LineSegment } from './line-segment.js';
+
+export class MakeabilityLabLogo {
 
   constructor(x, y, triangleSize) {
-    this.makeLabLogoArray = MakeabilityLabLogo.createMakeabilityLabLogo(x, y, triangleSize);
+    this.makeLabLogoArray = MakeabilityLabLogo.createMakeabilityLabLogoCellArray(x, y, triangleSize);
 
     this.visible = true;
     this.isMOutlineVisible = true;
     this.isLOutlineVisible = true;
-    this.mOutlineColor = "#FFFFFF";
+    this.mOutlineColor = 'black';
     this.mOutlineStrokeWidth = 4;
-    this.lOutlineColor = "#FFFFFF";
+    this.lOutlineColor = 'black';
     this.lOutlineStrokeWidth = 4;
+    this.setColors('white', 'black');
+    this.setFillColorsToDefault();
 
     for(const tri of this.getMShadowTriangles()){
       tri.fillColor = tri.strokeColor;
@@ -236,6 +241,13 @@ class MakeabilityLabLogo {
   }
 
   /**
+   * Sets the default colors for the logo.
+   */
+  setFillColorsToDefault(){
+    this.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
+  }
+
+  /**
    * Sets the default fill color for the colored triangles.
    * 
    * @param {(string|string[])} fillColorOrColorArray - A single color string or an 
@@ -268,7 +280,7 @@ class MakeabilityLabLogo {
 
     for (let row = 0; row < this.makeLabLogoArray.length; row++) {
       for (let col = 0; col < this.makeLabLogoArray[row].length; col++) {
-          this.makeLabLogoArray[row][col].draw();
+          this.makeLabLogoArray[row][col].draw(ctx);
       }
     }
 
@@ -455,7 +467,7 @@ class MakeabilityLabLogo {
     }
   }
 
-  static createMakeabilityLabLogo(x, y, triangleSize) {
+  static createMakeabilityLabLogoCellArray(x, y, triangleSize) {
     let mlLogo = new Array(MakeabilityLabLogo.numRows);
 
     // Initialize the make lab logo grid
@@ -554,5 +566,490 @@ class MakeabilityLabLogo {
           (row == 3 && col == 1 && triNum == 1) ||
           (row == 2 && col == 4 && triNum == 2) ||
           (row == 3 && col == 4 && triNum == 1);
+  }
+}
+
+const TriangleDir = {
+  TopLeft: 'TopLeft',
+  TopRight: 'TopRight',
+  BottomLeft: 'BottomLeft',
+  BottomRight: 'BottomRight'
+};
+
+class Cell {
+  /**
+   * Creates an instance of the class with two triangles.
+   * @constructor
+   * @param {Object} triangle1 - The first triangle object.
+   * @param {Object} triangle2 - The second triangle object.
+   */
+  constructor(triangle1, triangle2) {
+    this.tri1 = triangle1;
+    this.tri2 = triangle2;
+  }
+
+  /**
+   * Gets the x-coordinate of the cell
+   * @returns {number} The x-coordinate of the cell.
+   */
+  get x() {
+    return this.tri1.x;
+  }
+
+  /**
+   * Gets the y-coordinate of the cell
+   * @returns {number} The y-coordinate of the cell.
+   */
+  get y() {
+    return this.tri1.y;
+  }
+
+  /**
+   * Gets the size of the cell. Cells are always square.
+   * @type {number}
+   */
+  get size() {
+    return this.tri1.size;
+  }
+
+
+  /**
+   * Sets the fill and stroke colors for the cell.
+   *
+   * @param {string} fillColor - The color to be used for filling.
+   * @param {string} [strokeColor] - The color to be used for the stroke. 
+   *    If not provided, the fillColor will be used as the stroke color.
+   */
+  setColors(fillColor, strokeColor){
+    this.setFillColor(fillColor);
+
+    if(strokeColor){
+      this.setStrokeColor(strokeColor);
+    }else{
+      this.setStrokeColor(fillColor);
+    }
+  }
+
+  /**
+   * Sets the fill color for the cell.
+   * 
+   * @param {string} fillColor - The fill color
+   */
+  setFillColor(fillColor){
+    this.tri1.fillColor = fillColor;
+    this.tri2.fillColor = fillColor;
+  }
+
+  /**
+   * Sets the stroke color for the cell.
+   * 
+   * @param {string} strokeColor - The stroke color
+   */
+  setStrokeColor(strokeColor){
+    this.tri1.strokeColor = strokeColor;
+    this.tri2.strokeColor = strokeColor;
+  }
+
+  /**
+   * Sets the visibility of the cell
+   *
+   * @param {boolean} isVisible - A boolean indicating whether the cell is visible
+   */
+  setVisibility(isVisible){
+    this.tri1.visible = isVisible;
+    this.tri2.visible = isVisible;
+  }
+
+  /**
+   * Draws the cells on the canvas
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+   */
+  draw(ctx) {
+    if (this.tri1.visible) {
+      this.tri1.draw(ctx);
+    }
+
+    if (this.tri2.visible) {
+      this.tri2.draw(ctx);
+    }
+  }
+
+  /**
+   * Creates an empty cell with two invisible triangles.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @param {number} size - The size of the triangles.
+   * @param {TriangleDir} [topTriangleDir=TriangleDir.TopLeft] - The direction of the top triangle.
+   * @returns {Cell} A new cell containing two invisible triangles.
+   */
+  static createEmptyCell(x, y, size, topTriangleDir=TriangleDir.TopLeft) {
+    let tri1 = new Triangle(x, y, size, topTriangleDir);
+    let tri2 = new Triangle(x, y, size, Triangle.getOppositeDirection(topTriangleDir));
+    tri1.visible = false;
+    tri2.visible = false;
+    return new Cell(tri1, tri2);
+  }
+
+  /**
+   * Creates a cell with only the top triangle visible.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @param {number} size - The size of the triangles.
+   * @param {string} topTriangleDir - The direction of the top triangle. See TriangleDir for possible values.
+   * @returns {Cell} A cell object with the top triangle visible and the bottom triangle hidden.
+   */
+  static createCellWithTopTriangleOnly(x, y, size, topTriangleDir) {
+    let tri1 = new Triangle(x, y, size, topTriangleDir);
+    let tri2 = new Triangle(x, y, size, Triangle.getOppositeDirection(topTriangleDir));
+    tri2.visible = false;
+    return new Cell(tri1, tri2);
+  }
+
+  /**
+   * Creates a cell with only the bottom triangle visible.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @param {number} size - The size of the triangles.
+   * @param {string} botTriangleDir - The direction of the bottom triangle. See TriangleDir for possible values.
+   * @returns {Cell} A new cell with the specified bottom triangle.
+   */
+  static createCellWithBottomTriangleOnly(x, y, size, botTriangleDir) {
+    let tri1 = new Triangle(x, y, size, Triangle.getOppositeDirection(botTriangleDir));
+    let tri2 = new Triangle(x, y, size, botTriangleDir);
+    tri1.visible = false;
+    return new Cell(tri1, tri2);
+  }
+
+  /**
+   * Creates a cell composed of two triangles.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @param {number} size - The size of the triangles.
+   * @param {string} triangle1Dir - The direction of the first triangle. See TriangleDir for possible values.
+   * @param {string} [triangle2Dir] - The direction of the second triangle. If not provided, it will be the opposite of the first triangle's direction.
+   * @returns {Cell} A new cell composed of two triangles.
+   */
+  static createCell(x, y, size, triangle1Dir, triangle2Dir) {
+    let tri1 = new Triangle(x, y, size, triangle1Dir);
+
+    if (!triangle2Dir) {
+      triangle2Dir = Triangle.getOppositeDirection(triangle1Dir);
+    }
+    let tri2 = new Triangle(x, y, size, triangle2Dir);
+    return new Cell(tri1, tri2);
+  }
+}
+
+class Triangle {
+  /**
+   * Creates an instance of the triangle.
+   * 
+   * @constructor
+   * @param {number} x - The x-coordinate of the triangle.
+   * @param {number} y - The y-coordinate of the triangle.
+   * @param {number} size - The size of the triangle.
+   * @param {string} direction - The direction of the triangle. See TriangleDir for possible values.
+   * @param {p5.Color} [fillColor='white'] - The fill color of the triangle.
+   * @param {p5.Color} [strokeColor='black'] - The stroke color of the triangle.
+   * @param {number} [strokeWeight=1] - The stroke weight of the triangle.
+   * @param {boolean} [visible=true] - The visibility of the triangle.
+   */
+  constructor(x, y, size, direction, fillColor = 'white',
+    strokeColor = 'black', strokeWeight = 1, visible = true) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.direction = direction;
+    this.angle = 0;
+
+    this.strokeColor = strokeColor;
+    this.fillColor = fillColor;
+    this.strokeWeight = strokeWeight;
+    this.visible = visible;
+
+    this.isFillVisible = true;
+    this.isStrokeVisible = true;
+
+    this.drawCellOutline = false; // for debugging
+  }
+
+  /**
+   * Sets the fill and stroke colors for the triangle.
+   *
+   * @param {string} fillColor - The color to be used for filling.
+   * @param {string} [strokeColor] - The color to be used for the stroke. If not provided, the fillColor will be used as the stroke color.
+   */
+  setColors(fillColor, strokeColor){
+    this.fillColor = fillColor;
+
+    if(strokeColor){
+      this.strokeColor = strokeColor;
+    }else{
+      this.strokeColor = fillColor;
+    }
+  }
+
+  /**
+   * Draws a triangle on the given canvas context based on the object's properties.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+   */
+  draw(ctx) {
+    if (!this.visible) return;
+
+    ctx.save();
+
+    if (this.isFillVisible) {
+      ctx.fillStyle = this.fillColor;
+    } else {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+    }
+
+    if (this.isStrokeVisible) {
+      ctx.strokeStyle = this.strokeColor;
+      ctx.lineWidth = this.strokeWeight;
+    } else {
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
+    }
+
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle * Math.PI / 180);
+
+    ctx.beginPath();
+    switch (this.direction) {
+      case TriangleDir.BottomLeft:
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, this.size);
+        ctx.lineTo(this.size, this.size);
+        break;
+      case TriangleDir.BottomRight:
+        ctx.moveTo(0, this.size);
+        ctx.lineTo(this.size, this.size);
+        ctx.lineTo(this.size, 0);
+        break;
+      case TriangleDir.TopRight:
+        ctx.moveTo(0, 0);
+        ctx.lineTo(this.size, 0);
+        ctx.lineTo(this.size, this.size);
+        break;
+      case TriangleDir.TopLeft:
+      default:
+        ctx.moveTo(0, this.size);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(this.size, 0);
+        break;
+    }
+    ctx.closePath();
+
+    if (this.isFillVisible) {
+      ctx.fill();
+    }
+    if (this.isStrokeVisible) {
+      ctx.stroke();
+    }
+
+    // useful for debugging
+    if (this.drawCellOutline) {
+      ctx.strokeStyle = 'rgba(128, 128, 128, 0.5)';
+      ctx.strokeRect(0, 0, this.size, this.size);
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Returns the opposite direction of the given triangle direction.
+   *
+   * @param {TriangleDir} triangleDir - The current direction of the triangle.
+   * @returns {TriangleDir} - The opposite direction of the given triangle direction.
+   */
+  static getOppositeDirection(triangleDir) {
+    switch (triangleDir) {
+      case TriangleDir.BottomLeft:
+        return TriangleDir.TopRight;
+      case TriangleDir.BottomRight:
+        return TriangleDir.TopLeft;
+      case TriangleDir.TopRight:
+        return TriangleDir.BottomLeft;
+      case TriangleDir.TopLeft:
+      default:
+        return TriangleDir.BottomRight;
+    }
+  }
+
+  /**
+   * Creates a new Triangle object with the specified properties.
+   *
+   * @param {Object} tri - An object containing the properties of the triangle.
+   * @param {number} tri.x - The x-coordinate of the triangle.
+   * @param {number} tri.y - The y-coordinate of the triangle.
+   * @param {number} tri.size - The size of the triangle.
+   * @param {string} tri.direction - The direction of the triangle.
+   * @param {string} tri.fillColor - The fill color of the triangle.
+   * @param {string} tri.strokeColor - The stroke color of the triangle.
+   * @param {number} tri.strokeWeight - The stroke weight of the triangle.
+   * @param {boolean} tri.visible - The visibility of the triangle.
+   * @returns {Triangle} A new Triangle object.
+   */
+  static createTriangle(tri){
+    return new Triangle(tri.x, tri.y, tri.size, tri.direction,
+      tri.fillColor, tri.strokeColor, tri.strokeWeight, tri.visible);
+  }
+}
+
+export class Grid{
+  /**
+   * Constructs a new instance of the class.
+   * 
+   * @constructor
+   * @param {number} gridWidth - The width of the grid.
+   * @param {number} gridHeight - The height of the grid.
+   * @param {number} triangleSize - The size of each triangle in the grid.
+   * @param {string} [strokeColor='rgba(100, 100, 100, 0.5)'] - The color of the stroke for the grid lines.
+   * @param {string|null} [fillColor=null] - The fill color for the grid triangles.
+   */
+  constructor(gridWidth, gridHeight, triangleSize, strokeColor = 'rgba(100, 100, 100, 0.5)', fillColor = null){
+    this.gridArray = Grid.createGrid(gridWidth, gridHeight, triangleSize, strokeColor, fillColor);
+    this.visible = true;
+  }
+
+  /**
+   * Draws the grid onto the provided canvas context.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+   */
+  draw(ctx){
+    if(!this.visible){ return; }
+    
+    for(let row = 0; row < this.gridArray.length; row++){
+      for(let col = 0; col < this.gridArray[row].length; col++){
+        this.gridArray[row][col].draw(ctx);
+      }
+    }
+  }
+
+  /**
+   * Sets the stroke color for all triangles in the grid array.
+   *
+   * @param {string} strokeColor - The color to set as the stroke color for the triangles.
+   */
+  setStrokeColor(strokeColor){
+    for(let row = 0; row < this.gridArray.length; row++){
+      for(let col = 0; col < this.gridArray[row].length; col++){
+        this.gridArray[row][col].tri1.strokeColor = strokeColor;
+        this.gridArray[row][col].tri2.strokeColor = strokeColor;
+      }
+    }
+  }
+  
+  /**
+   * Sets the fill color for all triangles in the grid array.
+   *
+   * @param {string} fillColor - The color to set as the fill color for the triangles.
+   */
+  setFillColor(fillColor){
+    for(let row = 0; row < this.gridArray.length; row++){
+      for(let col = 0; col < this.gridArray[row].length; col++){
+        this.gridArray[row][col].tri1.fillColor = fillColor;
+        this.gridArray[row][col].tri2.fillColor = fillColor;
+      }
+    }
+  }
+
+
+  /**
+   * Creates a grid of cells with triangles.
+   *
+   * @param {number} gridWidth - The width of the grid.
+   * @param {number} gridHeight - The height of the grid.
+   * @param {number} triangleSize - The size of each triangle in the grid.
+   * @param {string} strokeColor - The color of the triangle strokes.
+   * @param {string} [fillColor] - The optional fill color of the triangles.
+   * @returns {Array<Array<Cell>>} A 2D array representing the grid of cells.
+   */
+  static createGrid(gridWidth, gridHeight, triangleSize, strokeColor, fillColor){
+
+    const numGridColumns = Math.floor(gridWidth / triangleSize);
+    const numGridRows = Math.floor(gridHeight / triangleSize);
+  
+    let grid = new Array(numGridRows);
+  
+    for(let row = 0; row < grid.length; row++){
+      grid[row] = new Array(numGridColumns);
+      for(let col = 0; col < grid[row].length; col++){
+        let triDir = TriangleDir.TopLeft;
+        if((row % 2 == 0 && col % 2 == 0) || (row % 2 != 0 && col % 2 != 0)){
+          triDir = TriangleDir.TopRight;
+        }
+        let cell = Cell.createCell(col * triangleSize, row * triangleSize, triangleSize, triDir);
+  
+        cell.tri1.strokeColor = strokeColor;
+        cell.tri2.strokeColor = strokeColor;
+
+        if(fillColor){
+          cell.tri1.fillColor = fillColor;
+          cell.tri2.fillColor = fillColor;
+        }
+
+        grid[row][col] = cell;
+      }
+    }
+    return grid;
+  }
+}
+
+const ColorScheme = {
+  WhiteOnBlack: 'WhiteOnBlack',
+  BlackOnWhite: 'BlackOnWhite',
+};
+
+const OriginalColorPaletteRGB = {
+  Blue: "rgb(135, 202, 228)",
+  BlueGray: "rgb(147, 169, 207)",
+  Purple: "rgb(171, 147, 197)",
+  Green: "rgb(148, 206, 146)",
+  Orange: "rgb(235, 185, 130)",
+  RedPurple: "rgb(207, 145, 166)",
+  Pink: "rgb(237, 162, 163)",
+  YellowGreen: "rgb(239, 226, 127)",
+  LightGreen: "rgb(209, 226, 133)",
+  BlueGreen: "rgb(147, 211, 202)"
+};
+
+const ORIGINAL_COLOR_ARRAY = [
+  OriginalColorPaletteRGB.Blue, 
+  OriginalColorPaletteRGB.BlueGray,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.Purple,
+  OriginalColorPaletteRGB.Green,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.YellowGreen,
+  OriginalColorPaletteRGB.LightGreen,
+  OriginalColorPaletteRGB.Orange,
+  OriginalColorPaletteRGB.RedPurple,
+  OriginalColorPaletteRGB.BlueGreen,
+  OriginalColorPaletteRGB.Pink
+];
+
+
+class Colorer{
+
+  static getRandomOriginalColor(){
+    return Colorer.getRandomColorFromPalette(OriginalColorPaletteRGB);
+  }
+
+  static getRandomColorFromPalette(palette){
+    if(!palette){
+      palette = OriginalColorPaletteRGB;
+    }
+
+    const keys = Object.keys(palette);
+    const randKey = keys[Math.floor(Math.random() * keys.length)];
+    return palette[randKey];
   }
 }
