@@ -1,37 +1,22 @@
 # .github/workflows/build-gallery.yml
 #
-# Auto-generate the example gallery (index.html) and deploy to GitHub Pages
-# whenever code is pushed to the master branch.
-#
-# The workflow:
-#   1. Checks out the repo
-#   2. Runs scripts/build_gallery.py to generate index.html
-#   3. Deploys the entire repo (including the new index.html) to GitHub Pages
+# Auto-generate the example gallery (index.html) on push to main.
+# The generated file is committed back to the branch, and GitHub Pages
+# serves it via the normal "Deploy from a branch" setting.
 
-name: Build Gallery & Deploy
+name: Build Gallery
 
 on:
   push:
-    branches: [master]
-  workflow_dispatch:        # Allow manual trigger from the Actions tab
+    branches: [main]
+  workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write        # needed to push the generated index.html back
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,15 +29,10 @@ jobs:
       - name: Generate gallery index.html
         run: python scripts/build_gallery.py
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload the entire repo root so all example folders are served
-          path: "."
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Auto-generate gallery index.html [skip ci]"
+          git push
