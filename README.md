@@ -1,110 +1,58 @@
-# p5js
-p5js repo for teaching by [Jon E. Froehlich](https://jonfroehlich.github.io/). Many of these programs are also available in the [p5js editor](https://editor.p5js.org/jonfroehlich/sketches) (in one form or another though typically the code on this page—which is served from [GitHub](https://github.com/makeabilitylab/p5js)—is more up-to-date)
+# Makeability Lab p5.js Examples
 
-# Some fun examples
-You can see all of this code at our [p5js GitHub repo](https://github.com/makeabilitylab/p5js).
+[![Build Gallery](https://github.com/makeabilitylab/p5js/actions/workflows/build-gallery.yml/badge.svg)](https://github.com/makeabilitylab/p5js/actions/workflows/build-gallery.yml)
 
-## Color
+A collection of [p5.js](https://p5js.org/) examples for teaching, learning, and experimenting — created by [Jon E. Froehlich](https://jonfroehlich.github.io/) and the [Makeability Lab](https://makeabilitylab.cs.washington.edu/) at the University of Washington. You can view many more p5js projects by Professor Froehlich in the [p5js editor here](https://editor.p5js.org/jonfroehlich/sketches).
 
-* [ColorExplorer3D](https://makeabilitylab.github.io/p5js/Color/ColorExplorer3D/): Explore the RGB color space in 2D and 3D. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Color/ColorExplorer3D)
+**🎨 [Browse the interactive gallery →](https://makeabilitylab.github.io/p5js/)**
 
-## Sound
+## What's here
 
-### Visualizing Sound Level
+Examples span several categories including sound visualization, computer vision, games, generative art, Web Serial communication, and more. Each example is a self-contained folder with an `index.html` you can open directly in a browser.
 
-#### Simple Sound Level Meters
+Many of these examples accompany the [Physical Computing](https://makeabilitylab.github.io/physcomp/) course, particularly the [Web Serial](https://makeabilitylab.github.io/physcomp/communication/web-serial.html) and [p5.js Serial](https://makeabilitylab.github.io/physcomp/communication/p5js-serial.html) lessons.
 
-* [Sound Level 1: Circle Size Meter](https://makeabilitylab.github.io/p5js/Sound/SoundLevel1-CircleSizeMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) as a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel1-CircleSizeMeter)
+## Running locally
 
-* [Sound Level 2: Circle Y Location Meter](https://makeabilitylab.github.io/p5js/Sound/SoundLevel2-CircleYLocationMeter): Visualizes the amplitude of microphone input in realtime (sound loudness) by changing the y-location of a circle. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevel2-CircleYLocationMeter)
+Most examples run by simply opening `index.html` in a browser. For **Web Serial** examples, you need a local web server (the browser blocks serial access from `file://` URLs).
 
-#### Abstract Sound Visualizations
+The easiest approach is [VS Code](https://code.visualstudio.com/) with the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension: open any example folder, right-click `index.html`, and choose "Open with Live Server."
 
-* [Sound Level Bubbles 1: Simple](https://makeabilitylab.github.io/p5js/Sound/SoundLevelBubbles1-Simple): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of random circles. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelBubbles1-Simple)
+## Web Serial examples
 
-* [Sound Level Bubbles 2: Image](https://makeabilitylab.github.io/p5js/Sound/SoundLevelBubbles2-Image): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of random circles colored by a backing image. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelBubbles2-Image)
+The `WebSerial/` folder contains examples that communicate with Arduino and other microcontrollers via the browser's [Web Serial API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API). These use the [`serial.js`](https://github.com/makeabilitylab/js#serial-module) wrapper from the [Makeability Lab JS library](https://github.com/makeabilitylab/js), loaded via CDN:
 
-* [Sound Reactive Flower 1: Sound Level](https://makeabilitylab.github.io/p5js/Sound/SoundReactiveFlower1-SoundLevel): Visualizes the amplitude of microphone input in realtime (sound loudness) as a set of rotating flower petals. Each petal represents sound loudness at a snapshot in time. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundReactiveFlower1-SoundLevel)
+```html
+<script src="https://cdn.jsdelivr.net/gh/makeabilitylab/js@main/dist/makelab.serial.iife.js"></script>
+```
 
-#### Time-series Visualizations
+Web Serial requires **Chrome**, **Edge**, or **Opera**. See the [Web Serial lesson](https://makeabilitylab.github.io/physcomp/communication/web-serial.html) for setup instructions.
 
-* [Sound Level Time Series 1: Simple](https://makeabilitylab.github.io/p5js/Sound/SoundLevelTimesSeries1-Simple): A very simple visualization of sound level over time. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelTimesSeries1-Simple)
+## Adding a new example
 
-* [Sound Level Time Series 2: Axes](https://makeabilitylab.github.io/p5js/Sound/SoundLevelTimesSeries2-Axes): Builds on the previous example but adds in axes. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundLevelTimesSeries2-Axes)
+1. Create a folder under the appropriate category (e.g., `Sound/MyNewVis/`)
+2. Add an `index.html` (and optional `sketch.js`, `css/style.css`, etc.)
+3. Optionally add a `screenshot.png` for a thumbnail in the gallery
+4. Commit and push — the gallery rebuilds automatically
 
-#### Waveform Visualizations
+## How the gallery works
 
-* [Waveform Vis 1: Simple](https://makeabilitylab.github.io/p5js/Sound/WaveformVis1-Simple): Visualizes the waveform currently in the sound buffer. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/WaveformVis1-Simple)
+The [interactive gallery](https://makeabilitylab.github.io/p5js/) is auto-generated on every push to `main` by a GitHub Actions workflow. Here's how it's set up:
 
-### Visualizing Sound Frequency
+**[`scripts/build_gallery.py`](scripts/build_gallery.py)** walks the repo, finds every folder containing an `index.html`, groups them by category and subcategory, and writes a self-contained `index.html` at the repo root. Configuration (excluded directories, branch name, repo URL) is defined as constants at the top of the script.
 
-You can learn more about analyzing sound frequency using Fast Fourier Transforms [here](https://makeabilitylab.github.io/physcomp/signals/frequency-analysis.html). But you don't need to understand the underlying mathematics to extract and visualize the underlying frequencies of sound waves in p5js, their [FFT library](https://p5js.org/reference/#/p5.FFT) and examples make it easy!
+**[`.github/workflows/build-gallery.yml`](.github/workflows/build-gallery.yml)** runs the build script and commits the generated `index.html` back to `main`. The `[skip ci]` tag in the commit message prevents an infinite loop.
 
-#### Frequency Bar Graphs
+**GitHub Pages** is configured under Settings → Pages to deploy from the `main` branch at `/` (root). No special "GitHub Actions" source setting is needed — the workflow simply commits the file to the branch that Pages already serves.
 
-* [Frequency Bar Graph 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph1-Simple): Visualizes the average underlying frequency amplitudes of sound (as measured by microphone input) using logarithmically-sized bins. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph1-Simple)
+To replicate this pattern in another repo, you need three things: the build script (adapted for your folder structure), the workflow file, and Pages set to "Deploy from a branch" pointing at your default branch.
 
-* [Frequency Bar Graph 2: Axes](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph2-Axes): Builds on the previous example but adds in axes. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph2-Axes)
+## Related repositories
 
-* [Frequency Bar Graph 3: With Classes](https://makeabilitylab.github.io/p5js/Sound/FrequencyBarGraph3-WithClasses): Builds on the previous example but uses a more object-oriented approach. Also visualizes and animates peaks. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBarGraph3-WithClasses)
+- **[makeabilitylab/js](https://github.com/makeabilitylab/js)** — Makeability Lab JavaScript library (serial, math, graphics, logo modules)
+- **[makeabilitylab/arduino](https://github.com/makeabilitylab/arduino)** — Arduino sketches that pair with the Web Serial examples
+- **[Physical Computing course](https://makeabilitylab.github.io/physcomp/)** — Full course website with lessons, labs, and references
 
-#### Frequency Spectrum Line Graphs
+## License
 
-* [Frequency Spectrum 1: Sound Level](https://makeabilitylab.github.io/p5js/Sound/FrequencySpectrum1-SoundLevel): Visualizes the current frequency spectrum in real-time [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencySpectrum1-SoundLevel)
-
-#### Abstract Frequency Visualizations
-
-* [Frequency Bubbles 1: Simple](https://makeabilitylab.github.io/p5js/Sound/FrequencyBubbles1-Simple): Visualizes each FFT frequency bin as a dynamically sized circle proportional to frequency amplitude in that bin. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBubbles1-Simple)
-
-* [Frequency Bubbles 2: Image](https://makeabilitylab.github.io/p5js/Sound/FrequencyBubbles2-Image): Visualizes each FFT frequency bin as a dynamically sized circle proportional to frequency amplitude in that bin. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/FrequencyBubbles2-Image)
-
-* [Sound Reactive Flower 2: Frequency](https://makeabilitylab.github.io/p5js/Sound/SoundReactiveFlower2-Frequency): Visualizes the frequency amplitudes of microphone input as dynamically sized flower petals. Each petal is assigned a certain frequency range. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundReactiveFlower2-Frequency)
-
-### Visualizing Multiple Sound Properties
-
-* [Sound Visualization](https://makeabilitylab.github.io/p5js/Sound/SoundVis4-ImprovedPerformance/): Processes microphone input in realtime and shows a scrolling waveform and various frequency visualizations (spectrogram, spectral graph). Writes to an off-screen graphics buffer for performance. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Sound/SoundVis4-ImprovedPerformance).
-
-## Perlin Noise
-
-* [NoiseGraph](https://makeabilitylab.github.io/p5js/PerlinNoise/NoiseGraph): Compare random to [Perlin Noise](https://en.wikipedia.org/wiki/Perlin_noise) in a scrolling graph. [Code link](https://github.com/makeabilitylab/p5js/tree/master/PerlinNoise/Noise2D).
-* [Noise2D](https://makeabilitylab.github.io/p5js/PerlinNoise/Noise2D/): Explore [Perlin Noise](https://en.wikipedia.org/wiki/Perlin_noise) in 2D. [Code link](https://github.com/makeabilitylab/p5js/tree/master/PerlinNoise/NoiseGraph).
-
-## Vectors
-
-* [Angle Explorer](https://makeabilitylab.github.io/p5js/Vectors/AngleExplorer/): Shows how to use vectors to calculate angles
-* [Angle Playground](https://makeabilitylab.github.io/p5js/Vectors/AnglePlayground/): Draw two arrows and calculate angle between them
-* [Bouncing balls and line segments](https://makeabilitylab.github.io/p5js/Vectors/BouncingBallsAndLineSegmentsImproved/): Demonstrates how to use vectors to calculate vectors and reflecting collisions
-
-## Computer Vision
-
-* [Hand pose demo](https://makeabilitylab.github.io/p5js/ml5js/HandPose/HandPoseDemo/): demonstration of the [ml5js](https://ml5js.org/) [handpose library](https://learn.ml5js.org/#/reference/handpose)
-* [Hand wave recognizer](https://makeabilitylab.github.io/p5js/ml5js/HandPose/HandWaveDetector/): wave your hand at the camera
-* [Elmo generator](https://makeabilitylab.github.io/p5js/ml5js/PoseNet/ElmoGeneratorMultiperson/): turn you and your friends into Elmo in realtime! Uses the [ml5js PoseNet implementation](https://learn.ml5js.org/#/reference/posenet)
-
-## Games
-
-Many of these games were created in 2020 when I first started learning p5js.
-
-* [Snake](https://makeabilitylab.github.io/p5js/Games/Snake/): simple [Snake](https://en.wikipedia.org/wiki/Snake) game. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/Snake).
-* [Pong](https://makeabilitylab.github.io/p5js/Games/Pong): simple [Pong](https://en.wikipedia.org/wiki/Pong) game. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/Pong).
-* [Flappy Bird](https://makeabilitylab.github.io/p5js/Games/FlappyBird2/): simple [Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird) game with procedural backgrounds. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/FlappyBird2).
-* [Cookie Monster](https://makeabilitylab.github.io/p5js/Games/CookieMonster3/): simple 2D game starring my face and Sesame Street's cookie monster. This is my children's favorite game. Inspired by [Robotron](https://en.wikipedia.org/wiki/Robotron:_2084). [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/CookieMonster3)
-* [Simple Keyboard Game](https://makeabilitylab.github.io/p5js/Games/SimpleKeyboardGame/): rapid prototype of a simple 2D game like [Cookie Monster](https://makeabilitylab.github.io/p5js/Games/CookieMonster3/). [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/SimpleKeyboardGame).
-
-### Sound as input
-
-* [FFTGame](https://makeabilitylab.github.io/p5js/Games/FFTGame/): use different frequencies (pitches) of sound to launch a ball into the air. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Games/FFTGame)
-
-## Makeability Lab Logos
-
-The Makeability Lab logo is precisely geometric in its foundation, composed solely of triangles and 45 degree angles. I've long wanted to programmatically play with this form. Here are some of my experiments:
-
-* [Makeability Lab Logo](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabLogo): a programmatically built logo. Use keyboard commands to turn certain features/layers off.
-
-* [Makeability Lab - Animation1 - Grid Fade Appearance](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation1-GridFade): a triangle-based grid appears and the ML logo emerges
-
-* [Makeability Lab Logo - Animation2 - Reverse Explosion](https://makeabilitylab.github.io/p5js/Art/MakeabilityLabAnimation2-ReverseExplosion): the ML logos start in random places and animate towards their final composition
-
-### Makeability Lab Holiday Cards
-
-* [Holiday Card 2023](https://makeabilitylab.github.io/p5js/Art/SantaToMakeabilityLab/): The interactive Makeability Lab holiday card for 2023 morphs a triangular Santa into the Makeability Lab logo. [Code link](https://github.com/makeabilitylab/p5js/tree/master/Art/SantaToMakeabilityLab)
+[MIT](LICENSE)
