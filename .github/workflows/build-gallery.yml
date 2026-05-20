@@ -1,6 +1,6 @@
 # .github/workflows/build-gallery.yml
 #
-# Auto-generate the example gallery (index.html) on push to master.
+# Auto-generate the example gallery (index.html) on push to main.
 # The generated file is committed back to the branch, and GitHub Pages
 # serves it via the normal "Deploy from a branch" setting.
 
@@ -8,7 +8,7 @@ name: Build Gallery
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
