@@ -1,0 +1,24 @@
+{
+  "name": "p5js",
+  "version": "1.0.0",
+  "description": "[![Build Gallery](https://github.com/makeabilitylab/p5js/actions/workflows/build-gallery.yml/badge.svg)](https://github.com/makeabilitylab/p5js/actions/workflows/build-gallery.yml)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makeabilitylab/p5js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/makeabilitylab/p5js/issues"
+  },
+  "homepage": "https://github.com/makeabilitylab/p5js#readme",
+  "devDependencies": {
+    "@types/p5": "^1.7.7"
+  }
+}

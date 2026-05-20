@@ -1,0 +1,5 @@
+{
+  "compilerOptions": {
+    "types": ["p5/global"]
+  }
+}
