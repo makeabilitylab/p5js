@@ -49,11 +49,14 @@
 
       if (navigator.serial) {
         if (!serial.isOpen()) {
-          await serial.connectAndOpen();
+          try {
+            await serial.connectAndOpen();
+          } catch (error) {
+            console.error("Serial connection failed:", error);
+          }
         } else {
-          console.log("The serial connection appears already open");
+          console.log("Serial connection is already open");
         }
-
       } else {
         alert('The Web Serial API does not appear supported on this web browser. Are you using Chrome? Did you remember to enable `experimental-web-platform-features` in Chrome? See https://web.dev/serial/');
       }
