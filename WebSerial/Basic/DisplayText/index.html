@@ -24,7 +24,7 @@
       <p id="output-text"></p>
 
       <h3>Received from Arduino:</h3>
-      <p id="received-text"></p>
+      <p id="received-text" aria-live="polite"></p>
     </div>
   </div>
   <script>
@@ -52,7 +52,11 @@
     async function onButtonConnectToSerialDevice() {
       console.log("onButtonConnectToSerialDevice");
       if (!serial.isOpen()) {
-        await serial.connectAndOpen();
+        try {
+          await serial.connectAndOpen();
+        } catch (error) {
+          console.error("Serial connection failed:", error);
+        }
       }
     }
 

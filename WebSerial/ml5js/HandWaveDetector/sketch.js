@@ -74,7 +74,11 @@ function setup() {
  */
 async function onButtonConnectToSerialDevice(){
   if (!serial.isOpen()) {
-    await serial.connectAndOpen();
+    try {
+      await serial.connectAndOpen();
+    } catch (error) {
+      console.error("Serial connection failed:", error);
+    }
   }
 }
 

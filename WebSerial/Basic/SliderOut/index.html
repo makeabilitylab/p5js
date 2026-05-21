@@ -118,7 +118,8 @@ http://makeabilitylab.io/
     function onSerialConnectionOpened(eventSender) {
       console.log("onSerialConnectionOpened");
       document.getElementById("connect-button").style.display = "none";
-      document.getElementById("instructions").style.display = "none";
+      const instructions = document.getElementById("instructions");
+      if (instructions) instructions.style.display = "none";
 
       document.getElementById("interactive-controls").style.visibility = "visible";
       document.getElementById("interactive-controls").style.display = "block";
