@@ -202,6 +202,10 @@ function drawEye(x, y) {
 
 function mouseClicked() {
   if (!serial.isOpen()) {
-    serial.connectAndOpen(null, serialOptions);
+    try {
+      serial.connectAndOpen(null, serialOptions);
+    } catch (error) {
+      console.error("Serial connection failed:", error);
+    }
   }
 }
