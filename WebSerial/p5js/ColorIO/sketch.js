@@ -91,7 +91,9 @@ function onSerialConnectionOpened(eventSender) {
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
   pHtmlMsg.html("onSerialConnectionClosed");
-  slider.style('visibility', 'hidden');
+  sliderOutToSerial.style('visibility', 'hidden');
+  sliderInFromSerial.style('visibility', 'hidden');
+  button.style('visibility', 'visible');
 }
 
 function onSerialDataReceived(eventSender, newData) {

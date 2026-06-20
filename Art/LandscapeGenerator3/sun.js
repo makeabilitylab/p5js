@@ -30,7 +30,7 @@ class Sun extends Circle {
       noStroke();
       fill(this.fillColor);
       ellipse(this.x, this.y, this.width, this.height);
-      push();
+      pop();
     }
   }
 }

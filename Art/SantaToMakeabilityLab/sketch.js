@@ -219,7 +219,7 @@ function keyPressed() {
   if(key == 'c'){
     defaultColorsOn = !defaultColorsOn;
     if(defaultColorsOn){
-      makeLabLogoStatic.setDefaultColoredTrianglesFillColor(originalColorArray);
+      makeLabLogoStatic.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
     }else{
       switch(colorScheme){
         case ColorScheme.BlackOnWhite:

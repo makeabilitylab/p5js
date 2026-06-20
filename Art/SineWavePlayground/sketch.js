@@ -1,7 +1,7 @@
 let bottomColor;
 function setup() {
   createCanvas(800, 400);
-  colorMode(HSB);
+  colorMode(HSB, 255);
   bottomColor = color(10, 128, 128);
 }
 

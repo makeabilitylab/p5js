@@ -163,7 +163,7 @@ class Avatar extends Shape{
     push();
     
     let img = this.imgOpenMouth;
-    if (frameCount % 4){
+    if (frameCount % 4 < 2){
       img = this.imgClosedMouth; 
     }
   

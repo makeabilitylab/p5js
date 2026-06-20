@@ -309,10 +309,10 @@ class ColorCube3D extends ColorPanel3D {
         selectedCube[0] = max(0, selectedCube[0] - 1);
         break;
       case RIGHT_ARROW:
-        selectedCube[0] = min(this.numCols, selectedCube[0] + 1);
+        selectedCube[0] = min(this.numCols - 1, selectedCube[0] + 1);
         break;
       case UP_ARROW:
-        selectedCube[1] = min(this.numCols, selectedCube[1] + 1);
+        selectedCube[1] = min(this.numCols - 1, selectedCube[1] + 1);
         break;
       case DOWN_ARROW:
         selectedCube[1] = max(0, selectedCube[1] - 1);
@@ -327,7 +327,7 @@ class ColorCube3D extends ColorPanel3D {
       if (keyIsDown(SHIFT)) {
         selectedCube[2] = max(0, selectedCube[2] - 1);
       } else {
-        selectedCube[2] = min(this.numCols, selectedCube[2] + 1);
+        selectedCube[2] = min(this.numCols - 1, selectedCube[2] + 1);
       }
     }
 

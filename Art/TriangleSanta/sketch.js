@@ -125,7 +125,7 @@ function keyPressed() {
   if(key == 'c'){
     defaultColorsOn = !defaultColorsOn;
     if(defaultColorsOn){
-      makeLabLogo.setDefaultColoredTrianglesFillColor(originalColorArray);
+      makeLabLogo.setDefaultColoredTrianglesFillColor(ORIGINAL_COLOR_ARRAY);
     }else{
       switch(colorScheme){
         case ColorScheme.BlackOnWhite:

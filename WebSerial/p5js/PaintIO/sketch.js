@@ -383,7 +383,7 @@ function keyPressed() {
     }
   }else if(key == 'c'){
     brushColorMode++;
-    if(brushColorMode >= Objects.keys(mapColorMode).length){
+    if(brushColorMode >= Object.keys(mapColorMode).length){
       brushColorMode = 0;
     }
   }else if(key == 's'){
