@@ -17,11 +17,11 @@ class Shape {
     return this.x + this.width;
   }
 
-  getBottom() {
+  getTop() {
     return this.y;
   }
 
-  getTop() {
+  getBottom() {
     return this.y + this.height;
   }
 
