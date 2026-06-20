@@ -34,7 +34,10 @@ class TriangleSanta {
   
   
     setStrokeTransparent(isTransparent){
-      for (const tri of this.getAllTriangles()) {
+      // Pass false so transparency toggles apply to ALL triangles, including
+      // the hidden silhouette triangles (preserves behavior across both the
+      // TriangleSanta and SantaToMakeabilityLab sketches that share this file).
+      for (const tri of this.getAllTriangles(false)) {
         tri.isStrokeVisible = !isTransparent;
       }
     }
@@ -45,7 +48,7 @@ class TriangleSanta {
      * @param {Boolean} includeMShadowTriangles 
      */
     setFillTransparent(isTransparent){
-      for (const tri of this.getAllTriangles()) {
+      for (const tri of this.getAllTriangles(false)) {
         tri.isFillVisible = !isTransparent;
       }
     }
@@ -72,12 +75,18 @@ class TriangleSanta {
       } 
     }
   
-    getAllTriangles(){
+    getAllTriangles(onlyVisible=true){
       let allTriangles = new Array();
       for (let row = 0; row < this.santaArray.length; row++) {
-        for (let col = 0; col < this.santaArray[row].length; col++) {         
-          allTriangles.push(this.santaArray[row][col].tri1);
-          allTriangles.push(this.santaArray[row][col].tri2);
+        for (let col = 0; col < this.santaArray[row].length; col++) { 
+          if((onlyVisible && this.santaArray[row][col].tri1.visible) || !onlyVisible){
+            allTriangles.push(this.santaArray[row][col].tri1);
+          }        
+          
+          if((onlyVisible && this.santaArray[row][col].tri2.visible) || !onlyVisible){
+            allTriangles.push(this.santaArray[row][col].tri2);
+          } 
+          
         }
       }  
       return allTriangles;
