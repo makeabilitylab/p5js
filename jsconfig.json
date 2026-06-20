@@ -1,5 +1,30 @@
 {
+  // Single repo-wide config that gives every sketch p5.js IntelliSense in
+  // VS Code with NO toolchain required — no npm, no `npm install`, no build.
+  // The p5 type definitions are vendored in `_p5types/` (see global.d.ts),
+  // so just opening the repo folder in VS Code "just works" offline.
+  //
+  // The vendored types are @types/p5 1.7.7 (newest for the p5 1.x line).
+  // See `_p5types/README.md` for how to refresh them (npm-free).
   "compilerOptions": {
-    "types": ["p5/global"]
-  }
+    "noEmit": true,
+    "checkJs": false
+  },
+  "include": [
+    "**/*.js",
+    "_p5types/global.d.ts"
+  ],
+  // Exclude vendored libraries and large minified bundles so the language
+  // server stays fast and doesn't try to analyze p5/ml5 source.
+  "exclude": [
+    "node_modules",
+    "_libraries",
+    "Templates/Multi/js",
+    "**/p5.js",
+    "**/p5.min.js",
+    "**/p5.sound.min.js",
+    "**/p5.dom.min.js",
+    "**/ml5.min.js",
+    "**/*.min.js"
+  ]
 }

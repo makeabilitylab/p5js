@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
@@ -32,8 +32,10 @@ declare module '../../index' {
          *   attached to various key events. To prevent any
          *   default behavior for this event, add "return
          *   false" to the end of the method.
+         *   @param [event] optional KeyboardEvent callback
+         *   argument.
          */
-        keyPressed(): void;
+        keyPressed(event?: object): void;
 
         /**
          *   The keyReleased() function is called once every
@@ -41,9 +43,11 @@ declare module '../../index' {
          *   more information. Browsers may have different
          *   default behaviors attached to various key events.
          *   To prevent any default behavior for this event,
-         *   add "return false" to the end of the method.
+         *   add "return false" to the end of the function.
+         *   @param [event] optional KeyboardEvent callback
+         *   argument.
          */
-        keyReleased(): void;
+        keyReleased(event?: object): void;
 
         /**
          *   The keyTyped() function is called once every time
@@ -63,9 +67,11 @@ declare module '../../index' {
          *   Browsers may have different default behaviors
          *   attached to various key events. To prevent any
          *   default behavior for this event, add "return
-         *   false" to the end of the method.
+         *   false" to the end of the function.
+         *   @param [event] optional KeyboardEvent callback
+         *   argument.
          */
-        keyTyped(): void;
+        keyTyped(event?: object): void;
 
         /**
          *   The keyIsDown() function checks if the key is

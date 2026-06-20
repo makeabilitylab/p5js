@@ -1,9 +1,8 @@
-import * as p5 from './index';
+import p5 = require("./index");
 
 declare module './index' {
     type ADD = 'lighter';
     type ARROW = 'arrow';
-    type AUDIO = 'audio';
     type AUTO = 'auto';
     type AXES = 'axes';
     type BASELINE = 'alphabetic';
@@ -16,11 +15,14 @@ declare module './index' {
     type BOTTOM = 'bottom';
     type BURN = 'color-burn';
     type CENTER = 'center';
+    type CHAR = 'char';
     type CHORD = 'chord';
     type CLAMP = 'clamp';
     type CLOSE = 'close';
+    type CONTAIN = 'contain';
     type CORNER = 'corner';
     type CORNERS = 'corners';
+    type COVER = 'cover';
     type CROSS = 'cross';
     type CURVE = 'curve';
     type DARKEST = 'darkest';
@@ -30,9 +32,12 @@ declare module './index' {
     type DODGE = 'color-dodge';
     type ERODE = 'erode';
     type EXCLUSION = 'exclusion';
+    type FALLBACK = 'fallback';
     type FILL = 'fill';
+    type FLOAT = 'float';
     type GRAY = 'gray';
     type GRID = 'grid';
+    type HALF_FLOAT = 'half-float';
     type HAND = 'hand';
     type HARD_LIGHT = 'hard-light';
     type HSB = 'hsb';
@@ -41,6 +46,7 @@ declare module './index' {
     type IMMEDIATE = 'immediate';
     type INVERT = 'invert';
     type ITALIC = 'italic';
+    type LABEL = 'label';
     type LANDSCAPE = 'landscape';
     type LEFT = 'left';
     type LIGHTEST = 'lighten';
@@ -72,6 +78,7 @@ declare module './index' {
     type REPEAT = 'repeat';
     type REPLACE = 'copy';
     type RGB = 'rgb';
+    type RGBA = 'rgba';
     type RIGHT = 'right';
     type ROUND = 'round';
     type SCREEN = 'screen';
@@ -87,7 +94,13 @@ declare module './index' {
     type TRIANGLE_FAN = 0x0006;
     type TRIANGLE_STRIP = 0x0005;
     type TRIANGLES = 0x0004;
-    type VIDEO = 'video';
+    type UNSIGNED_BYTE = 'unsigned-byte';
+    type UNSIGNED_INT = 'unsigned-int';
+    type VERSION = 'version';
     type WAIT = 'wait';
     type WEBGL = 'webgl';
+    type WEBGL2 = 'webgl2';
+    type WORD = 'word';
+    type VIDEO = 'video';
+    type AUDIO = 'audio';
 }

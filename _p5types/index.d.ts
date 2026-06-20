@@ -1,11 +1,6 @@
-// Type definitions for p5 1.1
-// Project: https://github.com/processing/p5.js
-// Definitions by: p5-types <https://github.com/p5-types>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.9
-
 // This file was auto-generated. Please do not edit it.
-
+/// <reference path="./src/accessibility/describe.d.ts" />
+/// <reference path="./src/accessibility/outputs.d.ts" />
 /// <reference path="./src/color/creating_reading.d.ts" />
 /// <reference path="./src/color/setting.d.ts" />
 /// <reference path="./src/core/shape/2d_primitives.d.ts" />
@@ -45,6 +40,7 @@
 /// <reference path="./src/webgl/loading.d.ts" />
 /// <reference path="./src/webgl/material.d.ts" />
 /// <reference path="./src/webgl/p5.Camera.d.ts" />
+/// <reference path="./src/webgl/p5.RendererGL.Immediate.d.ts" />
 /// <reference path="./src/webgl/p5.RendererGL.d.ts" />
 /// <reference path="./src/color/p5.Color.d.ts" />
 /// <reference path="./src/core/p5.Element.d.ts" />
@@ -55,6 +51,7 @@
 /// <reference path="./src/io/p5.XML.d.ts" />
 /// <reference path="./src/math/p5.Vector.d.ts" />
 /// <reference path="./src/typography/p5.Font.d.ts" />
+/// <reference path="./src/webgl/p5.Framebuffer.d.ts" />
 /// <reference path="./src/webgl/p5.Geometry.d.ts" />
 /// <reference path="./src/webgl/p5.Shader.d.ts" />
 /// <reference path="./src/core/p5.Renderer.d.ts" />
@@ -170,19 +167,27 @@ declare class p5 {
     remove(): void;
 
     /**
-     *   Allows for the friendly error system (FES) to be
-     *   turned off when creating a sketch, which can give
-     *   a significant boost to performance when needed.
+     *   Turn off some features of the friendly error
+     *   system (FES), which can give a significant boost
+     *   to performance when needed. Note that this will
+     *   disable the parts of the FES that cause
+     *   performance slowdown (like argument checking).
+     *   Friendly errors that have no performance cost
+     *   (like giving a descriptive error if a file load
+     *   fails, or warning you if you try to override p5.js
+     *   functions in the global space), will remain in
+     *   place.
+     *
      *   See  disabling the friendly error system.
      */
     disableFriendlyErrors: boolean;
 }
 
-// tslint:disable-next-line:no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface p5 extends p5.p5InstanceExtensions {}
 
 declare namespace p5 {
     type UNKNOWN_P5_CONSTANT = any;
-    // tslint:disable-next-line:no-empty-interface
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface p5InstanceExtensions {}
 }

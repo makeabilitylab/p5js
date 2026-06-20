@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
@@ -210,8 +210,8 @@ declare module '../../index' {
          *   p5.Image.get()
          *   @param x x-coordinate of the pixel
          *   @param y y-coordinate of the pixel
-         *   @param w width
-         *   @param h height
+         *   @param w width of the section to be returned
+         *   @param h height of the section to be returned
          *   @return the rectangle p5.Image
          */
         get(x: number, y: number, w: number, h: number): Image;
@@ -355,7 +355,7 @@ declare module '../../index' {
          *   to right across each row, then down each column.
          *   Retina and other high density displays will have
          *   more pixels[] (by a factor of pixelDensity^2). For
-         *   example, if the image is 100x100 pixels, there
+         *   example, if the image is 100×100 pixels, there
          *   will be 40,000. On a retina display, there will be
          *   160,000. The first four values (indices 0-3) in
          *   the array will be the R, G, B, A values of the

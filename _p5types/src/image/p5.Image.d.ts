@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     class Image {
@@ -41,7 +41,7 @@ declare module '../../index' {
          *   the underlying canvas
          *   @param y y-offset of the target update area for
          *   the underlying canvas
-         *   @param w height of the target update area for the
+         *   @param w width of the target update area for the
          *   underlying canvas
          *   @param h height of the target update area for the
          *   underlying canvas
@@ -176,16 +176,56 @@ declare module '../../index' {
         /**
          *   Masks part of an image from displaying by loading
          *   another image and using its alpha channel as an
-         *   alpha channel for this image.
+         *   alpha channel for this image. Masks are
+         *   cumulative, once applied to an image object, they
+         *   cannot be removed.
          *   @param srcImage source image
          */
         mask(srcImage: Image): void;
 
         /**
-         *   Applies an image filter to a p5.Image
+         *   Applies an image filter to a p5.Image THRESHOLD
+         *   Converts the image to black and white pixels
+         *   depending if they are above or below the threshold
+         *   defined by the level parameter. The parameter must
+         *   be between 0.0 (black) and 1.0 (white). If no
+         *   level is specified, 0.5 is used.
+         *
+         *   GRAY Converts any colors in the image to grayscale
+         *   equivalents. No parameter is used.
+         *
+         *   OPAQUE Sets the alpha channel to entirely opaque.
+         *   No parameter is used.
+         *
+         *   INVERT Sets each pixel to its inverse value. No
+         *   parameter is used.
+         *
+         *   POSTERIZE Limits each channel of the image to the
+         *   number of colors specified as the parameter. The
+         *   parameter can be set to values between 2 and 255,
+         *   but results are most noticeable in the lower
+         *   ranges.
+         *
+         *   BLUR Executes a Gaussian blur with the level
+         *   parameter specifying the extent of the blurring.
+         *   If no parameter is used, the blur is equivalent to
+         *   Gaussian blur of radius 1. Larger values increase
+         *   the blur.
+         *
+         *   ERODE Reduces the light areas. No parameter is
+         *   used.
+         *
+         *   DILATE Increases the light areas. No parameter is
+         *   used.
+         *
+         *   filter() does not work in WEBGL mode. A similar
+         *   effect can be achieved in WEBGL mode using custom
+         *   shaders. Adam Ferriss has written a selection of
+         *   shader examples that contains many of the effects
+         *   present in the filter examples.
          *   @param filterType either THRESHOLD, GRAY, OPAQUE,
-         *   INVERT, POSTERIZE, BLUR, ERODE, DILATE or BLUR.
-         *   See Filters.js for docs on each available filter
+         *   INVERT, POSTERIZE, ERODE, DILATE or BLUR. See
+         *   Filters.js for docs on each available filter
          *   @param [filterParam] an optional parameter unique
          *   to each filter, see above
          */
@@ -357,7 +397,7 @@ declare module '../../index' {
          *   row, then down each column. Retina and other high
          *   density displays may have more pixels (by a factor
          *   of pixelDensity^2). For example, if the image is
-         *   100x100 pixels, there will be 40,000. With
+         *   100×100 pixels, there will be 40,000. With
          *   pixelDensity = 2, there will be 160,000. The first
          *   four values (indices 0-3) in the array will be the
          *   R, G, B, A values of the pixel at (0, 0). The

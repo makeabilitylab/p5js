@@ -1,16 +1,16 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     class Geometry {
         /**
          *   p5 Geometry class
          *
-         *   @param [detailX] number of vertices on horizontal
-         *   surface
-         *   @param [detailY] number of vertices on horizontal
-         *   surface
+         *   @param [detailX] number of vertices along the
+         *   x-axis.
+         *   @param [detailY] number of vertices along the
+         *   y-axis.
          *   @param [callback] function to call upon object
          *   instantiation.
          */

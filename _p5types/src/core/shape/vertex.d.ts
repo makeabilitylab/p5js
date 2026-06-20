@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../../index';
+import p5 = require("../../../index");
 
 declare module '../../../index' {
     interface p5InstanceExtensions {
@@ -33,14 +33,34 @@ declare module '../../../index' {
          *   parameter tells it which types of shapes to create
          *   from the provided vertices. With no mode
          *   specified, the shape can be any irregular polygon.
-         *   The parameters available for beginShape() are
-         *   POINTS, LINES, TRIANGLES, TRIANGLE_FAN,
-         *   TRIANGLE_STRIP, QUADS, QUAD_STRIP, and TESS (WebGL
-         *   only). After calling the beginShape() function, a
-         *   series of vertex() commands must follow. To stop
-         *   drawing the shape, call endShape(). Each shape
-         *   will be outlined with the current stroke color and
-         *   filled with the fill color.
+         *   The parameters available for beginShape() are:
+         *
+         *   POINTS Draw a series of points
+         *
+         *   LINES Draw a series of unconnected line segments
+         *   (individual lines)
+         *
+         *   TRIANGLES Draw a series of separate triangles
+         *
+         *   TRIANGLE_FAN Draw a series of connected triangles
+         *   sharing the first vertex in a fan-like fashion
+         *
+         *   TRIANGLE_STRIP Draw a series of connected
+         *   triangles in strip fashion
+         *
+         *   QUADS Draw a series of separate quads
+         *
+         *   QUAD_STRIP Draw quad strip using adjacent edges to
+         *   form the next quad
+         *
+         *   TESS (WEBGL only) Handle irregular polygon for
+         *   filling curve by explicit tessellation
+         *
+         *   After calling the beginShape() function, a series
+         *   of vertex() commands must follow. To stop drawing
+         *   the shape, call endShape(). Each shape will be
+         *   outlined with the current stroke color and filled
+         *   with the fill color.
          *
          *   Transformations such as translate(), rotate(), and
          *   scale() do not work within beginShape(). It is
@@ -132,7 +152,7 @@ declare module '../../../index' {
          *   mode. 2D mode expects 2 parameters, while 3D mode
          *   expects 3 parameters. The first and last points in
          *   a series of curveVertex() lines will be used to
-         *   guide the beginning and end of a the curve. A
+         *   guide the beginning and end of the curve. A
          *   minimum of four points is required to draw a tiny
          *   curve between the second and third points. Adding
          *   a fifth point with curveVertex() will draw the
@@ -154,7 +174,7 @@ declare module '../../../index' {
          *   mode. 2D mode expects 2 parameters, while 3D mode
          *   expects 3 parameters. The first and last points in
          *   a series of curveVertex() lines will be used to
-         *   guide the beginning and end of a the curve. A
+         *   guide the beginning and end of the curve. A
          *   minimum of four points is required to draw a tiny
          *   curve between the second and third points. Adding
          *   a fifth point with curveVertex() will draw the
@@ -194,9 +214,9 @@ declare module '../../../index' {
          *   The endShape() function is the companion to
          *   beginShape() and may only be called after
          *   beginShape(). When endShape() is called, all of
-         *   image data defined since the previous call to
+         *   the image data defined since the previous call to
          *   beginShape() is written into the image buffer. The
-         *   constant CLOSE as the value for the MODE parameter
+         *   constant CLOSE as the value for the mode parameter
          *   to close the shape (to connect the beginning and
          *   the end).
          *   @param [mode] use CLOSE to close the shape
@@ -274,11 +294,51 @@ declare module '../../../index' {
          *   the beginShape() and endShape() functions.
          *   @param x x-coordinate of the vertex
          *   @param y y-coordinate of the vertex
-         *   @param z z-coordinate of the vertex
+         *   @param [z] z-coordinate of the vertex. Defaults to
+         *   0 if not specified.
+         *   @chainable
+         */
+        vertex(x: number, y: number, z?: number): p5;
+
+        /**
+         *   All shapes are constructed by connecting a series
+         *   of vertices. vertex() is used to specify the
+         *   vertex coordinates for points, lines, triangles,
+         *   quads, and polygons. It is used exclusively within
+         *   the beginShape() and endShape() functions.
+         *   @param x x-coordinate of the vertex
+         *   @param y y-coordinate of the vertex
+         *   @param [z] z-coordinate of the vertex. Defaults to
+         *   0 if not specified.
          *   @param [u] the vertex's texture u-coordinate
          *   @param [v] the vertex's texture v-coordinate
          *   @chainable
          */
-        vertex(x: number, y: number, z: number, u?: number, v?: number): p5;
+        vertex(x: number, y: number, z?: number, u?: number, v?: number): p5;
+
+        /**
+         *   Sets the 3d vertex normal to use for subsequent
+         *   vertices drawn with vertex(). A normal is a vector
+         *   that is generally nearly perpendicular to a
+         *   shape's surface which controls how much light will
+         *   be reflected from that part of the surface.
+         *   @param vector A p5.Vector representing the vertex
+         *   normal.
+         *   @chainable
+         */
+        normal(vector: Vector): p5;
+
+        /**
+         *   Sets the 3d vertex normal to use for subsequent
+         *   vertices drawn with vertex(). A normal is a vector
+         *   that is generally nearly perpendicular to a
+         *   shape's surface which controls how much light will
+         *   be reflected from that part of the surface.
+         *   @param x The x component of the vertex normal.
+         *   @param y The y component of the vertex normal.
+         *   @param z The z component of the vertex normal.
+         *   @chainable
+         */
+        normal(x: number, y: number, z: number): p5;
     }
 }

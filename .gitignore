@@ -1,10 +1,5 @@
+# macOS
+.DS_Store
 
-Games/.DS_Store
-Games/.DS_Store
-Games/SideScroller-CheetahRacer/.DS_Store
-Games/SideScroller-CheetahRacer/designs/.DS_Store
-.DS_Store
-Art/.DS_Store
-.DS_Store
-Art/.DS_Store
-.DS_Store
+# Node dependencies (the Node/ examples install their own; never commit them)
+node_modules/

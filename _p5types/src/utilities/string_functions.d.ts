@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
@@ -79,14 +79,17 @@ declare module '../../index' {
          *   formatting floats, and one for formatting ints.
          *   The values for the digits, left, and right
          *   parameters should always be positive integers.
+         *
          *   (NOTE): Be cautious when using left and right
          *   parameters as it prepends numbers of 0's if the
          *   parameter if greater than the current length of
-         *   the number. For example if number is 123.2 and
-         *   left parameter passed is 4 which is greater than
-         *   length of 123 (integer part) i.e 3 than result
-         *   will be 0123.2. Same case for right parameter i.e.
-         *   if right is 3 than the result will be 123.200.
+         *   the number.
+         *
+         *   For example if number is 123.2 and left parameter
+         *   passed is 4 which is greater than length of 123
+         *   (integer part) i.e 3 than result will be 0123.2.
+         *   Same case for right parameter i.e. if right is 3
+         *   than the result will be 123.200.
          *   @param num the Number to format
          *   @param [left] number of digits to the left of the
          *   decimal point
@@ -102,14 +105,17 @@ declare module '../../index' {
          *   formatting floats, and one for formatting ints.
          *   The values for the digits, left, and right
          *   parameters should always be positive integers.
+         *
          *   (NOTE): Be cautious when using left and right
          *   parameters as it prepends numbers of 0's if the
          *   parameter if greater than the current length of
-         *   the number. For example if number is 123.2 and
-         *   left parameter passed is 4 which is greater than
-         *   length of 123 (integer part) i.e 3 than result
-         *   will be 0123.2. Same case for right parameter i.e.
-         *   if right is 3 than the result will be 123.200.
+         *   the number.
+         *
+         *   For example if number is 123.2 and left parameter
+         *   passed is 4 which is greater than length of 123
+         *   (integer part) i.e 3 than result will be 0123.2.
+         *   Same case for right parameter i.e. if right is 3
+         *   than the result will be 123.200.
          *   @param nums the Numbers to format
          *   @param [left] number of digits to the left of the
          *   decimal point
@@ -191,19 +197,25 @@ declare module '../../index' {
          *   digits (place values) of a non-negative number
          *   with some negative number (See the example to get
          *   a clear picture). There are two versions: one for
-         *   formatting float, and one for formatting int. The
-         *   values for the digits, left, and right parameters
-         *   should always be positive integers. (IMP): The
-         *   result on the canvas basically the expected
-         *   alignment can vary based on the typeface you are
-         *   using. (NOTE): Be cautious when using left and
-         *   right parameters as it prepends numbers of 0's if
-         *   the parameter if greater than the current length
-         *   of the number. For example if number is 123.2 and
-         *   left parameter passed is 4 which is greater than
-         *   length of 123 (integer part) i.e 3 than result
-         *   will be 0123.2. Same case for right parameter i.e.
-         *   if right is 3 than the result will be 123.200.
+         *   formatting float, and one for formatting int.
+         *
+         *   The values for the digits, left, and right
+         *   parameters should always be positive integers.
+         *
+         *   (IMP): The result on the canvas basically the
+         *   expected alignment can vary based on the typeface
+         *   you are using.
+         *
+         *   (NOTE): Be cautious when using left and right
+         *   parameters as it prepends numbers of 0's if the
+         *   parameter if greater than the current length of
+         *   the number.
+         *
+         *   For example if number is 123.2 and left parameter
+         *   passed is 4 which is greater than length of 123
+         *   (integer part) i.e 3 than result will be 0123.2.
+         *   Same case for right parameter i.e. if right is 3
+         *   than the result will be 123.200.
          *   @param num the Number to format
          *   @param [left] number of digits to the left of the
          *   decimal point
@@ -223,19 +235,25 @@ declare module '../../index' {
          *   digits (place values) of a non-negative number
          *   with some negative number (See the example to get
          *   a clear picture). There are two versions: one for
-         *   formatting float, and one for formatting int. The
-         *   values for the digits, left, and right parameters
-         *   should always be positive integers. (IMP): The
-         *   result on the canvas basically the expected
-         *   alignment can vary based on the typeface you are
-         *   using. (NOTE): Be cautious when using left and
-         *   right parameters as it prepends numbers of 0's if
-         *   the parameter if greater than the current length
-         *   of the number. For example if number is 123.2 and
-         *   left parameter passed is 4 which is greater than
-         *   length of 123 (integer part) i.e 3 than result
-         *   will be 0123.2. Same case for right parameter i.e.
-         *   if right is 3 than the result will be 123.200.
+         *   formatting float, and one for formatting int.
+         *
+         *   The values for the digits, left, and right
+         *   parameters should always be positive integers.
+         *
+         *   (IMP): The result on the canvas basically the
+         *   expected alignment can vary based on the typeface
+         *   you are using.
+         *
+         *   (NOTE): Be cautious when using left and right
+         *   parameters as it prepends numbers of 0's if the
+         *   parameter if greater than the current length of
+         *   the number.
+         *
+         *   For example if number is 123.2 and left parameter
+         *   passed is 4 which is greater than length of 123
+         *   (integer part) i.e 3 than result will be 0123.2.
+         *   Same case for right parameter i.e. if right is 3
+         *   than the result will be 123.200.
          *   @param nums the Numbers to format
          *   @param [left] number of digits to the left of the
          *   decimal point

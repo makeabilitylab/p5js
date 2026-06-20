@@ -1,4 +1,4 @@
-import * as p5 from './index';
+import p5 = require("./index");
 
 declare module './index' {
     type ANGLE_MODE = RADIANS | DEGREES;
@@ -30,15 +30,21 @@ declare module './index' {
 
     type DEBUG_MODE = GRID | AXES;
 
+    type DESCRIBE_DISPLAY = LABEL | FALLBACK;
+
     type ELLIPSE_MODE = CENTER | RADIUS | CORNER | CORNERS;
 
     type END_MODE = CLOSE;
 
-    type FILTER_TYPE = THRESHOLD | GRAY | OPAQUE | INVERT | POSTERIZE | BLUR | ERODE | DILATE | BLUR;
+    type FILTER_TYPE = THRESHOLD | GRAY | OPAQUE | INVERT | POSTERIZE | ERODE | DILATE | BLUR;
 
     type GRAPHICS_RENDERER = P2D | WEBGL;
 
+    type GRID_DISPLAY = FALLBACK | LABEL;
+
     type HORIZ_ALIGN = LEFT | CENTER | RIGHT;
+
+    type IMAGE_FIT = CONTAIN | COVER;
 
     type IMAGE_MODE = CORNER | CORNERS | CENTER;
 
@@ -54,6 +60,8 @@ declare module './index' {
 
     type STROKE_JOIN = MITER | BEVEL | ROUND;
 
+    type TEXT_DISPLAY = FALLBACK | LABEL;
+
     type TEXTURE_MODE = IMAGE | NORMAL;
 
     type THE_STYLE = NORMAL | ITALIC | BOLD | BOLDITALIC;
@@ -62,7 +70,13 @@ declare module './index' {
 
     type VERT_ALIGN = TOP | BOTTOM | CENTER | BASELINE;
 
+    type WRAP_STYLE = WORD | CHAR;
+
     type WRAP_X = CLAMP | REPEAT | MIRROR;
 
     type WRAP_Y = CLAMP | REPEAT | MIRROR;
+
+    type X_ALIGN = LEFT | RIGHT | CENTER;
+
+    type Y_ALIGN = TOP | BOTTOM | CENTER;
 }

@@ -1,18 +1,19 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
         /**
          *   Loads an opentype font file (.otf, .ttf) from a
-         *   file or a URL, and returns a PFont Object. This
-         *   method is asynchronous, meaning it may not finish
-         *   before the next line in your sketch is executed.
-         *   The path to the font should be relative to the
-         *   HTML file that links in your sketch. Loading fonts
-         *   from a URL or other remote location may be blocked
-         *   due to your browser's built-in security.
+         *   file or a URL, and returns a p5.Font object. This
+         *   function is asynchronous, meaning it may not
+         *   finish before the next line in your sketch is
+         *   executed. The path to the font should be relative
+         *   to the HTML file that links in your sketch.
+         *   Loading fonts from a URL or other remote location
+         *   may be blocked due to your browser's built-in
+         *   security.
          *   @param path name of the file or url to load
          *   @param [callback] function to be executed after
          *   loadFont() completes
@@ -50,7 +51,8 @@ declare module '../../index' {
          *   WEBGL: Only opentype/truetype fonts are supported.
          *   You must load a font using the loadFont() method
          *   (see the example above). stroke() currently has no
-         *   effect in webgl mode.
+         *   effect in webgl mode. Learn more about working
+         *   with text in webgl mode on the wiki.
          *   @param str the alphanumeric symbols to be
          *   displayed
          *   @param x x-coordinate of text
@@ -65,15 +67,25 @@ declare module '../../index' {
 
         /**
          *   Sets the current font that will be drawn with the
-         *   text() function. WEBGL: Only fonts loaded via
+         *   text() function. If textFont() is called without
+         *   any argument, it will return the current font if
+         *   one has been set already. If not, it will return
+         *   the name of the default font as a string. If
+         *   textFont() is called with a font to use, it will
+         *   return the p5 object. WEBGL: Only fonts loaded via
          *   loadFont() are supported.
-         *   @return the current font
+         *   @return the current font / p5 Object
          */
         textFont(): object;
 
         /**
          *   Sets the current font that will be drawn with the
-         *   text() function. WEBGL: Only fonts loaded via
+         *   text() function. If textFont() is called without
+         *   any argument, it will return the current font if
+         *   one has been set already. If not, it will return
+         *   the name of the default font as a string. If
+         *   textFont() is called with a font to use, it will
+         *   return the p5 object. WEBGL: Only fonts loaded via
          *   loadFont() are supported.
          *   @param font a font loaded via loadFont(), or a
          *   String representing a web safe font (a font that

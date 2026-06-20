@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
@@ -35,9 +35,11 @@ declare module '../../index' {
          *   passed in, then an int array of the same length is
          *   returned.
          *   @param ns values to parse
+         *   @param [radix] the radix to convert to (default:
+         *   10)
          *   @return integer representation of values
          */
-        int(ns: any[]): number[];
+        int(ns: any[], radix?: number): number[];
 
         /**
          *   Converts a boolean, string or number to its string

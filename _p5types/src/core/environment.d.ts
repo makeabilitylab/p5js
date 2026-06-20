@@ -1,6 +1,6 @@
 // This file was auto-generated. Please do not edit it.
 
-import * as p5 from '../../index';
+import p5 = require("../../index");
 
 declare module '../../index' {
     interface p5InstanceExtensions {
@@ -25,7 +25,7 @@ declare module '../../index' {
          *   Sets the cursor to a predefined symbol or an
          *   image, or makes it visible if already hidden. If
          *   you are trying to set an image as the cursor, the
-         *   recommended size is 16x16 or 32x32 pixels. The
+         *   recommended size is 16×16 or 32×32 pixels. The
          *   values for parameters x and y must be less than
          *   the dimensions of the image.
          *   @param type Built-In: either ARROW, CROSS, HAND,
@@ -62,7 +62,7 @@ declare module '../../index' {
          *   getFrameRate().
          *
          *   Calling frameRate() with arguments that are not of
-         *   the type numbers or are non positive also returns
+         *   the type Number or are non-positive also returns
          *   current framerate.
          *   @param fps number of frames to be displayed every
          *   second
@@ -90,11 +90,21 @@ declare module '../../index' {
          *   getFrameRate().
          *
          *   Calling frameRate() with arguments that are not of
-         *   the type numbers or are non positive also returns
+         *   the type Number or are non-positive also returns
          *   current framerate.
          *   @return current frameRate
          */
         frameRate(): number;
+
+        /**
+         *   Returns _targetFrameRate variable. The default
+         *   _targetFrameRate is set to 60. This could be
+         *   changed by calling frameRate() and setting it to
+         *   the desired value. When getTargetFrameRate() is
+         *   called, it should return the value that was set.
+         *   @return _targetFrameRate
+         */
+        getTargetFrameRate(): number;
 
         /**
          *   Hides the cursor from view.
@@ -106,8 +116,9 @@ declare module '../../index' {
          *   time the browser window is resized. This is a good
          *   place to resize the canvas or do any other
          *   adjustments to accommodate the new window size.
+         *   @param [event] optional Event callback argument.
          */
-        windowResized(): void;
+        windowResized(event?: object): void;
 
         /**
          *   If argument is given, sets the sketch to
@@ -153,19 +164,31 @@ declare module '../../index' {
         displayDensity(): number;
 
         /**
-         *   Gets the current URL.
+         *   Gets the current URL. Note: when using the p5
+         *   Editor, this will return an empty object because
+         *   the sketch is embedded in an iframe. It will work
+         *   correctly if you view the sketch using the
+         *   editor's present or share URLs.
          *   @return url
          */
         getURL(): string;
 
         /**
-         *   Gets the current URL path as an array.
+         *   Gets the current URL path as an array. Note: when
+         *   using the p5 Editor, this will return an empty
+         *   object because the sketch is embedded in an
+         *   iframe. It will work correctly if you view the
+         *   sketch using the editor's present or share URLs.
          *   @return path components
          */
         getURLPath(): string[];
 
         /**
-         *   Gets the current URL params as an Object.
+         *   Gets the current URL params as an Object. Note:
+         *   when using the p5 Editor, this will return an
+         *   empty object because the sketch is embedded in an
+         *   iframe. It will work correctly if you view the
+         *   sketch using the editor's present or share URLs.
          *   @return URL params
          */
         getURLParams(): object;
@@ -174,7 +197,7 @@ declare module '../../index' {
          *   The system variable frameCount contains the number
          *   of frames that have been displayed since the
          *   program started. Inside setup() the value is 0,
-         *   after the first iteration of draw it is 1, etc.
+         *   after the first iteration of draw() it is 1, etc.
          */
         frameCount: number;
 
@@ -196,6 +219,18 @@ declare module '../../index' {
          *   if the window is focused and "false" if not.
          */
         focused: boolean;
+
+        /**
+         *   If the sketch was created in WebGL mode, then
+         *   weglVersion will indicate which version of WebGL
+         *   it is using. It will try to create a WebGL2 canvas
+         *   unless you have requested WebGL1 via
+         *   setAttributes({ version: 1 }), and will fall back
+         *   to WebGL1 if WebGL2 is not available. webglVersion
+         *   will always be either WEBGL2, WEBGL, or P2D if not
+         *   in WebGL mode.
+         */
+        webglVersion: string;
 
         /**
          *   System variable that stores the width of the
