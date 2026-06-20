@@ -1,3 +1,7 @@
+// NOTE: Intentional variant of Color/ColorExplorer3D/color-picker-2d.js, with
+// added mouse drag/release handling for this demo. Kept separate on purpose —
+// please don't auto-consolidate.
+
 var rgbColorPickerPanel;
 
 function setup() {

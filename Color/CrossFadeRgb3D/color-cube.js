@@ -1,3 +1,7 @@
+// NOTE: Intentional variant of Color/ColorExplorer3D/color-cube.js, trimmed
+// and tuned for this auto-fade demo (no keyboard nav / console output). Kept
+// separate on purpose — please don't auto-consolidate.
+
 let myFont;
 
 var colorCube3D;

@@ -255,6 +255,9 @@ function keyPressed() {
   }
 }
 
+// NOTE: This Ball is an intentional re-architecture (direction-based motion),
+// not a copy of the velocity/acceleration Ball in the other Vectors sketches.
+// Kept local on purpose — please don't auto-consolidate.
 class Ball {
 
   constructor(x, y, size) {

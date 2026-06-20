@@ -356,6 +356,11 @@ class LineSegment {
   }
 }
 
+// NOTE: This Ball is an intentional teaching variant, not accidental drift.
+// It mirrors Vectors/BouncingBall but deliberately omits the
+// resetVelocityAndAcceleration() call on bounce. Each Vectors sketch is a
+// self-contained lesson step, so this copy is kept local on purpose — please
+// don't auto-consolidate it with the other Ball classes.
 class Ball {
 
   constructor() {

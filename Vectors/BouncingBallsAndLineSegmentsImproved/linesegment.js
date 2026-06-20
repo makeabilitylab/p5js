@@ -1,3 +1,7 @@
+// NOTE: Intentional local variant of _libraries/linesegment.js, specialized
+// with collision helpers for this sketch. Not the shared library — kept local
+// on purpose; please don't auto-consolidate.
+
 function drawLineWithArrow(base, vec, myColor, drawLabels, drawArrow) {
   push();
   stroke(myColor);
