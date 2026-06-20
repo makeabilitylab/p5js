@@ -5,7 +5,8 @@ let sketch1 = new p5( p => {
 
   p.setup = () => {
     // canvas size is specified in the CSS file (size of div #one)
-    p.createCanvas($("#one").width(), $("#one").height());
+    const div = document.getElementById('one');
+    p.createCanvas(div.clientWidth, div.clientHeight);
   };
 
   p.draw = () => {
@@ -24,7 +25,8 @@ let sketch2 = new p5( p => {
 
   p.setup = () => {
     // canvas size is specified in the CSS file (size of div #two)
-    p.createCanvas($("#two").width(), $("#two").height());
+    const div = document.getElementById('two');
+    p.createCanvas(div.clientWidth, div.clientHeight);
   };
 
   p.draw = () => {
