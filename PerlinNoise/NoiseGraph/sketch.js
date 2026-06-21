@@ -36,10 +36,12 @@ function setup() {
 
   // Setup sliders
   sliderNoiseStep = createSlider(0, 2, 0.01, 0.001);
+  sliderNoiseStep.attribute('aria-label', 'Noise step'); // accessible name for screen readers
   sliderNoiseStep.position(xSliderPos, noiseGraph.getTop() + 15);
   sliderNoiseStep.style('width', '90px');
 
   sliderNoiseOctaves = createSlider(0, 10, 4, 1); // noise detail octave default is 4
+  sliderNoiseOctaves.attribute('aria-label', 'Noise detail octaves'); // accessible name for screen readers
   sliderNoiseOctaves.position(xSliderPos, sliderNoiseStep.y + sliderNoiseStep.height + ySliderBuffer);
   sliderNoiseOctaves.style('width', '90px');
   sliderNoiseOctaves.input(function(){
@@ -48,6 +50,7 @@ function setup() {
   });
 
   sliderNoiseFalloff = createSlider(0, 1, 0.5, 0.01); // needs to be between 0 and 1, default is 0.5
+  sliderNoiseFalloff.attribute('aria-label', 'Noise falloff'); // accessible name for screen readers
   sliderNoiseFalloff.position(xSliderPos, sliderNoiseOctaves.y + sliderNoiseOctaves.height + ySliderBuffer);
   sliderNoiseFalloff.style('width', '90px');
   sliderNoiseFalloff.input(function(){

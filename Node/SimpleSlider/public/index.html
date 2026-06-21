@@ -13,7 +13,7 @@
   <button id="connect-button" onclick="onConnectButtonClick()" style="display: none;">Connect via Serial Port</button>
 
   <h1>Slider value: <span id="slider-value-text">0</span></h1>
-  <input id="slider-widget" type="range" min="0" max="255" value="0" onchange="onSliderValueChanged(this, event)" />
+  <input id="slider-widget" type="range" min="0" max="255" value="0" onchange="onSliderValueChanged(this, event)" aria-label="Slider value sent over serial (0 to 255)" />
 
   <div id="error-message"></div>
   <script src="serial.js"></script>

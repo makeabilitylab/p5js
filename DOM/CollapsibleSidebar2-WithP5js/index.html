@@ -20,22 +20,22 @@
     <div class="w3-bar w3-dark-grey">
       <span class="w3-bar-item w3-padding-16">Content</span>
       <button onclick="closeSidebar()" class="w3-bar-item w3-button w3-right w3-padding-16"
-        title="close Sidebar">&times;</button>
+        title="close Sidebar" aria-label="Close sidebar">&times;</button>
     </div>
     <div class="w3-bar-block">
       <span class="w3-bar-item">Size: 
-        <input id="slider-size" type="range" min="1" max="100" value="50" onchange="ballSizeChanged(this, event)" style="width:100%"/>
+        <input id="slider-size" type="range" min="1" max="100" value="50" onchange="ballSizeChanged(this, event)" style="width:100%" aria-label="Ball size"/>
       </span>
       <span class="w3-bar-item">Color: 
-        <input id="color-picker" type="color" onchange="ballColorChanged(this, event)" style="width:100%"/>
+        <input id="color-picker" type="color" onchange="ballColorChanged(this, event)" style="width:100%" aria-label="Ball color"/>
       </span>
       <span class="w3-bar-item">
-        <input class="w3-check" type="checkbox" onchange="autoFillDivChanged(this, event)">
-        <label>Auto-fill div</label>
+        <input id="auto-fill-checkbox" class="w3-check" type="checkbox" onchange="autoFillDivChanged(this, event)">
+        <label for="auto-fill-checkbox">Auto-fill div</label>
       </span>  
       <span class="w3-bar-item">
-        <input class="w3-check" type="checkbox" onchange="fullScreenModeChanged(this, event)">
-        <label>Full screen</label>
+        <input id="full-screen-checkbox" class="w3-check" type="checkbox" onchange="fullScreenModeChanged(this, event)">
+        <label for="full-screen-checkbox">Full screen</label>
       </span> 
     </div>
   </div>
