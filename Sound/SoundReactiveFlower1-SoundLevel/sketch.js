@@ -55,6 +55,10 @@ function draw() {
   // get current microphone level (between 0 and 1)
   // See: https://p5js.org/reference/#/p5.AudioIn/getLevel
   let micLevel = mic.getLevel(); // between 0 and 1
+
+  // accessibility: update the text caption + screen-reader announcement
+  updateMicLevelText(micLevel);
+
   push();
   colorMode(HSB);
   
@@ -80,6 +84,30 @@ function draw() {
   drawFps();
 }
 
+
+// Accessibility: maps the mic level (0–1) to a coarse, human-readable label.
+function levelBucket(micLevel){
+  if(micLevel < 0.02) return 'silent';
+  if(micLevel < 0.08) return 'quiet';
+  if(micLevel < 0.2) return 'moderate';
+  return 'loud';
+}
+
+let lastAnnouncedLevelBucket = '';
+
+// Accessibility: updates the visible caption every frame and politely announces
+// only when the qualitative level changes (so screen readers aren't spammed).
+function updateMicLevelText(micLevel){
+  const percent = round(micLevel * 100);
+  const bucket = levelBucket(micLevel);
+  const textEl = document.getElementById('mic-level-text');
+  if(textEl){ textEl.textContent = 'Microphone level: ' + percent + '% (' + bucket + ')'; }
+  if(bucket !== lastAnnouncedLevelBucket){
+    const statusEl = document.getElementById('mic-level-status');
+    if(statusEl){ statusEl.textContent = 'Microphone level: ' + bucket; }
+    lastAnnouncedLevelBucket = bucket;
+  }
+}
 
 function drawFps(){
   // Draw fps

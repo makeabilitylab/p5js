@@ -12,6 +12,26 @@ let avatar;
 let blackhole;
 let score = 0;
 
+// Accessibility: announce score changes to screen readers via the aria-live
+// region in index.html. We track what we last announced so the region only
+// updates on a real change (no per-frame spam). This game has no game-over
+// state, so we only announce the score.
+let lastAnnouncedScore = -1;
+
+function announceStatus(message) {
+  const statusEl = document.getElementById('aria-status');
+  if (statusEl && statusEl.textContent !== message) {
+    statusEl.textContent = message;
+  }
+}
+
+function updateScreenReaderStatus() {
+  if (score !== lastAnnouncedScore) {
+    announceStatus('Score: ' + score);
+    lastAnnouncedScore = score;
+  }
+}
+
 function setup() {
   createCanvas(600, 400);
 
@@ -46,6 +66,7 @@ function draw() {
   textSize(20);
   text("Score:" + score, 10, 20);
 
+  updateScreenReaderStatus();
 }
 
 function keyPressed() {

@@ -41,6 +41,27 @@ let starHitSound;
 let starLostSound;
 let hasStarted = false;
 
+// Accessibility: announce score changes to screen readers via the aria-live
+// region in index.html. There is no game-over state (it's commented out), so
+// we only announce stars saved and lost, tracking what we last announced so
+// the region updates on a real change (no per-frame spam).
+let lastAnnouncedScore = '';
+
+function announceStatus(message) {
+  const statusEl = document.getElementById('aria-status');
+  if (statusEl && statusEl.textContent !== message) {
+    statusEl.textContent = message;
+  }
+}
+
+function updateScreenReaderStatus() {
+  const status = 'Saved: ' + score + '. Lost: ' + starsLost + '.';
+  if (status !== lastAnnouncedScore) {
+    announceStatus(status);
+    lastAnnouncedScore = status;
+  }
+}
+
 function setup() {
   createCanvas(1024, 600);
 
@@ -164,6 +185,8 @@ function draw() {
     ball.draw();
 
     lastSpectrum = spectrum;
+
+    updateScreenReaderStatus();
   }
 }
 

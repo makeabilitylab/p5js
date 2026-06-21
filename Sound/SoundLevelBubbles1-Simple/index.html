@@ -10,6 +10,12 @@
   <body>
     <main>
     </main>
+    <!-- Accessibility caption: visible <p> shows the live mic level for everyone
+         (not a live region, so it isn't announced every frame). The hidden polite
+         region announces only when the qualitative level changes. -->
+    <p id="mic-level-text">Click the canvas to start the microphone.</p>
+    <div id="mic-level-status" aria-live="polite"
+         style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;"></div>
     <script src="sketch.js"></script>
     <script src="bubble.js"></script>
   </body>

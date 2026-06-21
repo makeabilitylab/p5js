@@ -10,6 +10,12 @@
   <body>
     <main>
     </main>
+  <!-- Accessibility caption: visible <p> shows the live dominant frequency for
+       everyone (not a live region). The hidden polite region announces only when
+       the frequency band changes. -->
+  <p id="freq-text">Click the canvas to start the microphone.</p>
+  <div id="freq-status" aria-live="polite"
+       style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;"></div>
     <script src="sketch.js"></script>
   </body>
 </html>

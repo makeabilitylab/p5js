@@ -14,6 +14,12 @@
 </head>
 
 <body>
+  <!-- Accessibility caption: visible <p> shows the live dominant frequency for
+       everyone (not a live region). The hidden polite region announces only when
+       the frequency band changes. -->
+  <p id="freq-text">Waiting for audio…</p>
+  <div id="freq-status" aria-live="polite"
+       style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;"></div>
   <div class="w3-sidebar w3-light-grey w3-card-4 w3-animate-left" style="width:200px" id="sidebar">
     <div class="w3-bar w3-dark-grey">
       <span class="w3-bar-item w3-padding-16">SoundVis</span>

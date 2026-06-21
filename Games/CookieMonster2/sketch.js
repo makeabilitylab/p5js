@@ -31,6 +31,28 @@ let cookieMonsterScore = 0;
 
 let drawDebugInfo = false; // set to true to turn on debug
 
+// Accessibility: announce score changes to screen readers via the aria-live
+// region in index.html. This game is endless (no game-over state), so we only
+// announce the two scores, tracking what we last announced so the region
+// updates on a real change (no per-frame spam).
+let lastAnnouncedScore = '';
+
+function announceStatus(message) {
+  const statusEl = document.getElementById('aria-status');
+  if (statusEl && statusEl.textContent !== message) {
+    statusEl.textContent = message;
+  }
+}
+
+function updateScreenReaderStatus() {
+  const score = 'Your score: ' + playerScore +
+    '. Cookie Monster score: ' + cookieMonsterScore + '.';
+  if (score !== lastAnnouncedScore) {
+    announceStatus(score);
+    lastAnnouncedScore = score;
+  }
+}
+
 function preload(){
   
   // create the game characters
@@ -75,6 +97,7 @@ function draw() {
   textSize(20);
   text("Your Score: " + playerScore + "     Cookie Monster Score: " + cookieMonsterScore, 10, 20);
 
+  updateScreenReaderStatus();
 }
 
 function keyPressed() {

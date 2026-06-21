@@ -113,9 +113,38 @@ function resetGame(){
   loop();
 } 
 
+// Accessibility: announce score changes and game over to screen readers via
+// the aria-live region in index.html. We track what we last announced so the
+// region only updates on a real change (no per-frame spam).
+let lastAnnouncedScore = -1;
+let announcedGameOver = false;
+
+function announceStatus(message) {
+  const statusEl = document.getElementById('aria-status');
+  if (statusEl && statusEl.textContent !== message) {
+    statusEl.textContent = message;
+  }
+}
+
+function updateScreenReaderStatus() {
+  // score is the global pipe-pass count
+  if (isGameOver) {
+    if (!announcedGameOver) {
+      announceStatus('Game over. Final score: ' + score + '. Press the space bar to play again.');
+      announcedGameOver = true;
+    }
+  } else {
+    if (announcedGameOver) { announcedGameOver = false; lastAnnouncedScore = -1; }
+    if (score !== lastAnnouncedScore) {
+      announceStatus('Score: ' + score);
+      lastAnnouncedScore = score;
+    }
+  }
+}
+
 function draw() {
   background(220);
-  
+
   landscape.update();
   landscape.draw();
   
@@ -162,9 +191,12 @@ function draw() {
   armFlap.update(human);
   if(drawDebugInfo){
     drawPose();
-    armFlap.draw(); 
+    armFlap.draw();
   }
   drawScore();
+
+  // announce score / game over to screen readers
+  updateScreenReaderStatus();
 }
 
 function drawPose(){

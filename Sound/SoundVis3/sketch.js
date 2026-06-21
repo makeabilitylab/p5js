@@ -141,7 +141,42 @@ function setup() {
 }
 
 function audioInErrorCallback(){
-  print("Error setting up the microphone input"); 
+  print("Error setting up the microphone input");
+}
+
+// Accessibility: groups a frequency (Hz) into a coarse, human-readable band.
+function freqBand(hz){
+  if(hz < 250) return 'low';
+  if(hz < 2000) return 'mid';
+  if(hz < 6000) return 'high';
+  return 'very high';
+}
+
+// Accessibility: finds the dominant frequency (in Hz) from an FFT spectrum
+// array (amplitudes 0–255 spanning 0 Hz to the Nyquist frequency).
+function getPeakFrequencyHz(spectrum){
+  let maxIndex = 0, maxVal = -1;
+  for(let i = 0; i < spectrum.length; i++){
+    if(spectrum[i] > maxVal){ maxVal = spectrum[i]; maxIndex = i; }
+  }
+  return round(maxIndex * (sampleRate() / 2) / spectrum.length);
+}
+
+let lastAnnouncedFreqBand = '';
+
+// Accessibility: updates the visible caption every frame and politely announces
+// only when the dominant-frequency band changes.
+function updateFreqText(spectrum){
+  if(!spectrum || !spectrum.length){ return; }
+  const hz = getPeakFrequencyHz(spectrum);
+  const band = freqBand(hz);
+  const textEl = document.getElementById('freq-text');
+  if(textEl){ textEl.textContent = 'Dominant frequency: ' + hz + ' Hz (' + band + ')'; }
+  if(band !== lastAnnouncedFreqBand){
+    const statusEl = document.getElementById('freq-status');
+    if(statusEl){ statusEl.textContent = 'Dominant frequency: ' + band; }
+    lastAnnouncedFreqBand = band;
+  }
 }
 
 function mouseClicked() {
@@ -170,22 +205,24 @@ function draw() {
   spectrumBarGraph.draw(); 
   
   spectrumVis.update(spectrum);
-  spectrumVis.draw();  
-  
+  spectrumVis.draw();
+
+  updateFreqText(spectrum); // accessibility: announce dominant frequency
+
   //print((waveform.length / sampleRate()) * 1000 + "ms");
   fill(255);
   text("fps: " + nfc(frameRate(), 1), 6, 15);
-  
+
   //print(mic);
   //print(mic.getSources());
 }
 
 function keyPressed(){
-  print(key); 
+  print(key);
   if(key == 'c'){
     colorSchemeIndex++;
-    
-    let colorSchemes = Object.keys(COLORSCHEME); 
+
+    let colorSchemes = Object.keys(COLORSCHEME);
     if(colorSchemeIndex >= colorSchemes.length){
       colorSchemeIndex = 0;
     }

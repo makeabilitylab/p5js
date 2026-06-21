@@ -11,6 +11,11 @@
 </head>
 
 <body>
+  <!-- Screen-reader-only live region: announces score changes and game over.
+       It's visually hidden because the score is already drawn on the canvas. -->
+  <div id="aria-status" aria-live="polite"
+       style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;"></div>
+
   <script src="shape.js"></script>
   <script src="sketch.js"></script>
 

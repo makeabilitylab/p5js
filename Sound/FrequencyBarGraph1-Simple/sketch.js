@@ -8,6 +8,40 @@
 
 let mic, fft;
 
+// Accessibility: groups a frequency (Hz) into a coarse, human-readable band.
+function freqBand(hz){
+  if(hz < 250) return 'low';
+  if(hz < 2000) return 'mid';
+  if(hz < 6000) return 'high';
+  return 'very high';
+}
+
+// Accessibility: finds the dominant frequency (in Hz) from an FFT spectrum
+// array (amplitudes 0–255 spanning 0 Hz to the Nyquist frequency).
+function getPeakFrequencyHz(spectrum){
+  let maxIndex = 0, maxVal = -1;
+  for(let i = 0; i < spectrum.length; i++){
+    if(spectrum[i] > maxVal){ maxVal = spectrum[i]; maxIndex = i; }
+  }
+  return round(maxIndex * (sampleRate() / 2) / spectrum.length);
+}
+
+let lastAnnouncedFreqBand = '';
+
+// Accessibility: updates the visible caption every frame and politely announces
+// only when the dominant-frequency band changes (so screen readers aren't spammed).
+function updateFreqText(spectrum){
+  const hz = getPeakFrequencyHz(spectrum);
+  const band = freqBand(hz);
+  const textEl = document.getElementById('freq-text');
+  if(textEl){ textEl.textContent = 'Dominant frequency: ' + hz + ' Hz (' + band + ')'; }
+  if(band !== lastAnnouncedFreqBand){
+    const statusEl = document.getElementById('freq-status');
+    if(statusEl){ statusEl.textContent = 'Dominant frequency: ' + band; }
+    lastAnnouncedFreqBand = band;
+  }
+}
+
 function setup() {
   createCanvas(600, 400);
 
@@ -52,14 +86,17 @@ function draw() {
   // Returns an array of amplitude values (between 0 and 255) across the frequency spectrum.
   // See: https://p5js.org/reference/#/p5.FFT/analyze 
   const spectrum = fft.analyze();
-  const minFreqAmplitude = 0, maxFreqAmplitude = 255; 
+  const minFreqAmplitude = 0, maxFreqAmplitude = 255;
+
+  // Accessibility: update the live caption from the same spectrum
+  updateFreqText(spectrum);
 
   // Determine the total number of bars based on nyquist sampling frequency
   // See: https://en.wikipedia.org/wiki/Nyquist_rate
   const nyquistFreq = sampleRate() / 2.0;
   const numBars = floor(Math.log2(nyquistFreq));
   const freqResolution = nyquistFreq / spectrum.length;
- 
+
   // Calculate spectrum bars
   let mapSpectrumBarGraphBinToValues = new Map();
   for (let i = 1; i < spectrum.length; i++) {
