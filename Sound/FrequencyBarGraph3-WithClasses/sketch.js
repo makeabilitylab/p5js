@@ -13,6 +13,10 @@ let mapBinToBars = new Map();
 function setup() {
   createCanvas(600, 400);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A real-time, color-coded bar graph of the microphone's audio frequencies; taller bars mean more energy at that frequency.");
+
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn
   mic = new p5.AudioIn();

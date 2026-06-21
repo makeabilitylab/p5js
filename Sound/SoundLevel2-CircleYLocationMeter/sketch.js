@@ -13,6 +13,10 @@ let diameter = 30;
 
 function setup() {
   let cnv = createCanvas(400, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A sound-level meter: a circle that rises higher up the canvas as the microphone gets louder and falls back down as it quiets.");
   
   // https://p5js.org/reference/#/p5/userStartAudio
   // For security reasons, Chrome, iOS Safari, and other browsers force the user

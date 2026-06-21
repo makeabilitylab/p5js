@@ -19,6 +19,10 @@ let bgColorTranslucent = null;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An animated flower whose petals grow longer and change as the microphone gets louder.");
   
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn

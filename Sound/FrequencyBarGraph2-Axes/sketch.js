@@ -11,6 +11,10 @@ let showMaxAtBinLines = false;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A real-time, color-coded bar graph of the microphone's audio frequencies with labeled frequency and amplitude axes; taller bars mean more energy at that frequency.");
   
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn

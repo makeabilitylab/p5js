@@ -13,6 +13,10 @@ let mic, fft;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A real-time frequency spectrum of the microphone's audio drawn as a continuous curve across the canvas.");
   
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn

@@ -14,6 +14,10 @@ const ABS_MAX_BUBBLE_SIZE = 400;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An artistic rendering of microphone loudness as bubbles that appear and grow larger the louder the sound.");
   
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn

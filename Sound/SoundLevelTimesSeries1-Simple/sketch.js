@@ -11,6 +11,10 @@ let currentXPos = 0;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A scrolling time-series line charting the microphone's loudness over time, with the newest readings on the right.");
   
   // Gets a reference to computer's microphone
   // https://p5js.org/reference/#/p5.AudioIn

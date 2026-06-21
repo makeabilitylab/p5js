@@ -80,6 +80,10 @@ function setup() {
   
   canvas = createCanvas(canvasWidth, canvasHeight);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A multi-panel music visualization showing the playing song's waveform, a scrolling spectrogram, and frequency spectrum.");
+
   // Move the canvas so it’s inside our <div id="sketch-container">.
   canvas.parent('sketch-container');
   
@@ -102,7 +106,7 @@ function setup() {
                   " id = " + device.deviceId);
     });
   });
-  print("Sampling rate:", sampleRate(), "Master volume:", getMasterVolume());
+  print("Sampling rate:", sampleRate());
   
   let songSamplingRate = song.sampleRate();
   print("Song sampling rate:", songSamplingRate, "Channels:", song.channels());

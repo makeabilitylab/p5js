@@ -66,6 +66,10 @@ function setup() {
   }
   
   createCanvas(canvasWidth, canvasHeight);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A multi-panel visualization of the microphone's audio showing the live waveform, a scrolling spectrogram, the instantaneous waveform, and the frequency spectrum.");
   
   mic = new p5.AudioIn();
   mic.start();
@@ -110,7 +114,7 @@ function setup() {
     });
   });
   
-  print("Sampling rate:", sampleRate(), "Master volume:", getMasterVolume());
+  print("Sampling rate:", sampleRate());
   noFill();
   
   //frameRate(2);

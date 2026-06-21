@@ -10,6 +10,10 @@ let maxDiameter = 400;
 
 function setup() {
   let cnv = createCanvas(400, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A sound-level meter: a circle in the center of the canvas that grows larger as the microphone gets louder.");
   
   // https://p5js.org/reference/#/p5/userStartAudio
   // For security reasons, Chrome, iOS Safari, and other browsers force the user

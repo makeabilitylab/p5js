@@ -76,6 +76,10 @@ function setup() {
   }
   
   createCanvas(canvasWidth, canvasHeight);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A multi-panel music visualization showing the playing song's waveform, a scrolling spectrogram, and frequency spectrum.");
   
   //mic = new p5.AudioIn();
   //mic.start();
