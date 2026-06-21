@@ -25,6 +25,9 @@ let autoDrive = false;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A ball you steer with the arrow keys moves around a gray canvas containing a single line segment; the sketch draws the collision normal and reflected vector when the ball nears the segment (including its end points), and pressing the spacebar launches the ball to bounce automatically.");
 
   let x1 = random(width * 0.2, width * 0.8);
   let y1 = random(height * 0.2, height * 0.8);

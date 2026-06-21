@@ -28,6 +28,9 @@ let pHtmlMsg;
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with the detected hand drawn on top, used to recognize a hand wave and its angle, which is sent over Web Serial to an Arduino.");
   hand = new Hand();
   video = createCapture(VIDEO);
   // video.size(width, height);

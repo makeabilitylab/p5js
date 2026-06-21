@@ -1,6 +1,9 @@
 let bottomColor;
 function setup() {
   createCanvas(800, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A wavy translucent shape filling the bottom of the canvas, formed by combining two sine waves of different frequencies.");
   colorMode(HSB, 255);
   bottomColor = color(10, 128, 128);
 }

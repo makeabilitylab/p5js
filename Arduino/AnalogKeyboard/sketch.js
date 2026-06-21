@@ -14,6 +14,9 @@ let values;
 
 function setup() {
   createCanvas(800, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("Two circles, one red and one blue, whose sizes grow and shrink to reflect two analog sensor values typed in from an Arduino, with each value labeled below its circle.");
 }
 
 function draw() {

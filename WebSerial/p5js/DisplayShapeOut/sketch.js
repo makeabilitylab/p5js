@@ -25,6 +25,10 @@ let serialOptions = { baudRate: 115200  };
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A centered white shape (circle, square, or triangle) on a dark gray canvas whose type and size are controlled by mouse clicks and movement and sent out over serial to a connected microcontroller.");
+
   // Setup Web Serial using serial.js
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);

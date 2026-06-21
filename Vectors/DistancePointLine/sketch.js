@@ -2,7 +2,10 @@
 
 function setup() {
   createCanvas(640, 400);
-  
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A fixed line segment on a gray canvas with a small circle marking the closest point on the segment to the mouse; a line connects the mouse to that point and the distance is shown as text, demonstrating point-to-line-segment distance via orthogonal projection.");
+
   a = createVector(220, 270);
   b = createVector(420, 170);
 }

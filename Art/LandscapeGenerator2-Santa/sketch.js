@@ -37,6 +37,9 @@ let santaX;
 
 function setup() {
   createCanvas(1024, 600);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A procedurally generated landscape with a gradient sky, a sun, layered ranges of Perlin-noise mountain silhouettes, and Santa flying by in his sleigh.");
   colorMode(HSB, 255);
 
   topColor = getRandomTopBGColor();

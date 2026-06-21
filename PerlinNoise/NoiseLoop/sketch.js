@@ -23,6 +23,10 @@ const ySliderBuffer = 4;
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A blank canvas; this is an unfinished starter for a 2D Perlin noise loop sketch.");
+
 }
 
 function draw() {

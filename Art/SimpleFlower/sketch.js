@@ -9,8 +9,11 @@
 
 function setup() {
   createCanvas(600, 400);
-  
-  angleMode(DEGREES); 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A flower made of rainbow-colored translucent ellipses rotated around the center of a dark canvas.");
+
+  angleMode(DEGREES);
 }
 
 function draw() {

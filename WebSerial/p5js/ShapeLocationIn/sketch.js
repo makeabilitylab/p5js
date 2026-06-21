@@ -15,6 +15,10 @@ let serialOptions = { baudRate: 115200  };
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A white circle on a dark gray canvas whose x,y location is set by normalized x,y position values received over serial from a connected microcontroller.");
+
   // Initialize location of circle
   circleX = width / 2;
   circleY = height / 2;

@@ -14,6 +14,9 @@ let diameter = 40;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A red circle that moves horizontally and bounces back and forth between the left and right edges of the canvas.");
   x = width / 2;
   y = height / 2;
   fill(200, 0, 0);

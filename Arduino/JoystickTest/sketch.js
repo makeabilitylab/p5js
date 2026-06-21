@@ -24,7 +24,11 @@ let lastMouseMoveTimestamp;
 
 function setup() {
   createCanvas(700, 300);
-  
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A game-controller display showing four directional buttons that darken when pressed and a large joystick circle with a smaller dot that moves to reflect joystick input from an Arduino.");
+
   unpressedColor = color(255);
   pressedColor = color(50);
   

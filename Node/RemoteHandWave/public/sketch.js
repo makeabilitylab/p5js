@@ -21,6 +21,9 @@ let mostRecentRemoteHandData = null;
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam view with hand-tracking overlays that detect when your hand is waving, plus an outline and landmarks showing a remote person's waving hand.");
   hand = new Hand();
   video = createCapture(VIDEO);
   // video.size(width, height);

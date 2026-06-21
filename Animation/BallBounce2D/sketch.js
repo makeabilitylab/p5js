@@ -15,6 +15,9 @@ let diameter = 40;
 
 function setup() {
   createCanvas(600, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A red circle that moves diagonally and bounces off all four edges of the canvas.");
   x = width / 2;
   y = height / 2;
   

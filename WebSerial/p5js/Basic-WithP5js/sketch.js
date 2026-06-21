@@ -23,6 +23,10 @@ let pHtmlMsg;
 function setup() {
   createCanvas(400, 400);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A gray canvas that displays the current value (0 to 255) of a slider that is sent out over serial to control a connected microcontroller's LEDs.");
+
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);
   serial.on(SerialEvents.CONNECTION_CLOSED, onSerialConnectionClosed);

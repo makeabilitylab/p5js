@@ -36,8 +36,11 @@ function preload() {
 
 function setup() {
   createCanvas(800, 650);
-  
-  angleMode(DEGREES); 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive holiday card where a triangle Santa morphs into the Makeability Lab logo as the mouse moves left to right, with a 'Happy holidays from the Makeability Lab!' message.");
+
+  angleMode(DEGREES);
 
   triangleSantaAnimated = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
   originalSantaTriangles = triangleSantaAnimated.getAllTriangles();

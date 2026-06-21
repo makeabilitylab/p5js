@@ -7,6 +7,9 @@ let sketch1 = new p5( p => {
     // canvas size is specified in the CSS file (size of div #one)
     const div = document.getElementById('one');
     p.createCanvas(div.clientWidth, div.clientHeight);
+    // Accessibility: text description of the canvas for screen readers
+    // https://p5js.org/reference/p5/describe/
+    p.describe("A white square that follows the mouse around a dark gray canvas; replace this description with one that describes your sketch.");
   };
 
   p.draw = () => {
@@ -27,6 +30,9 @@ let sketch2 = new p5( p => {
     // canvas size is specified in the CSS file (size of div #two)
     const div = document.getElementById('two');
     p.createCanvas(div.clientWidth, div.clientHeight);
+    // Accessibility: text description of the canvas for screen readers
+    // https://p5js.org/reference/p5/describe/
+    p.describe("A white circle that follows the mouse around a gray canvas; replace this description with one that describes your sketch.");
   };
 
   p.draw = () => {

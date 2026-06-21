@@ -14,6 +14,10 @@ let serial;
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A blank dark gray canvas serving as a starting template for a p5.js Web Serial sketch that connects to a microcontroller.");
+
   // Setup Web Serial using serial.js
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);

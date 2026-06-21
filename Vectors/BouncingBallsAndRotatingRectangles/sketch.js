@@ -39,6 +39,9 @@ let boxes = [];
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A ball bounces around a gray canvas; clicking adds rectangles of random size and rotation, and the ball reflects off the rectangle edges it collides with using vector reflection.");
 
   ball = new Ball();
 }

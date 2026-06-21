@@ -23,6 +23,10 @@ const ySliderBuffer = 4;
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A grayscale 2D Perlin noise texture filling the canvas, with sliders to adjust the noise step, octaves, and falloff.");
+
   // Setup sliders
   sliderNoiseStepX = createSlider(0, 2, 0.01, 0.001);
   sliderNoiseStepX.position(xSliderPos, 15);

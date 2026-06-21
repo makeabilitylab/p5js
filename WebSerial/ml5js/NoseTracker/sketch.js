@@ -37,6 +37,9 @@ const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 100;
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with a cartoon red nose and two googly eyes drawn over the detected face, sending the nose's position over Web Serial.");
   video = createCapture(VIDEO);
   video.hide();
 

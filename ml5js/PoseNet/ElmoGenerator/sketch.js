@@ -28,9 +28,12 @@ let human = null;
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with a cartoon red nose and two googly eyes drawn over the detected face using pose tracking.");
   video = createCapture(VIDEO);
   video.hide();
-  
+
   // setup PoseNet. This can take a while, so we load it 
   // asynchronously (when it's done, it will call modelReady)
   poseNet = ml5.poseNet(video, onModelReady); //call onModelReady when setup

@@ -15,6 +15,10 @@ let serialOptions = { baudRate: 115200  };
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An Etch A Sketch style drawing where a semi-transparent circle moves and leaves a trail across the canvas based on normalized x,y positions received over serial from a connected microcontroller.");
+
   // Initialize location of circle
   circleX = width / 2;
   circleY = height / 2;

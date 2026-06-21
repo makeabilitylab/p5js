@@ -20,6 +20,10 @@ let serialInputRgb;
 function setup() {
   createCanvas(400, 400);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A canvas split into two color panels: the left shows the color being sent out over serial from a slider, and the right shows the color received back over serial from the connected microcontroller.");
+
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);
   serial.on(SerialEvents.CONNECTION_CLOSED, onSerialConnectionClosed);

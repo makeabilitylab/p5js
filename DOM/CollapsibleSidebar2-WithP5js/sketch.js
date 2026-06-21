@@ -8,6 +8,10 @@ var canvas = null;
 function setup() {
   canvas = createCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A single circle centered on the canvas whose size and color can be changed using the controls in the sidebar.");
+
   // Move the canvas so it’s inside our <div id="sketch-container">.
   canvas.parent('sketch-container');
   _ballFillColor = color(220, 0, 220);

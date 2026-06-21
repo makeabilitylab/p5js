@@ -22,8 +22,11 @@ let angleOverlays = false;
 
 function setup() {
   createCanvas(800, 600);
-  
-  angleMode(DEGREES); 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("The Makeability Lab logo drawn from a grid of colored triangles, with keyboard toggles for the grid, outlines, colors, and color scheme.");
+
+  angleMode(DEGREES);
 
   makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabGrid = new Grid(width, height, TRIANGLE_SIZE);

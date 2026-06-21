@@ -16,6 +16,9 @@ let curMouseClickPos;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive playground where clicking draws a red vector arrow and then moving the mouse left or right changes its magnitude (length), illustrating how a vector's magnitude can be adjusted.");
 }
 
 function draw() {

@@ -35,6 +35,9 @@ let lines = [];
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A ball bounces around a gray canvas; clicking two points draws a blue line-segment barrier, and the ball reflects off any barriers it hits using vector reflection, with normals and reflected vectors drawn for illustration.");
 
   ball = new Ball();
 }

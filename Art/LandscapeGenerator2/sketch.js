@@ -36,6 +36,9 @@ let drawSanta = false;
 
 function setup() {
   createCanvas(1024, 600);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A procedurally generated landscape with a gradient sky, a sun, and several layered ranges of Perlin-noise mountain silhouettes.");
   colorMode(HSB, 255);
 
   topColor = getRandomTopBGColor();

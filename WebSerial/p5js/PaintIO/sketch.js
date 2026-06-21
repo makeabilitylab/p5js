@@ -59,6 +59,10 @@ let serialOptions = { baudRate: 115200 };
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A paint program where colorful brush strokes are drawn on the canvas by either the mouse or by brush position, size, and shape data received over serial from a connected microcontroller, with on-screen keyboard command instructions.");
+
   // Setup Web Serial using serial.js
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);

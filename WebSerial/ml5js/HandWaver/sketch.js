@@ -30,6 +30,9 @@ const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 50; // 50 ms is ~20 Hz
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with the detected hand's keypoints and bounding box drawn on top, sending the palm's horizontal position over Web Serial to control a servo.");
   video = createCapture(VIDEO);
   // Hide the video element, and just show the canvas
   video.hide();

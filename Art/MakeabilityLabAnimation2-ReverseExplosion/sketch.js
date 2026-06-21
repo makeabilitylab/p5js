@@ -28,8 +28,11 @@ let modifyAngle = true;
 
 function setup() {
   createCanvas(800, 600);
-  
-  angleMode(DEGREES); 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive animation where scattered, randomly sized and rotated triangles assemble into the Makeability Lab logo as the mouse moves left to right.");
+
+  angleMode(DEGREES);
 
   makeLabLogo = new MakeabilityLabLogo(5*TRIANGLE_SIZE, 4*TRIANGLE_SIZE, TRIANGLE_SIZE);
   makeLabLogo.visible = false;

@@ -10,6 +10,9 @@ let grid;
 
 function setup() {
   createCanvas(600, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A coordinate grid overlaid on the canvas illustrating how p5.js orients its x and y screen coordinates.");
   grid = new Grid();
   //frameRate(1);
   grid.isCheckboardOn = false; // switch to true to get a red/black checkboard

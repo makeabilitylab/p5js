@@ -2,6 +2,9 @@ var rgbColorPickerPanel;
 
 function setup() {
   createCanvas(600, 120);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A 2D RGB color picker panel that lets you choose a color with the mouse or keyboard.");
 
   rgbColorPickerPanel = new RgbColorPickerPanel(0, 0, width, height);
   rgbColorPickerPanel.on(ColorEvents.NEW_HOVER_COLOR, onNewHoverColorEvent);

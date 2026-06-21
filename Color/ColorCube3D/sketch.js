@@ -12,6 +12,9 @@ function preload() {
 
 function setup() {
   createCanvas(500, 400, WEBGL);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive 3D RGB color cube made of small colored boxes that you can rotate with the mouse and navigate to hover and select colors.");
   //debugMode();
   pFrameRate = createP('Framerate');
   textFont(myFont);

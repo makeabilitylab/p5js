@@ -24,6 +24,10 @@ const ySliderBuffer = 4;
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("Two scrolling line graphs stacked vertically that compare jagged random values on top with smoother Perlin noise values below, with sliders to adjust the noise step, octaves, and falloff.");
+
   graphHeight = height / numGraphs;
   let yGraph = 0;
   randomGraph = new Graph(0, yGraph, width, graphHeight, "random");

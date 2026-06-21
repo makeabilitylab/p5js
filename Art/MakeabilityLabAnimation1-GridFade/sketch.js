@@ -26,6 +26,9 @@ let transparent = false;
 
 function setup() {
   createCanvas(800, 600);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An animation where a grid of triangles fades in with random colors and then the colorful Makeability Lab logo emerges on top.");
 
   angleMode(DEGREES);
 

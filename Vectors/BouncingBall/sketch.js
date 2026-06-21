@@ -23,6 +23,9 @@ let ball;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A white ball with a short heading line moves across a gray canvas, speeding up due to acceleration and bouncing off the four walls, illustrating velocity and acceleration vectors.");
   ball = new Ball();
   //noLoop();
 }

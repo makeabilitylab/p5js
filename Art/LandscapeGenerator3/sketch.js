@@ -7,6 +7,9 @@ const maxNumMountainRanges = 5;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A full-window procedurally generated landscape with a gradient sky, a sun, and several layered ranges of Perlin-noise mountain silhouettes.");
   skyBackground = new SkyBackground(0, 0, width, height);
   sun = new Sun(skyBackground.topColor);
   moon = new Moon(skyBackground.topColor);

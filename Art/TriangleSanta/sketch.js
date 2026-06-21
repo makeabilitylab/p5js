@@ -23,8 +23,11 @@ let triangleSanta = null;
 
 function setup() {
   createCanvas(800, 650);
-  
-  angleMode(DEGREES); 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A Santa figure built from colored triangles, with keyboard toggles to also show the Makeability Lab logo, a triangle grid, and outlines.");
+
+  angleMode(DEGREES);
 
   triangleSanta = new TriangleSanta(3*TRIANGLE_SIZE, 2 * TRIANGLE_SIZE, TRIANGLE_SIZE);
   //triangleSanta.setStrokeColors(color(128, 128, 128));

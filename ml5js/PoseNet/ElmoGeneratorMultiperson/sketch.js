@@ -32,6 +32,9 @@ let numHumansDetected = -1;
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with a cartoon red nose and two googly eyes drawn over every detected face using multi-person pose tracking.");
   video = createCapture(VIDEO);
   video.hide();
 

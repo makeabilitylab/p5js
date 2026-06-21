@@ -15,6 +15,9 @@ const SPACEBAR_KEYCODE = 32;
 
 function setup() {
   createCanvas(600, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A drawing canvas where moving the mouse paints circles whose size depends on mouse speed and color depends on horizontal position; pressing the mouse or holding the spacebar switches from filled circles to outlined ones.");
   background(204);
   colorMode(HSB);
   noStroke();

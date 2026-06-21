@@ -20,6 +20,9 @@ let mountainRange2;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A procedurally generated landscape with a gradient sky, a sun, and two layered ranges of Perlin-noise mountain silhouettes.");
   colorMode(HSB, 255);
 
   topColor = getRandomTopBGColor();

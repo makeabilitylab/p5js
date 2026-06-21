@@ -21,6 +21,10 @@ let rgbSaved = null;
 function setup() {
   createCanvas(600, 400);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A horizontal rainbow hue gradient with a vertical line at the mouse position; clicking sends the selected color's red, green, and blue values out over serial to a connected microcontroller.");
+
   serialConnectButton = createButton("Connect to Serial Device");
   serialConnectButton.mousePressed(onSerialConnectButtonClicked);
 

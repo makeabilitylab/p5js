@@ -14,6 +14,9 @@ let diameter = 20;
 
 function setup() {
   createCanvas(600, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A drawing canvas where moving the mouse paints purple circles whose size grows with mouse speed; pressing the mouse switches from filled circles to outlined ones.");
   background(204);
   noStroke();
 }

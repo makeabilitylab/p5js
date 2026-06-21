@@ -16,6 +16,10 @@ let xMouseNormalized = 0;
 function setup() {
   createCanvas(640, 480);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A dark gray canvas showing a vertical line at the mouse's x position and the normalized x value as large text, which is sent out over serial to a connected microcontroller.");
+
   // Setup Web Serial using serial.js
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);

@@ -14,6 +14,10 @@ let xPos = 0;
 function setup() {
   createCanvas(750, 420);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A real-time scrolling bar graph on a dark canvas that plots sensor values received over serial from a connected microcontroller, with bar color shifting based on each value.");
+
   // Setup Web Serial using serial.js
   serial = new Serial();
   serial.on(SerialEvents.CONNECTION_OPENED, onSerialConnectionOpened);

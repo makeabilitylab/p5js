@@ -34,6 +34,9 @@ const poseNetOptions = { detectionType: "single"};
 
 function setup() {
   createCanvas(640, 480);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A live webcam feed with the detected body's skeleton and labeled keypoints drawn on top, plus a bounding box and confidence score for each pose.");
   video = createCapture(VIDEO);
   //video.size(width, height);
   video.hide();

@@ -10,6 +10,9 @@
 
 function setup() {
   createCanvas(600, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A drawing canvas where moving the mouse paints a trail of semi-transparent purple circles.");
   fill(200, 0, 200, 150);
   background(204);
   noStroke();

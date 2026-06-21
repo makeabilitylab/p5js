@@ -15,6 +15,9 @@ let lineSegmentBlue = null;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive vector-angle demo: a red arrow follows the mouse from the center against a gray horizontal x-axis, with arcs showing the angle between them; click to freeze the red arrow and draw a blue arrow whose angle to the red one is also arced, and right-click to reset.");
   let centerX = width / 2;
   let centerY = height / 2;
   lineSegmentRed = new LineSegment(centerX, centerY, mouseX, mouseY);

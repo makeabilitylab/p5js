@@ -19,6 +19,9 @@ let curMouseClickPos;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A white ball with a heading line bounces around a gray canvas; clicking two points draws an arrow between them whose length sets the ball's acceleration, demonstrating how an acceleration vector changes the ball's motion.");
   ball = new Ball();
   //noLoop();
 }

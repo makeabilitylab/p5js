@@ -17,6 +17,9 @@ let curMouseClickPos;
 
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("An interactive playground where you click to draw a red vector and a blue vector; the canvas then shows the angle between them in degrees and redraws lighter copies of both vectors from the center with an arc marking the angle.");
 }
 
 function draw() {

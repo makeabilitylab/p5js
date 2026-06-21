@@ -7,6 +7,9 @@
 //  - be able to set font size
 function setup() {
   createCanvas(400, 400);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("Sample text with horizontal lines marking its baseline, ascent, and descent, plus a red box showing the text's bounding area.");
   noSmooth();
 }
 

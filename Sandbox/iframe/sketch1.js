@@ -1,5 +1,8 @@
 function setup() {
   createCanvas(320, 220);
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A single purple circle centered on the canvas whose size and outline color are controlled by variables shared from the parent page.");
 }
 
 function draw() {

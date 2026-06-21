@@ -6,6 +6,10 @@
 function setup() {
   createCanvas(400, 400);
 
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A shared drawing canvas where dragging the mouse paints purple circles, while gray circles appear wherever other connected users are drawing.");
+
   // const socketURL = process.env.NODE_ENV === 'production'
   //     ? window.location.hostname
   //     : 'https://localhost:3000';
