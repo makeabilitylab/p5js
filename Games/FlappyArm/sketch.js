@@ -64,6 +64,10 @@ function preload() {
 
 function setup() {
   createCanvas(640, 480);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A Flappy Bird game controlled by flapping your arms, tracked through your webcam with ml5.js pose detection; flap to fly the bird through gaps between pipes.");
   
   video = createCapture(VIDEO);
   //video.hide();

@@ -58,6 +58,10 @@ function setup() {
   
   grid = new Grid(); // Snake is based on a grid of cells
   createCanvas(grid.getWidth(), grid.getHeight()); // the canvas is derived from grid size
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("The classic Snake game: steer a growing snake with the arrow keys to eat food while avoiding the walls and the snake's own body.");
   setupGameEntities();
 }
 

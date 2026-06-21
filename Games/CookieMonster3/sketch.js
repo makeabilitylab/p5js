@@ -63,6 +63,10 @@ function preload() {
 
 function setup() {
   createCanvas(650, 500);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A keyboard game where you feed Cookie Monster by typing; the most developed Cookie Monster version, with a score and game states.");
   textFont(arcadeFont);
   frameRate(8);
 

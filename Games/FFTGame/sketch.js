@@ -43,6 +43,10 @@ let hasStarted = false;
 
 function setup() {
   createCanvas(1024, 600);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A sound game: make noise into the microphone to propel a ball upward into falling stars; the ball's height tracks the energy of an FFT of the mic input.");
   noFill();
 
   mic = new p5.AudioIn();

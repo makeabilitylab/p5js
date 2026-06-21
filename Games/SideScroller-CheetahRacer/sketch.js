@@ -39,6 +39,10 @@ function preload() {
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A side-scrolling endless-runner (Chrome-dino style) where you press a key to jump a cheetah over oncoming obstacles.");
   textFont(arcadeFont); 
   ground = new Ground();
   

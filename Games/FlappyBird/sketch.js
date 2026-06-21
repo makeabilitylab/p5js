@@ -59,6 +59,10 @@ function preload() {
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A Flappy Bird game: press a key to flap the bird upward and fly through the gaps between scrolling pipes.");
   minDistanceBetweenPipes = width / 3;
   textFont(arcadeFont); 
   

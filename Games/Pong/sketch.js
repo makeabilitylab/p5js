@@ -50,6 +50,10 @@ const PADDLE = {
 
 function setup() {
   createCanvas(600, 600);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A two-player Pong game: paddles on the left and right bounce a ball back and forth, with the score shown at the top.");
   ball = new Ball(50, 50, 20, 20);
 
   let paddleWidth = 20;

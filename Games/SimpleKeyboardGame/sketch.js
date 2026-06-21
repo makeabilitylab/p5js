@@ -14,6 +14,10 @@ let score = 0;
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A keyboard game: use the arrow keys to move a blue ball into the black hole to score a point.");
   
   // create the game character
   avatar = new Ball(width/2, height/2, 30, color(0, 0, 255, 140));

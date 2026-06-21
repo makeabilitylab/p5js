@@ -33,6 +33,10 @@ function preload(){
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A keyboard game where each key press makes Cookie Monster take another bite of the cookie until it is gone.");
   
   
   frameRate(8);

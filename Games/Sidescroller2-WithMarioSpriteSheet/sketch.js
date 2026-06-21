@@ -47,6 +47,10 @@ function preload() {
 
 function setup() {
   createCanvas(600, 400);
+
+  // Accessibility: text description of the canvas for screen readers
+  // https://p5js.org/reference/p5/describe/
+  describe("A side-scrolling endless-runner using an animated Mario sprite sheet; press a key to jump over oncoming obstacles.");
   textFont(arcadeFont); 
   ground = new Ground();
   frameRate(30);
