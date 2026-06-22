@@ -81,20 +81,48 @@ and in CI.
 
 ```jsonc
 {
-  "skip": false,             // true → no preview generated
+  "skip": false,             // true → no preview generated (use a hand-made screenshot.* instead)
   "mode": "animated",        // "animated" (canvas loop) or "poster" (single shot)
   "duration": 4,             // seconds of loop to record (animated)
   "fps": 15,                 // frames per second (animated)
   "delay": 250,              // ms to wait before the first frame (let it settle)
   "width": 480,              // output width in px
   "quality": 72,             // libwebp quality (0–100)
-  "click": true              // click the canvas once before recording (animated only)
+  "click": true,             // click the canvas once before recording (animated only)
+  "captureSelector": null,   // CSS selector of the element to record (default: first <canvas>)
+  "interact": null           // scripted input played while recording (see below)
 }
 ```
 
 Defaults: animated for most categories; **poster** for `WebSerial/` (no serial
 device is attached headless, so we capture the UI). An animated capture that
-finds no `<canvas>` automatically falls back to a poster.
+finds no capture target automatically falls back to a poster.
+
+**Recording a non-`<canvas>` element / driving interaction.** Some sketches put
+their canvas in an `<iframe>`, or only animate when you interact (a p5 `WEBGL`
+sketch with `orbitControl()`, say). Two options handle these:
+
+- `captureSelector` records a specific element instead of the first `<canvas>`
+  (e.g. `"#color-cube-iframe"`).
+- `interact` plays scripted input *while* the loop records, so the preview shows
+  the sketch being driven:
+  ```jsonc
+  "interact": {
+    "drag": "orbit",                                  // "orbit" | "horizontal" | "none"
+    "keys": ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown"],  // pressed in order
+    "keyEveryFrames": 6                               // press a key every N frames
+  }
+  ```
+  The drag sweeps one full cycle over the recording so the loop returns near its
+  start; a balanced key sequence (e.g. the diamond above) keeps state from
+  drifting. See `Color/ColorExplorer3D/preview.json` for a worked example (it
+  orbits a 3D RGB cube living in an iframe).
+
+**Caching / determinism.** The manifest stores a content hash *and* a signature
+of these options, and compares against the **mode actually produced** — so an
+`animated` example that falls back to a poster at runtime stays cached instead
+of re-rendering (and, for non-deterministic WebGL sketches, re-committing) on
+every CI run.
 
 **Getting past start gates.** Two things help sketches that don't run on their
 own headless:

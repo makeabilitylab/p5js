@@ -1,3 +1,9 @@
 {
-  "skip": true
+  "mode": "animated",
+  "captureSelector": "#color-cube-iframe",
+  "interact": { "drag": "orbit", "keys": ["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown"], "keyEveryFrames": 6 },
+  "duration": 5,
+  "fps": 15,
+  "width": 480,
+  "quality": 70
 }

@@ -53,11 +53,23 @@
   },
   "Color/ColorCube3D": {
     "mode": "animated",
-    "appHash": "3ad6b65bf62d0c58"
+    "appHash": "3ad6b65bf62d0c58",
+    "optsSig": "{\"mode\":\"animated\",\"captureSelector\":null,\"interact\":null,\"duration\":4,\"fps\":15,\"width\":480,\"quality\":72,\"click\":true}"
+  },
+  "Color/ColorExplorer3D": {
+    "mode": "animated",
+    "appHash": "181f4a785fd26035",
+    "optsSig": "{\"mode\":\"animated\",\"captureSelector\":\"#color-cube-iframe\",\"interact\":{\"drag\":\"orbit\",\"keys\":[\"ArrowRight\",\"ArrowUp\",\"ArrowLeft\",\"ArrowDown\"],\"keyEveryFrames\":6},\"duration\":5,\"fps\":15,\"width\":480,\"quality\":70,\"click\":true}"
   },
   "Color/ColorPanel2D": {
     "mode": "animated",
-    "appHash": "3686ac5bf44d762e"
+    "appHash": "3686ac5bf44d762e",
+    "optsSig": "{\"mode\":\"animated\",\"captureSelector\":null,\"interact\":null,\"duration\":4,\"fps\":15,\"width\":480,\"quality\":72,\"click\":true}"
+  },
+  "Color/CrossFadeRgb3D": {
+    "mode": "animated",
+    "appHash": "c8173e3f7b626717",
+    "optsSig": "{\"mode\":\"animated\",\"captureSelector\":\"#color-cube-iframe\",\"interact\":{\"drag\":\"orbit\",\"keys\":[\"ArrowRight\",\"ArrowUp\",\"ArrowLeft\",\"ArrowDown\"],\"keyEveryFrames\":6},\"duration\":5,\"fps\":15,\"width\":480,\"quality\":70,\"click\":true}"
   },
   "DOM/CollapsibleSidebar1-NoP5js": {
     "mode": "poster",

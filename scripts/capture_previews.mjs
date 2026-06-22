@@ -51,6 +51,13 @@ const DEFAULTS = {
   width: 480, // output px width
   quality: 72, // libwebp q:v
   click: true, // click the canvas once before capturing (dismiss "click to start" gates)
+  // What element to record. Defaults to the first <canvas>; set a CSS selector
+  // (e.g. an iframe) to record sketches whose canvas lives elsewhere.
+  captureSelector: null,
+  // Optional scripted input played WHILE recording, so the loop shows the sketch
+  // being driven. Shape (all optional):
+  //   { "drag": "orbit" | "horizontal", "keys": ["ArrowRight"], "keyEveryFrames": 6 }
+  interact: null,
 };
 const VIEWPORT = { width: 900, height: 560 };
 
@@ -162,17 +169,45 @@ async function captureAnimated(page, app, framesDir) {
   const frameCount = Math.round(fps * duration);
   const intervalMs = 1000 / fps;
 
-  const canvas = page.locator('canvas').first();
-  await canvas.waitFor({ state: 'visible', timeout: 8000 });
+  const target = page.locator(app.opts.captureSelector || 'canvas').first();
+  await target.waitFor({ state: 'visible', timeout: 8000 });
   await maybeClick(page, app);
   await sleep(delay);
 
+  // Optional scripted interaction (drag-to-orbit, arrow keys) played as the loop
+  // records, so e.g. a p5 WEBGL sketch visibly rotates in its preview.
+  const inter = app.opts.interact;
+  const box = inter ? await target.boundingBox() : null;
+  const cx = box ? box.x + box.width / 2 : 0;
+  const cy = box ? box.y + box.height / 2 : 0;
+  let dragging = false;
+  if (inter && box && inter.drag && inter.drag !== 'none') {
+    await page.mouse.move(cx, cy);
+    await page.mouse.down();        // grabs the canvas (and focuses it for key input)
+    dragging = true;
+  }
+  const keys = (inter && inter.keys) || [];
+  const keyEvery = (inter && inter.keyEveryFrames) || 6;
+
   const t0 = Date.now();
   for (let i = 0; i < frameCount; i++) {
+    if (inter && box) {
+      if (dragging) {
+        // Sweep one full cycle over the recording so the loop returns near start.
+        const phase = (i / frameCount) * Math.PI * 2;
+        const dx = Math.sin(phase) * box.width * (inter.drag === 'horizontal' ? 0.35 : 0.30);
+        const dy = inter.drag === 'orbit' ? Math.cos(phase) * box.height * 0.16 : 0;
+        await page.mouse.move(cx + dx, cy + dy, { steps: 3 });
+      }
+      if (keys.length && i % keyEvery === 0) {
+        await page.keyboard.press(keys[Math.floor(i / keyEvery) % keys.length]);
+      }
+    }
     const drift = Date.now() - t0 - i * intervalMs;
     if (drift < 0) await sleep(-drift); // pace toward real-time fps
-    await canvas.screenshot({ path: path.join(framesDir, `f_${String(i).padStart(4, '0')}.png`) });
+    await target.screenshot({ path: path.join(framesDir, `f_${String(i).padStart(4, '0')}.png`) });
   }
+  if (dragging) await page.mouse.up();
   return frameCount;
 }
 
@@ -217,10 +252,11 @@ async function renderApp(browser, app) {
     await page.goto(app.url, { waitUntil: 'networkidle', timeout: 30000 });
     await page.addStyleTag({ content: '.hint{display:none !important;}' });
 
-    // Animated mode still falls back to a poster if there's no canvas to record.
+    // Animated mode still falls back to a poster if there's nothing to record.
     let mode = app.opts.mode;
-    if (mode === 'animated' && (await page.locator('canvas').count()) === 0) {
-      console.warn(`  no canvas → poster: ${app.key}`);
+    if (mode === 'animated'
+        && (await page.locator(app.opts.captureSelector || 'canvas').count()) === 0) {
+      console.warn(`  no capture target → poster: ${app.key}`);
       mode = 'poster';
     }
 
@@ -261,6 +297,26 @@ function startServer() {
 
 // ---------- main ----------
 
+/**
+ * Signature of the output-affecting options, stored in the manifest so a change
+ * to preview.json (which is excluded from the content hash) still triggers a
+ * rebuild. Note: NOT compared against the produced mode — an `animated` example
+ * that falls back to a poster at runtime stores mode:"poster", and we treat it
+ * as fresh on the next run as long as this signature and the content hash match.
+ */
+function optsSignature(opts) {
+  return JSON.stringify({
+    mode: opts.mode,
+    captureSelector: opts.captureSelector,
+    interact: opts.interact,
+    duration: opts.duration,
+    fps: opts.fps,
+    width: opts.width,
+    quality: opts.quality,
+    click: opts.click,
+  });
+}
+
 async function main() {
   const apps = discoverApps();
 
@@ -281,18 +337,23 @@ async function main() {
     }
     const appFiles = await listFiles(app.dir);
     const appHash = await hashFiles(appFiles.filter((f) => !f.endsWith('preview.json')));
+    const optsSig = optsSignature(app.opts);
     const prev = manifest[app.key];
     const webpOut = path.join(OUT_DIR, `${app.key}.webp`);
     const posterOut = path.join(OUT_DIR, `${app.key}.poster.png`);
-    const expected = app.opts.mode === 'poster' ? posterOut : webpOut;
+    // Compare against the mode actually produced last time (prev.mode), so a
+    // runtime poster-fallback stays cached instead of re-rendering every run.
+    const expected = prev && prev.mode === 'poster' ? posterOut : webpOut;
 
     const fresh = !FORCE && prev
       && prev.appHash === appHash
-      && prev.mode === app.opts.mode
+      // Legacy manifest entries predate optsSig; treat them as opts-fresh so this
+      // change doesn't force a one-time re-render (and re-commit) of everything.
+      && (prev.optsSig === undefined || prev.optsSig === optsSig)
       && existsSync(expected);
 
     if (fresh) { console.log(`ok     ${app.key} (unchanged)`); continue; }
-    work.push({ app, appHash });
+    work.push({ app, appHash, optsSig });
   }
 
   if (work.length === 0) {
@@ -317,12 +378,12 @@ async function main() {
     ],
   });
   try {
-    for (const { app, appHash } of work) {
+    for (const { app, appHash, optsSig } of work) {
       const label = `${app.key} [${app.opts.mode}]`;
       try {
         const t = Date.now();
         const mode = await renderApp(browser, app);
-        manifest[app.key] = { mode, appHash };
+        manifest[app.key] = { mode, appHash, optsSig };
         console.log(`build  ${label} (${((Date.now() - t) / 1000).toFixed(1)}s)`);
       } catch (e) {
         console.error(`FAIL   ${label}: ${e.message}`);
