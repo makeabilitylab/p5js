@@ -1,4 +1,12 @@
+//
+// Sine-wave playground: fills the bottom of the canvas with a wavy shape built by
+// summing two sine waves — a fast, small ripple plus a slow, larger swell. A nice
+// starting point for experimenting with frequency, amplitude, and Perlin noise.
+//
+
 let bottomColor;
+
+// Set up the canvas and the HSB fill color used for the wave shape.
 function setup() {
   createCanvas(800, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -8,6 +16,8 @@ function setup() {
   bottomColor = color(10, 128, 128);
 }
 
+// Each frame: trace one vertex per column across the width, where the wave height
+// y is the sum of the two sine terms, then close the shape down to the bottom edge.
 function draw() {
   background(220);
 

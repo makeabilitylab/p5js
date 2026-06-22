@@ -7,6 +7,7 @@
  **/
 
 
+// Set up the canvas and switch to degrees so the petal rotation reads naturally.
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -16,6 +17,8 @@ function setup() {
   angleMode(DEGREES);
 }
 
+// Draw the flower: from the center, rotate by angleStep and stamp a translucent
+// ellipse "petal" each step, sweeping the hue through 360 degrees for a rainbow.
 function draw() {
   background(10);
 

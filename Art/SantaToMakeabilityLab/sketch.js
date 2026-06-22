@@ -26,6 +26,7 @@ let originalSantaTriangles = null;
 let holidayFont;
 let holidayTextSize = 45;
 
+// Load the holiday font before setup() so it's ready for the card's message.
 function preload() {
   holidayFont = loadFont('fonts/MerryChristmasFlake.ttf'); // text size 45
   holidayTextSize = 45;
@@ -34,6 +35,8 @@ function preload() {
   //holidayFont = loadFont('fonts/MagicChristmas.otf'); // text size 30
 }
 
+// Build the triangle Santa and the (initially hidden) Makeability Lab logo, then
+// pair up their triangles so the Santa can morph into the logo as the mouse moves.
 function setup() {
   createCanvas(800, 650);
   // Accessibility: text description of the canvas for screen readers
@@ -61,6 +64,8 @@ function setup() {
   createTriangleAnimationMapping();
 }
 
+// Group triangles by their direction (TopLeft, BottomRight, etc.) into a Map so
+// we only ever morph a Santa triangle into a logo triangle of the same shape.
 function getMapOfTriangleDirectionToTriangles(triangles){
   let mapDirToTriangles = new Map();
   for(let i = 0; i <  triangles.length; i++){
@@ -74,6 +79,9 @@ function getMapOfTriangleDirectionToTriangles(triangles){
   return mapDirToTriangles;
 }
 
+// For each Santa triangle, record its current pose as .original and assign a
+// same-direction logo triangle as its .destination (shuffled so the morph looks
+// scattered rather than orderly). mouseMoved() later lerps between the two.
 function createTriangleAnimationMapping(){
   let allSantaTrianglesAnimated = triangleSantaAnimated.getAllTriangles();
   let allMakeLabTriangles = makeLabLogoStatic.getAllTriangles();
@@ -98,10 +106,14 @@ function createTriangleAnimationMapping(){
   }
 }
 
+// On touch devices, drive the same morph as mouse movement.
 function touchMoved(){
   mouseMoved();
 }
 
+// Drive the morph from the mouse's x position: lerp each Santa triangle's
+// position and colors from its .original pose toward its .destination logo
+// triangle (0 = full Santa at the left edge, 1 = full logo at the right edge).
 function mouseMoved(){
   const lerpAmt = map(mouseX, 0, width, 0, 1, true);
 
@@ -135,6 +147,9 @@ function mouseMoved(){
 }
 
 
+// Each frame: paint the background for the current scheme, draw whichever layers
+// are visible, then draw the holiday message (sliding down and darkening with the
+// same mouse-driven lerp as the morph).
 function draw() {
 
   switch(colorScheme){
@@ -144,7 +159,7 @@ function draw() {
     case ColorScheme.WhiteOnBlack:
       background(10);
       break;
-  } 
+  }
 
   // makeLabGrid[0][0].draw();
   // makeLabGrid[0][1].draw();
@@ -179,6 +194,8 @@ function draw() {
   pop();
 }
 
+// Keyboard toggles for debugging/showing layers: g=grid, m/l=M&L outlines,
+// k=L strokes, h=logo, b=color scheme, t=transparency, c=default colors.
 function keyPressed() {
 
   if(key == 'g'){
@@ -238,6 +255,8 @@ function keyPressed() {
   }
 }
 
+// Apply a color scheme to the logo: set its triangle fill/stroke and outline
+// colors, then restore the default-colored triangles if that mode is on.
 function setColorScheme(cScheme){
   colorScheme = cScheme;
   let fillColor = null;
@@ -267,6 +286,7 @@ function setColorScheme(cScheme){
   print("Color scheme set to: ", colorScheme);
 }
 
+// Flip between the two color schemes (black-on-white and white-on-black).
 function toggleColorScheme(){
 
   switch(colorScheme){

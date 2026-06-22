@@ -1,3 +1,14 @@
+// Procedurally generated landscape in p5js, refactored so each feature lives in
+// its own file: SkyBackground, Sun, Moon, and MountainRange. Fills the browser
+// window and resizes with it.
+//
+// By Jon Froehlich
+// http://makeabilitylab.io/
+//
+// Based on:
+//  - https://twitter.com/muted_mountains (follow them!)
+//  - https://jonoshields.com/2017/03/29/creating-procedurally-generated-scenes/
+
 let skyBackground;
 let sun;
 let moon;
@@ -5,6 +16,7 @@ let mountainRange;
 let mountainRanges = new Array();
 const maxNumMountainRanges = 5;
 
+// Build the sky, sun, moon (disabled by default), and the layered ranges.
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // Accessibility: text description of the canvas for screen readers
@@ -31,6 +43,8 @@ function setup() {
   }
 }
 
+// Each frame: redraw sky, sun, optional moon, then the ranges far-to-near
+// (ranges self-animate by advancing their noise offset each draw).
 function draw() {
   //background(220);
   skyBackground.draw();
@@ -46,6 +60,7 @@ function draw() {
   }
 }
 
+// Keep the canvas and sky filling the window when the browser is resized.
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   skyBackground.width = width;

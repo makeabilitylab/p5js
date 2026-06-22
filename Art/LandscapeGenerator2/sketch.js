@@ -34,6 +34,7 @@ let santaWidth;
 let santaX;
 let drawSanta = false;
 
+// Pick sky colors, build a sun, several layered mountain ranges, and load Santa.
 function setup() {
   createCanvas(1024, 600);
   // Accessibility: text description of the canvas for screen readers
@@ -64,6 +65,7 @@ function setup() {
   smooth();
 }
 
+// Each frame: redraw sky, sun, the ranges far-to-near, and Santa if enabled.
 function draw() {
   drawBackground(topColor, bottomColor);
   sun.draw();
@@ -89,12 +91,14 @@ function draw() {
   }
 }
 
+// Returns a random sky color: a random hue at a fixed saturation/brightness.
 function getRandomTopBGColor() {
   colorMode(HSB, 255);
   let hue = random(0, 255);
   return color(hue, 115, 150);
 }
 
+// Fills the canvas with a vertical top-to-bottom gradient sky.
 function drawBackground(top, bottom) {
   // p5js has very limited gradient fill support, so we actually
   // don't use p5js here, we use regular Canvas drawing
@@ -111,8 +115,10 @@ function drawBackground(top, bottom) {
 }
 
 
+// A randomly sized/placed sun, tinted brighter than the sky.
 class Sun extends Shape {
 
+  // Random size and position high in the sky; fill is a brighter sky tint.
   constructor(baseColor) {
     let size = 50 + width * random(0.1, 0.3);
     let xLoc = width * random();
@@ -123,6 +129,7 @@ class Sun extends Shape {
       brightness(topColor) * 1.6);
   }
 
+  // Draws the sun as a filled circle.
   draw() {
     // TODO: maybe make the sun a slight gradient in future too?
     noStroke();
@@ -131,8 +138,11 @@ class Sun extends Shape {
   }
 }
 
+// A wispy cloud silhouette built from two sine waves plus Perlin noise.
+// Experimental and currently unused (cloud creation is commented out in setup).
 class Cloud { //TODO: make this into a shape object
-  
+
+  // Picks random wave amplitudes/frequencies for the small and large waves.
   constructor(mountainRange, baseColor){
     
     
@@ -149,9 +159,11 @@ class Cloud { //TODO: make this into a shape object
     this.angle2Multiplier = random(0.01, 0.035); // large wave
   }
   
+  // Traces the cloud's lower edge by summing two sine waves and Perlin noise
+  // across the width, then fills the shape.
   draw() {
     //stroke(255);
-    
+
     // TODO: maybe try using diff sized circles along a sine wave
     // maybe that would look like cool clouds
     //
@@ -182,7 +194,11 @@ class Cloud { //TODO: make this into a shape object
   }
 }
 
+// A Perlin-noise mountain silhouette. Higher zIndex = nearer (taller, more
+// saturated), so ranges layer into depth when drawn far-to-near.
 class MountainRange extends Shape {
+  // Height and color scale with zIndex; each range samples a distinct noise
+  // window so neighboring ranges don't share the same ridge profile.
   constructor(zIndex, numMountains, baseColor) {
     let maxMountainHeight = (zIndex + 1) / numMountains * (height - height * 0.4);
     maxMountainHeight += min(pow(zIndex, random(3.3, 4)), 100);
@@ -202,6 +218,8 @@ class MountainRange extends Shape {
     this.zIndex = zIndex;
   }
 
+  // Trace the ridge as a filled shape, sampling Perlin noise per x to set the
+  // peak height at each column (the -20/+21 overshoot keeps the edges flush).
   draw() {
     // perlin noise links:
     // - http://flafla2.github.io/2014/08/09/perlinnoise.html

@@ -2,8 +2,11 @@
 // - Use perlin noise to make cloud-like textures. But perhaps this needs to be it's own
 //   layer so can go in front of sun
 
+// The gradient sky filling the canvas; also the source of the scene's base
+// (top) color that the sun, moon, and mountains tint themselves from.
 class SkyBackground extends Shape{
 
+    // Picks a random top color and derives a brighter bottom color from it.
     constructor(x, y, width, height) {
       super(x, y, width, height);
    
@@ -12,6 +15,7 @@ class SkyBackground extends Shape{
       this.bottomColor = color(hue(rc), saturation(rc) * 0.9, brightness(rc) * 1.5);
     }
   
+    // Fills the canvas with a vertical top-to-bottom gradient sky.
     draw() {
       // p5js has very limited gradient fill support, so we actually
       // don't use p5js here, we use regular Canvas drawing
@@ -28,6 +32,7 @@ class SkyBackground extends Shape{
   
     }
   
+    // Returns a random sky color: a random hue at a fixed saturation/brightness.
     static getRandomColor() {
       colorMode(HSB, 255);
       let hue = random(0, 255);

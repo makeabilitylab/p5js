@@ -1,4 +1,7 @@
+// A randomly sized/placed moon, drawn with a vertical color gradient.
 class Moon extends Circle {
+  // Random size and position high in the sky; precomputes a top-to-bottom
+  // gradient (fillColor fading to a brighter bottomColor) reused each draw.
   constructor(baseColor) {
     let size = max(10, width * random(0.05, 0.1));
     let xLoc = min(size/2 + width * random(), width - size / 2);
@@ -18,10 +21,12 @@ class Moon extends Circle {
     this.colorGradient = grd;
   }
 
+  // Draws the moon as a gradient-filled circle via the raw Canvas context
+  // (p5 has limited gradient support).
   draw() {
 
     let ctx = drawingContext;
-    
+
 
     let oldFillStyle = ctx.fillStyle; // save old fillstyle to reset
     ctx.fillStyle = this.colorGradient;

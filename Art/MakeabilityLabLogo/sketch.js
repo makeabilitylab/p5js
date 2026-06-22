@@ -20,6 +20,8 @@ let defaultColorsOn = true;
 let transparent = false;
 let angleOverlays = false;
 
+// Build the Makeability Lab logo from a triangle grid; set the default color
+// scheme and print the keyboard-toggle menu to the console.
 function setup() {
   createCanvas(800, 600);
   // Accessibility: text description of the canvas for screen readers
@@ -39,6 +41,8 @@ function setup() {
 }
 
 
+// Each frame: paint the background for the active color scheme, then draw the
+// grid, logo, and (if enabled) the M/L angle-outline overlays.
 function draw() {
 
   switch(colorScheme){
@@ -48,7 +52,7 @@ function draw() {
     case ColorScheme.WhiteOnBlack:
       background(10);
       break;
-  } 
+  }
 
   // makeLabGrid[0][0].draw();
   // makeLabGrid[0][1].draw();
@@ -75,6 +79,7 @@ function draw() {
   
 }
 
+// Print the interactive keyboard-toggle menu (and current states) to the console.
 function printMenu(){
   print("Press 'a' to toggle angle overlays. Currently set to: ", angleOverlays);
   print("Press 'g' to toggle grid. Currently set to: ", makeLabGrid.visible);
@@ -90,6 +95,8 @@ function printMenu(){
   print("Type printMenu() to see this menu again.");
 }
 
+// Key toggles: a=angle overlays, g=grid, m/l=M/L outlines, k=L strokes,
+// h=logo, b=color scheme, t=transparency, c=default colors.
 function keyPressed() {
   if(key == 'a'){
     angleOverlays = !angleOverlays;
@@ -153,6 +160,8 @@ function keyPressed() {
   }
 }
 
+// Apply a color scheme (BlackOnWhite/WhiteOnBlack): set logo fill/stroke and
+// outline colors, restoring the original triangle palette if default colors are on.
 function setColorScheme(cScheme){
   colorScheme = cScheme;
   let fillColor = null;
@@ -182,6 +191,7 @@ function setColorScheme(cScheme){
   print("Color scheme set to: ", colorScheme);
 }
 
+// Flip between the BlackOnWhite and WhiteOnBlack color schemes.
 function toggleColorScheme(){
 
   switch(colorScheme){

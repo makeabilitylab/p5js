@@ -1,4 +1,8 @@
+// A self-animating Perlin-noise mountain silhouette. Higher index = nearer
+// (taller, more saturated, and scrolls faster), so ranges layer into depth.
 class MountainRange extends Shape {
+  // Height and color scale with index; xNoiseStep sets ruggedness and
+  // xNoiseAnimationIncrement sets the per-frame scroll speed (nearer = faster).
   constructor(baseColor, mountainRangeIndex, totalNumMountains) {
 
     let baseHeight = height - height * (random(0.3, 0.4));
@@ -20,6 +24,8 @@ class MountainRange extends Shape {
     this.isAnimated = true;
   }
 
+  // Trace the ridge as a filled shape, sampling Perlin noise per column to set
+  // peak heights, then advance the noise offset so the range scrolls over time.
   draw(){
     push();
     noStroke();

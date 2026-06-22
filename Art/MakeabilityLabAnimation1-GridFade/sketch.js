@@ -24,6 +24,9 @@ let colorScheme = null;
 let defaultColorsOn = true;
 let transparent = false;
 
+// Set up the grid-fade animation: each grid triangle is staggered to fade from
+// white to a random color, then the Makeability Lab logo fades in on top via
+// timed reveals (see the setTimeout calls below).
 function setup() {
   createCanvas(800, 600);
   // Accessibility: text description of the canvas for screen readers
@@ -71,6 +74,8 @@ function setup() {
   }, 4000)
 }
 
+// Each frame: advance every grid triangle's fade animation, then draw the grid
+// and (once revealed) the logo.
 function draw() {
   background(250);
 
@@ -96,15 +101,19 @@ function draw() {
 
 }
 
+// Seed one triangle's fade: white -> random target color, with a randomized
+// start delay so triangles fade in at staggered times.
 function initializeGridTriangle(tri){
   tri.startFillColor = color(255);
   tri.endFillColor = Colorer.getRandomOriginalColor();
   tri.animationDuration = 1.5; // in seconds
-  tri.startAnimationTimestamp = millis() + random() * 2000;
+  tri.startAnimationTimestamp = millis() + random() * 2000; // 0-2s random start delay (ms)
   tri.fillColor = this.startFillColor;
   tri.strokeColor = this.fillColor;
 }
 
+// Once a triangle's start time has passed, lerp its fill/stroke from start to
+// end color based on elapsed fraction of the animation duration.
 function updateGridAnimation(tri){
   if(millis() > tri.startAnimationTimestamp){
     const currentT = millis() - tri.startAnimationTimestamp;
@@ -115,6 +124,8 @@ function updateGridAnimation(tri){
   }
 }
 
+// Key toggles: g=grid, m/l=M/L outlines, k=L strokes, h=logo,
+// b=color scheme, t=transparency, c=default colors.
 function keyPressed() {
   if (key == 'g') {
     makeLabGrid.visible = !makeLabGrid.visible;
@@ -172,6 +183,8 @@ function keyPressed() {
   }
 }
 
+// Flip the color scheme and reapply logo + M-shadow colors (restoring the
+// original palette if default colors are on).
 function toggleColorScheme() {
   let fillColor = null;
   let strokeColor = null;

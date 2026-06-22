@@ -26,6 +26,9 @@ let originalRandomTriLocs = [];
 let modifySize = true;
 let modifyAngle = true;
 
+// Set up the reverse-explosion: a static target logo (hidden/transparent) plus
+// an animated logo whose triangles are scattered to random positions, sizes,
+// and angles, ready to lerp back into place as the mouse moves.
 function setup() {
   createCanvas(800, 600);
   // Accessibility: text description of the canvas for screen readers
@@ -61,6 +64,8 @@ function setup() {
   setStaticLogoTransparent(true);
 }
 
+// Scatter the animated logo's triangles to random positions (and optionally
+// random sizes/angles), caching those start states so mouseMoved can lerp back.
 function resetRandomTriLocs(){
   originalRandomTriLocs = [];
   for(const tri of makeLabLogoAnimated.getAllTriangles(true)){
@@ -73,10 +78,14 @@ function resetRandomTriLocs(){
   }
 }
 
+// Treat touch drags the same as mouse movement (mobile support).
 function touchMoved(){
   mouseMoved();
 }
 
+// Map mouseX (left->right) to a 0..1 assembly amount, then lerp each scattered
+// triangle's position/angle/size (and color) from its start state toward the
+// static logo's final state.
 function mouseMoved(){
   const lerpAmt = map(mouseX, 0, width, 0, 1, true);
 
@@ -121,6 +130,8 @@ function mouseMoved(){
 }
 
 
+// Each frame: paint the scheme background, then draw the grid, the animated
+// (assembling) logo, and the static logo on top.
 function draw() {
 
   switch(colorScheme){
@@ -130,7 +141,7 @@ function draw() {
     case ColorScheme.WhiteOnBlack:
       background(10);
       break;
-  } 
+  }
 
   // makeLabGrid[0][0].draw();
   // makeLabGrid[0][1].draw();
@@ -149,6 +160,9 @@ function draw() {
   
 }
 
+// Key toggles: space=re-scatter triangles, s=randomize size, g=grid,
+// m/l=M/L outlines, k=L strokes, h=logo, b=color scheme, t=transparency,
+// c=default colors.
 function keyPressed() {
 
   if(key == ' '){
@@ -212,6 +226,7 @@ function keyPressed() {
   }
 }
 
+// Show/hide the static target logo's triangle fills (used as the assembly goal).
 function setStaticLogoTransparent(trans){
   transparent = trans;
   for(const tri of makeLabLogo.getAllTriangles(false)){
@@ -221,6 +236,8 @@ function setStaticLogoTransparent(trans){
   print("Transparent set to: ", trans);
 }
 
+// Flip the color scheme and reapply logo colors (restoring the original
+// palette if default colors are on).
 function toggleColorScheme(){
   let fillColor = null;
   let strokeColor = null;

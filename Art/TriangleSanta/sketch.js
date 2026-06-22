@@ -21,6 +21,9 @@ let transparent = false;
 let angleOverlays = false;
 let triangleSanta = null;
 
+// Build the triangle Santa plus the (hidden) Makeability Lab logo and grid that
+// can be toggled on via the keyboard. Simpler sibling of SantaToMakeabilityLab,
+// which morphs the two shapes together.
 function setup() {
   createCanvas(800, 650);
   // Accessibility: text description of the canvas for screen readers
@@ -42,6 +45,8 @@ function setup() {
 }
 
 
+// Each frame: paint the background for the current scheme, then draw whichever
+// layers are toggled on (grid, Santa, logo, and optional angle overlays).
 function draw() {
 
   switch(colorScheme){
@@ -81,6 +86,8 @@ function draw() {
   }
 }
 
+// Keyboard toggles for showing layers: a=angle overlays, g=grid, m/l=M&L
+// outlines, k=L strokes, h=logo, b=color scheme, t=transparency, c=default colors.
 function keyPressed() {
   if(key == 'a'){
     angleOverlays = !angleOverlays;
@@ -144,6 +151,8 @@ function keyPressed() {
   }
 }
 
+// Apply a color scheme to the logo: set its triangle fill/stroke and outline
+// colors, then restore the default-colored triangles if that mode is on.
 function setColorScheme(cScheme){
   colorScheme = cScheme;
   let fillColor = null;
@@ -173,6 +182,7 @@ function setColorScheme(cScheme){
   print("Color scheme set to: ", colorScheme);
 }
 
+// Flip between the two color schemes (black-on-white and white-on-black).
 function toggleColorScheme(){
 
   switch(colorScheme){
