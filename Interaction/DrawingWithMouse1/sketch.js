@@ -8,6 +8,8 @@
 //  - https://learning.oreilly.com/library/view/make-getting-started/9781457186769/ch05.html#response
 
 
+// Set the brush color and paint the initial background (drawn once so the
+// trail accumulates rather than being cleared each frame).
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -18,8 +20,9 @@ function setup() {
   noStroke();
 }
 
+// Each frame: stamp a circle at the mouse position (no background clear, so
+// the circles build up into a painted trail).
 function draw() {
   ellipse(mouseX, mouseY, 20);
-  print(mouseX, mouseY);
 }
 

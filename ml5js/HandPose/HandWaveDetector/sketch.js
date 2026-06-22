@@ -23,6 +23,8 @@ let handPoseModel;
 let video;
 let hand;
 
+// Start the webcam and load ml5's HandPose model, then wire its predict callback
+// into a Hand object whose discrete wave events we subscribe to below.
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -46,36 +48,43 @@ function setup() {
   hand.on(Hand.EVENT_NEW_HAND_WAVE_ANGLE, onNewHandWaveAngle);
 }
 
+// Discrete event: fires once each time the Hand registers a completed wave.
 function onHandWaveDetected(contiguousHandWaveCount, overallHandWaveCount){
   console.log(`onHandWaveDetected: contiguousHandWaveCount=${contiguousHandWaveCount}, overallHandWaveCount=${overallHandWaveCount}`);
 }
 
+// Discrete event: fires when the Hand computes a new wave (palm-to-finger) angle.
 function onNewHandWaveAngle(handWaveAngle){
   console.log("onNewHandWaveAngle", handWaveAngle);
 }
 
+// Discrete event: fires once when the hand enters the open "ready to wave" stance.
 function onHandWavePositionEntered(){
   console.log("onHandWavePositionEntered");
 }
 
+// Discrete event: fires once when the hand leaves the wave stance.
 function onHandWavePositionExited(){
   console.log("onHandWavePositionExited");
 }
 
+// Called once when the HandPose model finishes loading; hides the status banner.
 function onHandPoseModelReady() {
   console.log("HandPose model ready!");
   document.getElementById("status").style.display = "none";
 }
 
 /**
- * Called by ml5js HandPose library
- * 
- * @param {*} predictions 
+ * Called by ml5js HandPose every frame with the latest predictions; hands them
+ * to the Hand object, which updates state and emits the wave events above.
+ *
+ * @param {*} predictions array of detected hand poses from ml5 HandPose
  */
 function onNewHandPosePrediction(predictions) {
   hand.setNewHandPose(predictions);
 }
 
+// Each frame: draw the webcam, overlay fps/detection debug text, then the hand.
 function draw() {
 
   // Draw the video to the screen

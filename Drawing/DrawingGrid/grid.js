@@ -1,9 +1,17 @@
+// Where the x and y axes are anchored: at the canvas top-left (p5's default
+// coordinate origin) or at its center.
 const AxisAlignment = {
   TOPLEFT: 'topleft',
   CENTER: 'center',
 }
 
 
+// A teaching overlay that visualizes p5.js screen coordinates: it draws the x/y
+// axes with labeled arrows, a faint cell grid, tick marks with coordinate
+// labels, an optional center point, and a live readout of the mouse position.
+// An optional red/black checkerboard (cached offscreen) illustrates per-pixel
+// addressing. Configure the public flags (isCheckboardOn, isCenterPtOn,
+// axisAlignment) before calling draw().
 class Grid {
   constructor() {
     this.axisColor = color(128);
@@ -25,6 +33,8 @@ class Grid {
     this.isCenterPtOn = true;
   }
 
+  // Render the full overlay: grid lines, both axes, optional center point, and
+  // the mouse readout. Call this from the sketch's draw().
   draw() {
     push();
     strokeWeight(1);
@@ -47,6 +57,7 @@ class Grid {
     pop();
   }
 
+  // Draw a dot at the canvas center, labeled with its (x, y) coordinates.
   drawCenterPt() {
     push();
     fill(this.axisTextColor);
@@ -60,6 +71,7 @@ class Grid {
     pop();
   }
 
+  // Draw faint vertical and horizontal lines every gridCellSize pixels.
   drawGrid() {
     noFill();
     stroke(this.gridColor);
@@ -72,6 +84,9 @@ class Grid {
     }
   }
 
+  // Paint a 1px red/black checkerboard across the canvas. Building it pixel by
+  // pixel is slow, so it is rendered once into a cached offscreen buffer and
+  // then blitted each frame.
   drawCheckboard() {
     // only draw this to an offscreen graphics buffer
     // because it takes a long time! So, this way, we only 
@@ -108,6 +123,9 @@ class Grid {
     image(this.bufferedCheckboard, 0, 0);  
   }
 
+  // Draw the horizontal axis with a labeled "x values" arrow and numbered tick
+  // marks at each grid line. Placement depends on axisAlignment (top edge vs.
+  // vertical center).
   drawXAxis() {
     let asc = textAscent() * this.textScalar;
     let desc = textDescent() * this.textScalar;
@@ -167,6 +185,9 @@ class Grid {
     }
   }
 
+  // Draw the vertical axis with a rotated "y values" arrow and numbered tick
+  // marks at each grid line. Placement depends on axisAlignment (left edge vs.
+  // horizontal center).
   drawYAxis() {
     let asc = textAscent() * this.textScalar;
     let desc = textDescent() * this.textScalar;
@@ -222,6 +243,8 @@ class Grid {
     }
   }
 
+  // Mark the cursor and label it with its live (x, y) coordinates, nudging the
+  // label inward so it stays on-canvas near the right and top edges.
   drawMousePosition() {
     push();
     textSize(12);
@@ -248,6 +271,8 @@ class Grid {
     pop();
   }
 
+  // Draw a line from (x1,y1) to (x2,y2) capped with a filled triangle arrowhead
+  // at the (x2,y2) end, sized by arrowSize.
   drawLineWithArrow(x1, y1, x2, y2, arrowSize) {
     //from: https://stackoverflow.com/a/44892083
     line(x1, y1, x2, y2); //draw a line beetween the vertices

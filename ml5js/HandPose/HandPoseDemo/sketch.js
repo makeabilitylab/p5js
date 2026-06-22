@@ -29,6 +29,7 @@ let kpCircleDiameter = 10;
 let kpColor;
 let skeletonColor;
 
+// Start the webcam and load ml5's HandPose model; wire its predict callback.
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -71,6 +72,7 @@ function onNewHandPosePrediction(predictions) {
   }
 }
 
+// Each frame: draw the webcam, then overlay the most recent hand pose (if any).
 function draw() {
   image(video, 0, 0, width, height);
 
@@ -138,6 +140,8 @@ function drawHand(handPose) {
   text(nfc(handPose.handInViewConfidence, 2), tightBoundingBox.left, tightBoundingBox.top - 15);
 }
 
+// Draws a circle at each of the 21 hand landmarks and, as a side effect,
+// returns the tight bounding box (min/max x,y over the landmarks).
 function drawKeypoints(handPose) {
   if (!handPose) {
     return;

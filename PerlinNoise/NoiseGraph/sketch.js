@@ -21,6 +21,7 @@ let graphHeight = -1;
 const xSliderPos = 90;
 const ySliderBuffer = 4;
 
+// Build the two stacked graphs (random vs. noise) and the noise-control sliders.
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
@@ -60,6 +61,9 @@ function setup() {
 
 }
 
+// Each frame: push one new random value and one new 1D noise() value onto the
+// graphs (advancing the noise input by the step slider), then scroll/draw both
+// and overlay the current slider values.
 function draw() {
   background(220);
 
@@ -102,6 +106,7 @@ function draw() {
   text(sliderNoiseFalloff.value(), xSliderValTextPos, yTextPos);
 }
 
+// Keep the canvas, graphs, and sliders positioned on window resize.
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
@@ -122,6 +127,15 @@ function windowResized() {
  * Simple graph class to plot random/noise data
  */
 class Graph {
+  /**
+   * @param {Number} x left edge of the graph
+   * @param {Number} y top edge of the graph
+   * @param {Number} width graph width in pixels (also caps the number of stored data points)
+   * @param {Number} height graph height in pixels
+   * @param {String} title label drawn in the lower-left corner
+   * @param {p5.Color} backgroundColor fill behind the plotted line
+   * @param {p5.Color} strokeColor color of the plotted line
+   */
   constructor(x, y, width, height, title = "title", backgroundColor = color(90), strokeColor = color(230)) {
     this.x = x;
     this.y = y;
@@ -194,9 +208,13 @@ class Graph {
     this.data.push(val);
   }
 
+  /**
+   * Draws the graph background, title, and a line connecting the stored data
+   * points (each point's y is scaled so 0..1 maps to the full graph height).
+   */
   draw() {
     push();
-    
+
     // draw background
     fill(this.backgroundColor);
     noStroke();

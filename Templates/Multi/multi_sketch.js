@@ -1,6 +1,10 @@
-// Multi-sketch example
+// Multi-sketch example — starter scaffold (copy me).
+// Uses p5 INSTANCE mode: each sketch is `new p5(p => {...}, 'divId')` where
+// every p5 call is namespaced on `p` (e.g. p.createCanvas) instead of the
+// global-mode defaults. This lets multiple independent sketches share one page,
+// each bound to its own container div.
 
-// Sketch1
+// Sketch1: a white square that follows the mouse, bound to div #one.
 let sketch1 = new p5( p => {
 
   p.setup = () => {
@@ -23,7 +27,7 @@ let sketch1 = new p5( p => {
 }, 'one');
 
 
-// Sketch2
+// Sketch2: a white circle that follows the mouse, bound to div #two.
 let sketch2 = new p5( p => {
 
   p.setup = () => {

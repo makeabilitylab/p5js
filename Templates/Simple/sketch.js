@@ -1,3 +1,5 @@
+// Minimal starter scaffold — copy this folder to begin a new sketch.
+
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers

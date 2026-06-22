@@ -12,6 +12,7 @@
 
 let diameter = 20;
 
+// Paint the initial background once so the brush trail accumulates.
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -21,6 +22,8 @@ function setup() {
   noStroke();
 }
 
+// Each frame: pick fill (default) or stroke (when pressed), then stamp a
+// circle sized by how fast the mouse moved since last frame.
 function draw() {
   if(mouseIsPressed == true){
     noFill();

@@ -32,6 +32,7 @@ let poseNetModelReady = false;
 // };
 const poseNetOptions = { detectionType: "single"};
 
+// Start the webcam and load ml5's PoseNet model, then wire its pose callback.
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -67,6 +68,7 @@ function onPoseDetected(poses) {
   currentPoses = poses;
 }
 
+// Each frame: draw the webcam, then overlay each currently detected pose.
 function draw() {
   image(video, 0, 0, width, height);
 
@@ -89,8 +91,15 @@ function draw() {
   }
 }
 
+/**
+ * Draws one detected pose: the skeleton lines, a labeled circle at each keypoint
+ * (part name, x/y, score), and a confidence-labeled bounding box around the body.
+ *
+ * @param {object} pose a single PoseNet result (has .skeleton and .pose.keypoints)
+ * @param {number} poseIndex this pose's index, used for the "Pose: N" label
+ */
 function drawPose(pose, poseIndex){
-  
+
   // Draw skeleton
   const skeletonColor = color(255, 255, 255, 128);
   stroke(skeletonColor); 
@@ -188,7 +197,9 @@ function drawPose(pose, poseIndex){
 }
 
 
-// A function to draw ellipses over the detected keypoints
+// Unused reference helper (kept from the original ml5 example): a simpler
+// keypoint draw that loops a global `poses` array. drawPose() above is what
+// this sketch actually uses.
 function drawKeypoints() {
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i += 1) {
@@ -207,7 +218,8 @@ function drawKeypoints() {
   }
 }
 
-// A function to draw the skeletons
+// Unused reference helper (kept from the original ml5 example): draws skeleton
+// lines from a global `poses` array. Superseded by drawPose() above.
 function drawSkeleton() {
   // Loop through all the skeletons detected
   for (let i = 0; i < poses.length; i += 1) {

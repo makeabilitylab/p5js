@@ -26,6 +26,7 @@ let video;
 let poseNet;
 let human = null;
 
+// Start the webcam and load ml5's PoseNet model, then wire its pose callback.
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -34,16 +35,18 @@ function setup() {
   video = createCapture(VIDEO);
   video.hide();
 
-  // setup PoseNet. This can take a while, so we load it 
+  // setup PoseNet. This can take a while, so we load it
   // asynchronously (when it's done, it will call modelReady)
   poseNet = ml5.poseNet(video, onModelReady); //call onModelReady when setup
   poseNet.on('pose', onPoseDetected); // call onPoseDetected when pose detected
 }
 
+// Called once when the PoseNet model finishes loading.
 function onModelReady() {
   print("The PoseNet model is ready...");
 }
 
+// Called by PoseNet every frame with detected poses; we keep just the first body.
 function onPoseDetected(poses) {
   // poses can contain an array of bodies (because PoseNet supports
   // recognition for *multiple* human bodies at the same time
@@ -52,6 +55,8 @@ function onPoseDetected(poses) {
   human = poses[0];
 }
 
+// Each frame: draw the webcam, then (if a body is detected) draw Elmo's nose
+// and eyes onto the detected face keypoints.
 function draw() {
   image(video, 0, 0); // draw the video to screen
 

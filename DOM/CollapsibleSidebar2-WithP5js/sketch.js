@@ -1,3 +1,13 @@
+//
+// Mixes a p5.js canvas with an HTML DOM sidebar (W3.CSS) of controls.
+// The sidebar's range/color/checkbox inputs (in index.html) call the
+// *Changed() handlers below to update the sketch, which has noLoop()-style
+// redraw-on-event behavior. The sidebar open/close *toggle* logic lives in
+// the inline <script> in index.html (openSidebar()/closeSidebar()), which
+// shows/hides the #sidebar div and shifts the #main margin; the handlers here
+// only react to the control values, not the toggle.
+//
+
 let _ballSize = 50;
 let _ballFillColor = null;
 let DEFAULT_HEIGHT = 400;
@@ -5,6 +15,8 @@ let DEFAULT_WIDTH = 400;
 let _autoFillDiv = false;
 var canvas = null;
 
+// Create the canvas, place it inside the sketch-container div, and sync the
+// sidebar's size slider max and color picker to the sketch's starting values.
 function setup() {
   canvas = createCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -29,30 +41,36 @@ function setup() {
   //noLoop();
 }
 
+// Draw the single circle, centered, using the current sidebar size/color.
 function draw() {
   background(220);
   fill(_ballFillColor);
   circle(width/2, height/2, _ballSize);
 }
 
+// Sidebar size-slider handler: update ball diameter and redraw.
 function ballSizeChanged(src, e){
   print("ballSizeChanged", src, e);
   _ballSize = src.value;
   redraw();
 }
 
+// Sidebar color-picker handler: update ball fill color and redraw.
 function ballColorChanged(src, e){
   print("ballColorChanged", src, e);
   _ballFillColor = src.value;
   redraw();
 }
 
+// Sidebar "Auto-fill div" checkbox handler: toggle whether the canvas fills
+// the window, then resize.
 function autoFillDivChanged(src, e){
   print("autoFillDivChanged", src, e);
   _autoFillDiv = src.checked;
   resizeCanvasEvent();
 }
 
+// Sidebar "Full screen" checkbox handler: enter/exit fullscreen, then resize.
 function fullScreenModeChanged(src, e){
   print("fullScreenModeChanged", src, e);
   fullscreen(src.checked);
@@ -60,6 +78,8 @@ function fullScreenModeChanged(src, e){
   redraw();
 }
 
+// Resize the canvas to either fill the window (auto-fill on) or the default
+// size, then redraw.
 function resizeCanvasEvent(){
   if(_autoFillDiv){
     // assigns new values for width and height variables
@@ -74,6 +94,7 @@ function resizeCanvasEvent(){
   redraw();
 }
 
+// Re-fit the canvas whenever the browser window is resized.
 window.onresize = function() {
   print("onresize event");
   resizeCanvasEvent();

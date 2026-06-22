@@ -20,6 +20,7 @@ let xNoiseInputVal = 0;
 const xSliderPos = 90;
 const ySliderBuffer = 4;
 
+// Build the canvas and the four sliders that control the 2D noise field.
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
@@ -70,8 +71,10 @@ function setup() {
   noLoop(); // no reason to loop
 }
 
+// Sample 2D noise(x, y) per pixel into a grayscale field (stepping the noise
+// input coords by the slider amounts), then overlay the current slider values.
 function draw() {
-  
+
   loadPixels();
   const noiseStepX = sliderNoiseStepX.value();
   const noiseStepY = sliderNoiseStepY.value();
@@ -124,6 +127,7 @@ function draw() {
   text(sliderNoiseFalloff.value(), xSliderValTextPos, yTextPos);
 }
 
+// Keep the canvas matched to the window on resize.
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 

@@ -8,6 +8,8 @@
 
 let grid;
 
+// Build the coordinate-grid overlay and configure which optional layers
+// (checkerboard, center point) it draws.
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -23,9 +25,10 @@ function setup() {
   print("setup(): I only run once!");
 }
 
+// Each frame: clear to dark and redraw the grid overlay (uncomment the shapes
+// below to see where they land relative to the coordinate axes).
 function draw() {
   //print("Hi, I'm draw(), you keep calling me all the time!");
-  print("draw() frameCnt=", frameCount);
   background(10);
   
   // uncomment the code below to draw some shapes

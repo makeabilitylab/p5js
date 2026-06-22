@@ -20,6 +20,7 @@ let xNoiseInputVal = 0;
 const xSliderPos = 90;
 const ySliderBuffer = 4;
 
+// Create the full-window canvas (unfinished starter — draw() is still empty).
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
@@ -29,11 +30,13 @@ function setup() {
 
 }
 
+// Each frame: intended to render a seamless looping 1D Perlin noise animation (not yet implemented).
 function draw() {
   // TODO:
-  
+
 }
 
+// Keep the canvas matched to the window on resize.
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 

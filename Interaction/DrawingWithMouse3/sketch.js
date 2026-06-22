@@ -13,6 +13,7 @@
 let diameter = 20;
 const SPACEBAR_KEYCODE = 32;
 
+// Paint the initial background and switch to HSB so hue maps cleanly to mouse X.
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -23,6 +24,8 @@ function setup() {
   noStroke();
 }
 
+// Each frame: hue from mouse X, fill vs. stroke from press/spacebar, and circle
+// size from mouse speed, then stamp the circle.
 function draw() {
   let hue = map(mouseX, 0, width, 0, 360);
   if(mouseIsPressed == true || keyIsDown(SPACEBAR_KEYCODE)){
@@ -47,6 +50,8 @@ function draw() {
   // }
 }
 
+// Any key except the spacebar clears the canvas (the spacebar is reserved as a
+// drawing modifier in draw(), so it must not also erase).
 function keyPressed(){
   if(key != ' '){
     colorMode(RGB);

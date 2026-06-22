@@ -12,6 +12,7 @@ let y;
 let xSpeed = 3; // moves 3 pixels per frame
 let diameter = 40;
 
+// Place the circle at the canvas center and set its appearance.
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -23,6 +24,7 @@ function setup() {
   noStroke();
 }
 
+// Each frame: move the circle horizontally, then reverse direction at the walls.
 function draw() {
   background(220);
   x += xSpeed;

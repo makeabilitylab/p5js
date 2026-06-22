@@ -13,6 +13,7 @@ let xSpeed;
 let ySpeed;
 let diameter = 40;
 
+// Place the circle at the canvas center and give it a random x/y speed.
 function setup() {
   createCanvas(600, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -28,6 +29,7 @@ function setup() {
   noStroke();
 }
 
+// Each frame: move the circle in x and y, then reverse each axis at its walls.
 function draw() {
   background(220);
   x += xSpeed;

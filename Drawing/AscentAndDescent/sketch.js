@@ -5,6 +5,7 @@
 //  - have drop down to select fonts (to see how things change)
 //  - print out ascent and descent information
 //  - be able to set font size
+// noSmooth() keeps the guide lines crisp (no anti-aliasing).
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -13,11 +14,15 @@ function setup() {
   noSmooth();
 }
 
+// Draw sample text and overlay its typographic guides: baseline, ascent line,
+// descent line, and a bounding box derived from textAscent()/textDescent().
 function draw() {
   background(220);
-  
+
   textSize(30);
-  
+
+  // Shrinks the reported ascent/descent slightly so the guide lines hug the
+  // visible glyphs rather than the font's full metric box.
   let textScalar = 0.8;
   let xText = 50;
   let yText = 100;
