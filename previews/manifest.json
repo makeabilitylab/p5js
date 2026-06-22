@@ -55,17 +55,9 @@
     "mode": "animated",
     "appHash": "3ad6b65bf62d0c58"
   },
-  "Color/ColorExplorer3D": {
-    "mode": "poster",
-    "appHash": "181f4a785fd26035"
-  },
   "Color/ColorPanel2D": {
     "mode": "animated",
     "appHash": "3686ac5bf44d762e"
-  },
-  "Color/CrossFadeRgb3D": {
-    "mode": "poster",
-    "appHash": "c8173e3f7b626717"
   },
   "DOM/CollapsibleSidebar1-NoP5js": {
     "mode": "poster",
