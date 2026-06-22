@@ -12,6 +12,7 @@
 let csvString = "";
 let values;
 
+// Set up the canvas. Input arrives later as keystrokes "typed" by the Arduino.
 function setup() {
   createCanvas(800, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -19,6 +20,8 @@ function setup() {
   describe("Two circles, one red and one blue, whose sizes grow and shrink to reflect two analog sensor values typed in from an Arduino, with each value labeled below its circle.");
 }
 
+// Each frame: if we've received a value pair, draw a red and a blue circle whose
+// sizes map the two analog values (0-1023); otherwise show a "no input" message.
 function draw() {
   background(230);
 
@@ -51,6 +54,7 @@ function draw() {
   }
 }
 
+// Draw a numeric label, horizontally centered, just below a circle's center.
 function drawValue(val, xCircle, yCircle) {
   let lblSize = 20;
   textSize(lblSize);
@@ -62,9 +66,9 @@ function drawValue(val, xCircle, yCircle) {
 }
 
 
+// The Arduino "types" a CSV line and presses Enter. Accumulate characters until
+// Enter, then parse the line into `values`; reset the buffer for the next line.
 function keyPressed() {
-  print(key);
-
   if (keyCode == ENTER) {
 
     let rowsOfData = CSVToArray(csvString);

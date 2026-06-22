@@ -22,6 +22,7 @@ let mouseXDelta = 0;
 let mouseYDelta = 0
 let lastMouseMoveTimestamp;
 
+// Set up the canvas and the pressed/unpressed button colors.
 function setup() {
   createCanvas(700, 300);
 
@@ -37,9 +38,12 @@ function setup() {
   mouseMoveTimestamp = millis();
 }
 
+// Each frame: draw the four directional buttons (darkened while their arrow key
+// is held) and the joystick base with a dot offset by recent mouse movement.
+// The Arduino sends input as emulated arrow-key presses and Mouse.move() deltas.
 function draw() {
   background(180);
-  
+
   let yUpButton = height * 0.3;
   let xUpButton = width * 0.8;
   fill(getButtonStateColor(UP_ARROW));
@@ -104,25 +108,22 @@ function draw() {
 
 }
 
+// Returns the pressed color if that arrow key is currently held, else unpressed.
 function getButtonStateColor(keyCode){
   if(keyIsDown(keyCode)){
-    return pressedColor; 
+    return pressedColor;
   }else{
-    return unpressedColor; 
+    return unpressedColor;
   }
 }
 
-function keyPressed(){
-  print("keyPressed", key);
-}
-
+// Track mouse movement deltas (the Arduino joystick arrives as Mouse.move()
+// events) so draw() can offset the joystick dot.
 function mouseMoved(event) {
   lastMouseMoveTimestamp = millis();
   mouseXDelta = mouseX - prevMouseX;
   mouseYDelta = mouseY - prevMouseY;
-  
+
   prevMouseX = mouseX;
   prevMouseY = mouseY;
-  
-  print(millis(), "mouseX", mouseX, "mouseY", mouseY, "mouseXDelta", mouseXDelta, "mouseYDelta", mouseYDelta); 
 }
