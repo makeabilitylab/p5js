@@ -11,6 +11,7 @@ let y;
 let yGravity = 5;
 let diameter = 30;
 
+// Set up the canvas and microphone; the circle's y-location will track loudness.
 function setup() {
   let cnv = createCanvas(400, 400);
 
@@ -36,10 +37,12 @@ function setup() {
   noStroke();
 }
 
+// Each frame: map the mic level (0-1) to a target y; the circle snaps up to a
+// louder reading but falls back down by yGravity when sound quiets.
 function draw() {
   // background(220, 220, 220, 10);
   background(220);
-  
+
   if(getAudioContext().state !== "running" ){
     textAlign(CENTER, CENTER);
     text("Click screen to begin", width/2, height/2);

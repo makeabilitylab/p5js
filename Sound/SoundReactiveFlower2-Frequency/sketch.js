@@ -51,6 +51,8 @@ function updateFreqText(spectrum){
   }
 }
 
+// Set up the canvas, microphone, and a small (64-bin) FFT so each petal can map
+// to one frequency band of the spectrum.
 function setup() {
   createCanvas(600, 400);
 
@@ -81,6 +83,9 @@ function setup() {
   angleMode(DEGREES); 
 }
 
+// Each frame: run an FFT and draw one petal per frequency bin, fanning evenly
+// around the center; each petal's length maps from that bin's amplitude, so the
+// flower's shape reflects the spectrum's distribution of energy.
 function draw() {
   //background(5, 5, 5, 1);
   background(bgColorTranslucent);
@@ -127,13 +132,13 @@ function draw() {
 
     flowerPetalAngle += angleStep;
   }
-  print(angleStep);
   pop();
 
   drawFps();
 }
 
 
+// Draw the current frame rate in the top-left corner (over a small backing box).
 function drawFps(){
   // Draw fps
   push();
@@ -175,6 +180,7 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
@@ -182,6 +188,7 @@ function touchStarted() {
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
@@ -189,6 +196,8 @@ function mouseClicked() {
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, the
+// sampling rate, and any later audio-context state changes (for debugging).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

@@ -8,6 +8,7 @@ let x;
 let y; 
 let maxDiameter = 400;
 
+// Set up the canvas and microphone; the circle's size will track mic loudness.
 function setup() {
   let cnv = createCanvas(400, 400);
 
@@ -35,6 +36,8 @@ function setup() {
   maxDiameter = min(width, height);
 }
 
+// Each frame: read the mic level (0-1) and draw a center circle whose diameter
+// (and red tint) grows with loudness.
 function draw() {
   // background(220, 220, 220, 10);
   background(220);
@@ -59,7 +62,6 @@ function draw() {
   // the size of the circle proportional to mic level
   let diameter = map(micLevel, 0, 1, 5, maxDiameter);
   ellipse(x, y, diameter);
-  print(micLevel, redColor);
 }
 
 // Accessibility: maps the mic level (0–1) to a coarse, human-readable label.
@@ -93,10 +95,12 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// One-time callback when mic.start() succeeds (logs for debugging).
 function onMicStartedSuccess(){
   print("onMicStartedSuccess");
 }
 
+// One-time callback when mic.start() fails, e.g. permission denied (logs the error).
 function onMicStartedError(event){
   print("onMicStartedError", event);
 }

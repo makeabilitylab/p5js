@@ -43,6 +43,7 @@ function updateFreqText(spectrum){
   }
 }
 
+// Open the mic and create the FFT analyzer that produces the frequency spectrum.
 function setup() {
   createCanvas(600, 400);
 
@@ -72,6 +73,9 @@ function setup() {
   fft.setInput(mic);
 }
 
+// Each frame: run an FFT on the mic, group the linear FFT bins into log-spaced
+// bars, draw the amplitude (%) gridlines, then draw each octave's bar colored by
+// frequency (hue) with a per-bar upper-frequency (Hz) label.
 function draw() {
   background(100);
 
@@ -81,7 +85,7 @@ function draw() {
   }
 
   // Returns an array of amplitude values (between 0 and 255) across the frequency spectrum.
-  // See: https://p5js.org/reference/#/p5.FFT/analyze 
+  // See: https://p5js.org/reference/#/p5.FFT/analyze
   const minFreqAmplitude = 0, maxFreqAmplitude = 255;
   const spectrum = fft.analyze();
 
@@ -200,6 +204,7 @@ function draw() {
   drawFps();
 }
 
+// Draw the current frame rate in the top-left corner.
 function drawFps(){
   // Draw fps
   push();
@@ -215,12 +220,14 @@ function drawFps(){
   pop();
 }
 
+// Map a frequency amplitude (0-255) to a y pixel (bottom = 0, top = 255).
 function getYPixelValueForFrequencyIntensity(frequencyIntensity){
-  // The min/max frequency amplitudes are 0 - 255, see https://p5js.org/reference/#/p5.FFT/analyze 
-  const minFreqAmplitude = 0, maxFreqAmplitude = 255; 
+  // The min/max frequency amplitudes are 0 - 255, see https://p5js.org/reference/#/p5.FFT/analyze
+  const minFreqAmplitude = 0, maxFreqAmplitude = 255;
   return map(frequencyIntensity, minFreqAmplitude, maxFreqAmplitude, height, 0);
 }
 
+// The upper frequency (Hz) of a log bar bin, capped at the Nyquist frequency.
 function getMaxFreqAtBin(binIndex) {
   let minFreqAtBin = pow(2, binIndex);
   let maxFreqAtBin = pow(2, binIndex + 1);
@@ -253,18 +260,21 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the audio context on touch (browsers require a user gesture to start audio).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture to start audio).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available input devices, and sample rate.
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

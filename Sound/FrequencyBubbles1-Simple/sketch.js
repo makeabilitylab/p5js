@@ -43,6 +43,8 @@ function updateFreqText(spectrum){
   }
 }
 
+// Open the mic, create the FFT analyzer, and seed one Bubble per FFT bin at a
+// random position, colored by its frequency (hue maps low->high frequency).
 function setup() {
   createCanvas(600, 400);
 
@@ -94,6 +96,8 @@ function setup() {
   pop();
 }
 
+// Each frame: run an FFT on the mic and size each frequency's bubble by that
+// frequency's current energy (louder frequency = bigger bubble).
 function draw() {
   background(50);
 
@@ -131,6 +135,7 @@ function draw() {
   drawMenu();
 }
 
+// Draw the frame rate and the "hit 'g' for grayscale" hint in the top-left.
 function drawMenu(){
   // Draw fps
   push();
@@ -152,6 +157,7 @@ function drawMenu(){
   pop();
 }
 
+// Press 'g' to toggle every bubble between its color and grayscale.
 function keyPressed(){
   if(key === 'g'){
     for (const [freqBin, bubble] of mapFreqToBubble.entries()) {
@@ -182,18 +188,21 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the audio context on touch (browsers require a user gesture to start audio).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture to start audio).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available input devices, and sample rate.
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

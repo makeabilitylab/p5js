@@ -58,14 +58,17 @@ let visualizations = [];
 let song;
 
 const numFftBins = 1024;
-const showLengthInSeconds = 40;
+const showLengthInSeconds = 40; // how many seconds of audio the scrolling views span
 
 let colorSchemeIndex = 0;
 
+// Load the song before setup() so it's ready to play and analyze.
 function preload(){
-  song = loadSound('assets/ImogenHeap_HideAndSeek_Edited.mp3'); 
+  song = loadSound('assets/ImogenHeap_HideAndSeek_Edited.mp3');
 }
 
+// Start the song + FFT, then lay out the five visualizer panels (scrolling
+// waveform, scrolling spectrogram, instant waveform, spectrum curve, bar graph).
 function setup() {
   let canvasWidth = 900; // windowWidth
   let canvasHeight = 600;
@@ -140,6 +143,7 @@ function setup() {
   //frameRate(2);
 }
 
+// Called if the mic input fails to initialize.
 function audioInErrorCallback(){
   print("Error setting up the microphone input");
 }
@@ -181,14 +185,16 @@ function updateFreqText(spectrum){
 
 function mouseClicked() {
   //mic.start();
-  
+
   //fft = new p5.FFT(0, numFftBins);
   //fft.setInput(mic);
 }
 
+// Each frame: pull the latest waveform + spectrum from the FFT and update/draw
+// every panel, then update the accessibility caption.
 function draw() {
   background(220);
-  
+
   let waveform = fft.waveform(); // analyze the waveform
   let spectrum = fft.analyze();
   
@@ -217,6 +223,7 @@ function draw() {
   //print(mic.getSources());
 }
 
+// Press 'c' to cycle every visualizer through the available color schemes.
 function keyPressed(){
   print(key);
   if(key == 'c'){

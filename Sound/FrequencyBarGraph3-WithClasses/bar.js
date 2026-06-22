@@ -1,3 +1,6 @@
+// One animated bar in the frequency bar graph, representing a single log-spaced
+// frequency bin (octave). Tracks the bin's average amplitude plus a held "peak"
+// line that drops at an accelerating rate after a brief hold, and draws itself.
 class Bar {
   constructor(x, width, y, maxHeight, barGraphBin, hue) {
     this.x = x;
@@ -64,6 +67,8 @@ class Bar {
   }
 
 
+  // Store this frame's frequency->amplitude map for the bin and recompute the
+  // bin's frequency range, its loudest frequency, and its average amplitude.
   update(mapFrequencyToAmplitude) {
     this.mapFrequenciesToAmplitudes = mapFrequencyToAmplitude;
 
@@ -76,6 +81,8 @@ class Bar {
     this.avgFrequencyAmplitude = sumOfValuesAtBin / frequenciesInBin.length;
   }
 
+  // Update the falling peak (raise instantly to a new high, then drop after a
+  // hold) and draw the bar, its peak line, and the peak's amplitude (%) label.
   draw() {
 
     if (this.peakFrequencyAmplitude < this.avgFrequencyAmplitude) {
@@ -130,8 +137,10 @@ class Bar {
 
   }
 
+  // Conversions from a frequency amplitude (0-255): one to a y pixel within the
+  // bar's bounds, the other to a 0-100 percent (used for the peak label).
   getYPixelValueForFrequencyAmplitude(freqAmplitude) {
-    // The min/max frequency amplitudes are 0 - 255, see https://p5js.org/reference/#/p5.FFT/analyze 
+    // The min/max frequency amplitudes are 0 - 255, see https://p5js.org/reference/#/p5.FFT/analyze
     const minFreqAmplitude = 0, maxFreqAmplitude = 255;
     return map(freqAmplitude, minFreqAmplitude, maxFreqAmplitude, this.maxHeight, this.y);
   }

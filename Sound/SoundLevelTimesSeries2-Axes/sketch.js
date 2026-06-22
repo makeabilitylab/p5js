@@ -20,6 +20,7 @@ let xWidth = -1;
 
 let bgColor = null;
 
+// Set up the canvas and microphone, reserving space for labeled x and y axes.
 function setup() {
   createCanvas(600, 400);
 
@@ -46,6 +47,9 @@ function setup() {
   xWidth = width - Y_AXIS_HORIZONTAL_SPACE;
 }
 
+// Each frame: draw one vertical line (hue mapped from loudness) at the next x
+// column, scrolling left to right; redraw the axes and wipe when it reaches the
+// right edge.
 function draw() {
 
   if(!mic.enabled || getAudioContext().state !== 'running'){
@@ -97,6 +101,8 @@ function draw() {
   pop();
 }
 
+// Clear the canvas and redraw the axes: horizontal gridlines/labels for mic
+// level (y) and tick marks/labels in frame counts along the bottom (x).
 function drawAxes(){
   background(bgColor);
   const micLevelIncrement = 0.2;
@@ -166,6 +172,8 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// Convert a mic level (0-1) to its y pixel position on the chart (0 sits at the
+// x-axis baseline, 1 reaches the top).
 function getYPixelValueForMicLevel(micLevel){
   // The min/max mic levels are 0 and 1
   const minMicLevel = 0, maxMicLevel = 1; 
@@ -196,6 +204,7 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
@@ -203,6 +212,7 @@ function touchStarted() {
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
@@ -210,6 +220,8 @@ function mouseClicked() {
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, the
+// sampling rate, and any later audio-context state changes (for debugging).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

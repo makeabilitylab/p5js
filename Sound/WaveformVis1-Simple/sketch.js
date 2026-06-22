@@ -8,6 +8,8 @@
 
 let mic, fft;
 
+// Set up the canvas, microphone, and an FFT used here only to grab the raw
+// time-domain waveform buffer each frame.
 function setup() {
   createCanvas(600, 400);
 
@@ -41,6 +43,8 @@ function setup() {
   fill(240);
 }
 
+// Each frame: grab the current waveform buffer (amplitude samples from -1 to +1)
+// and draw it as a single connected line spanning the canvas width.
 function draw() {
   background(100);
 
@@ -101,6 +105,7 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// Draw the current frame rate in the top-left corner.
 function drawFps(){
   // Draw fps
   push();
@@ -138,18 +143,22 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, and
+// the sampling rate (handy for debugging which microphone the browser picked).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

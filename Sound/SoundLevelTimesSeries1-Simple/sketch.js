@@ -9,6 +9,7 @@
 let mic;
 let currentXPos = 0;
 
+// Set up the canvas and microphone for the scrolling sound-level time series.
 function setup() {
   createCanvas(600, 400);
 
@@ -29,6 +30,9 @@ function setup() {
   background(100);
 }
 
+// Each frame: draw one vertical line whose height is the current mic level at the
+// next x column, advancing left to right and wiping the canvas to start over at
+// the right edge.
 function draw() {
 
   if(!mic.enabled || getAudioContext().state !== 'running'){
@@ -103,6 +107,7 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
@@ -110,6 +115,7 @@ function touchStarted() {
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
@@ -117,6 +123,8 @@ function mouseClicked() {
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, the
+// sampling rate, and any later audio-context state changes (for debugging).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

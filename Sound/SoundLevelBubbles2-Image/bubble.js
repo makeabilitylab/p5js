@@ -1,3 +1,5 @@
+// A single bubble at a fixed position whose diameter maps from the current mic
+// level (0-1) to its [minSize, maxSize] range. Can draw in color or grayscale.
 class Bubble{
   constructor(x, y, minSize, maxSize, fillColor){
     this.x = x;
@@ -14,10 +16,12 @@ class Bubble{
     this.drawGrayscale = false;
   }
 
+  // Store the latest mic level (0-1) used to size the bubble on the next draw().
   update(micLevel){
     this.micLevel = micLevel;
   }
 
+  // Draw the bubble, its diameter scaled from the current mic level.
   draw(){
     push();
     noStroke();

@@ -12,6 +12,8 @@ const MAX_BUBBLES = 1000;
 const ABS_MIN_BUBBLE_SIZE = 1;
 const ABS_MAX_BUBBLE_SIZE = 400;
 
+// Set up the mic and scatter MAX_BUBBLES randomly placed, randomly sized/colored
+// bubbles across the canvas; each will scale with the live mic level in draw().
 function setup() {
   createCanvas(600, 400);
 
@@ -51,6 +53,8 @@ function setup() {
   pop();
 }
 
+// Each frame: read the (smoothed) mic level and update + draw every bubble so
+// they all swell and shrink with loudness.
 function draw() {
   background(50);
 
@@ -100,6 +104,7 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// Draw the on-screen overlay: current frame rate and the grayscale-toggle hint.
 function drawMenu(){
   // Draw fps
   push();
@@ -121,6 +126,7 @@ function drawMenu(){
   pop();
 }
 
+// Press 'g' to toggle all bubbles between color and grayscale.
 function keyPressed(){
   if(key === 'g'){
     for(const bubble of bubbles){
@@ -151,18 +157,22 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, and
+// the sampling rate (handy for debugging which microphone the browser picked).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

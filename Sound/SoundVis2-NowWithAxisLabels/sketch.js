@@ -54,6 +54,8 @@ let backgroundColor;
 const numFftBins = 1024;
 const showLengthInSeconds = 10;
 
+// Set up the mic + FFT and lay out the four visualizers (waveform, spectrogram,
+// instant waveform, spectrum) across the canvas.
 function setup() {
   let canvasWidth = 1000; // windowWidth
   let canvasHeight = 700;
@@ -112,6 +114,7 @@ function setup() {
   //frameRate(2);
 }
 
+// Called if the microphone input fails to initialize.
 function audioInErrorCallback(){
   print("Error setting up the microphone input");
 }
@@ -151,13 +154,16 @@ function updateFreqText(spectrum){
   }
 }
 
+// Restart the mic + FFT on click (note: overridden by the mouseClicked below).
 function mouseClicked() {
   mic.start();
-  
+
   fft = new p5.FFT(0, numFftBins);
   fft.setInput(mic);
 }
 
+// Each frame: pull the latest waveform/spectrum and update + draw all four
+// visualizers, then refresh the accessibility frequency caption and fps.
 function draw() {
   background(220);
   
@@ -186,12 +192,14 @@ function draw() {
   //print(mic.getSources());
 }
 
+// Resume the audio context on touch (browsers require a user gesture).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');

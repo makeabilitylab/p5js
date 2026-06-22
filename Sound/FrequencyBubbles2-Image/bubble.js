@@ -1,3 +1,5 @@
+// A circle tied to one frequency, drawn at a fixed position; its diameter tracks
+// the current amplitude (energy) of that frequency, so it pulses with the sound.
 class Bubble{
   constructor(x, y, freq, fillColor){
     this.x = x;
@@ -5,13 +7,15 @@ class Bubble{
     this.fillColor = fillColor;
     this.freq = freq;
     this.freqAmplitude = 50;
-    this.maxWidth = 200;
+    this.maxWidth = 200; // diameter (px) at full amplitude (255)
   }
 
+  // Store this frame's amplitude (0-255) for this frequency.
   update(freqAmplitude){
     this.freqAmplitude = freqAmplitude;
   }
 
+  // Draw the bubble, mapping amplitude to diameter.
   draw(){
     push();
     noStroke();

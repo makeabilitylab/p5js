@@ -54,8 +54,10 @@ let spectrogram;
 let backgroundColor;
 
 const numFftBins = 1024;
-const showLengthInSeconds = 30;
+const showLengthInSeconds = 30; // how many seconds of audio the scrolling views span
 
+// Set up the mic + FFT, then lay out the four visualizer panels (scrolling
+// waveform, scrolling spectrogram, instant waveform, frequency spectrum).
 function setup() {
   let canvasWidth = 800; // windowWidth
   let canvasHeight = 600;
@@ -120,6 +122,7 @@ function setup() {
   //frameRate(2);
 }
 
+// Called if the mic input fails to initialize.
 function audioInErrorCallback(){
   print("Error setting up the microphone input");
 }
@@ -159,9 +162,11 @@ function updateFreqText(spectrum){
   }
 }
 
+// Each frame: pull the latest waveform + spectrum from the FFT and update/draw
+// every panel, then update the accessibility caption.
 function draw() {
   background(220);
-  
+
   let waveform = fft.waveform(); // analyze the waveform
   let spectrum = fft.analyze();
   
@@ -198,12 +203,14 @@ function draw() {
   //print(mic.getSources());
 }
 
+// Resume the audio context on touch (browsers require a user gesture).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');

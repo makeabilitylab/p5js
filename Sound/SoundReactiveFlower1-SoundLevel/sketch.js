@@ -17,6 +17,7 @@ const MAX_PETAL_LENGTH = 450;
 let bgColorSolid = null;
 let bgColorTranslucent = null;
 
+// Set up the canvas and microphone; petals will grow with overall mic loudness.
 function setup() {
   createCanvas(600, 400);
 
@@ -42,6 +43,9 @@ function setup() {
   background(bgColorSolid);
 }
 
+// Each frame: draw one petal (an ellipse) whose length maps from the current mic
+// level, rotating a bit further each frame so petals fan out into a flower; the
+// translucent background leaves a fading trail of past petals.
 function draw() {
   //background(5, 5, 5, 1);
   background(bgColorTranslucent);
@@ -109,6 +113,7 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// Draw the current frame rate in the top-left corner (over a small backing box).
 function drawFps(){
   // Draw fps
   push();
@@ -150,6 +155,7 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
@@ -157,6 +163,7 @@ function touchStarted() {
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
@@ -164,6 +171,8 @@ function mouseClicked() {
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, the
+// sampling rate, and any later audio-context state changes (for debugging).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

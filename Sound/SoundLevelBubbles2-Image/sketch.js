@@ -13,11 +13,14 @@ const MAX_BUBBLES = 1500;
 const ABS_MIN_BUBBLE_SIZE = 1;
 const ABS_MAX_BUBBLE_SIZE = 400;
 
+// Load the background image before setup() so its pixels are ready to sample.
 function preload() {
   // preload() runs once
   img = loadImage('assets/SewardPark_600x400_ByJonFroehlich.jpg');
 }
 
+// Set up the mic and scatter MAX_BUBBLES across the canvas, each colored from the
+// image pixel beneath it; they'll scale with the live mic level in draw().
 function setup() {
   createCanvas(600, 400);
 
@@ -55,6 +58,8 @@ function setup() {
   }
 }
 
+// Each frame: redraw the photo, then update + draw every bubble so they swell
+// and shrink with the (smoothed) mic level over the image.
 function draw() {
   background(50);
   background(img);
@@ -104,6 +109,7 @@ function updateMicLevelText(micLevel){
   }
 }
 
+// Draw the on-screen overlay: current frame rate and the grayscale-toggle hint.
 function drawMenu(){
   // Draw fps
   push();
@@ -125,6 +131,7 @@ function drawMenu(){
   pop();
 }
 
+// Press 'g' to toggle all bubbles between color and grayscale.
 function keyPressed(){
   if(key === 'g'){
     for(const bubble of bubbles){
@@ -155,18 +162,22 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the (browser-suspended) audio context on first touch so the mic starts.
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the (browser-suspended) audio context on first click so the mic starts.
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available audio input devices, and
+// the sampling rate (handy for debugging which microphone the browser picked).
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

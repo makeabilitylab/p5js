@@ -60,14 +60,17 @@ let song;
 
 
 const numFftBins = 1024;
-const showLengthInSeconds = 15;
+const showLengthInSeconds = 15; // how many seconds of audio the scrolling views span
 
 let colorSchemeIndex = 0;
 
+// Load the song before setup() so it's ready to play and analyze.
 function preload(){
-  song = loadSound('assets/ImogenHeap_HideAndSeek_Edited.mp3'); 
+  song = loadSound('assets/ImogenHeap_HideAndSeek_Edited.mp3');
 }
 
+// Create the canvas (parented into #sketch-container), start the mic + FFT, then
+// build the visualizer panels via canvasHasBeenResized().
 function setup() {
 
   let canvasWidth = 900; // windowWidth
@@ -129,6 +132,7 @@ function setup() {
   //frameRate(2); // slow down draw rate for debugging
 }
 
+// Toggle fullscreen from the page's checkbox, resizing the canvas to match.
 function fullScreenModeChanged(src, e){
   print("fullScreenModeChanged", src, e);
   fullscreen(src.checked);
@@ -136,6 +140,8 @@ function fullScreenModeChanged(src, e){
   canvasHasBeenResized();
 }
 
+// (Re)build all five visualizer panels for the current canvas size. Pauses the
+// draw loop while rebuilding so a half-built panel is never drawn.
 function canvasHasBeenResized(){
   print("canvasHasBeenResized");
   noLoop();
@@ -172,6 +178,7 @@ function canvasHasBeenResized(){
   loop();
 }
 
+// On browser-window resize, resize the canvas and rebuild the panels.
 window.onresize = function() {
   // TODO: this is almost working but doesn't seem to accomodate the sidebar.
   // we really want to measure the size of the 'sketch-container'
@@ -180,6 +187,7 @@ window.onresize = function() {
   canvasHasBeenResized();
 }
 
+// Called if the mic input fails to initialize.
 function audioInErrorCallback(){
   print("Error setting up the microphone input");
 }
@@ -219,9 +227,10 @@ function updateFreqText(spectrum){
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture).
 function mouseClicked() {
   //mic.start();
-  
+
   //fft = new p5.FFT(0, numFftBins);
   //fft.setInput(mic);
 
@@ -230,9 +239,11 @@ function mouseClicked() {
   });
 }
 
+// Each frame: pull the latest waveform + spectrum from the FFT and update/draw
+// every panel, then update the accessibility caption.
 function draw() {
   //background(220);
-  
+
   let waveform = fft.waveform(); // analyze the waveform
   let spectrum = fft.analyze();
   
@@ -261,8 +272,9 @@ function draw() {
   //print(mic.getSources());
 }
 
+// Press 'c' to cycle every visualizer through the available color schemes.
 function keyPressed(){
-  print(key); 
+  print(key);
   if(key == 'c'){
     colorSchemeIndex++;
     

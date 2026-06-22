@@ -44,11 +44,14 @@ function updateFreqText(spectrum){
   }
 }
 
+// Load the background image before setup() (preload blocks the sketch start).
 function preload() {
   // preload() runs once
   img = loadImage('assets/YellowStone_600x400_ByJonFroehlich.jpg');
 }
 
+// Open the mic, create the FFT analyzer, and seed one Bubble per FFT bin at a
+// random position, tinted with the image's color sampled at that position.
 function setup() {
   createCanvas(600, 400);
 
@@ -98,6 +101,8 @@ function setup() {
   pop();
 }
 
+// Each frame: redraw the photo, then run an FFT on the mic and size each
+// frequency's image-tinted bubble by that frequency's current energy.
 function draw() {
   background(50);
 
@@ -137,6 +142,7 @@ function draw() {
   drawFps();
 }
 
+// Draw the current frame rate in the top-left corner.
 function drawFps(){
   // Draw fps
   push();
@@ -174,18 +180,21 @@ function drawEnableMicText(){
   pop();
 }
 
+// Resume the audio context on touch (browsers require a user gesture to start audio).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture to start audio).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available input devices, and sample rate.
 function printAudioSourceInformation(){
   let micSamplingRate = sampleRate();
   print(mic);

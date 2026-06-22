@@ -15,6 +15,22 @@
 //  - if getNumSamplesInOnePixel() < 1024, need to update code
 //     -- draw lines or rects for spectrogram to fill x
 
+// ---------------------------------------------------------------------------
+// This file defines several self-contained sound visualizers, each fed by
+// p5.sound's waveform/FFT data (wired up in sketch.js):
+//   Rectangle           - geometry base class (position, size, hit tests)
+//   SoundVisualizer     - base for time-scrolling vis: sample<->pixel<->time math
+//   WaveformVisualizer  - scrolling amplitude waveform (min/max per x pixel)
+//   Line                - tiny x1,y1,x2,y2 holder
+//   MinMaxRange         - tiny min/max value pair
+//   Spectrogram         - scrolling time x frequency heat map
+//   SpectrumVisualizer  - live frequency spectrum curve
+//   InstantWaveformVis  - non-scrolling snapshot of the current waveform
+//
+// This is the first (simpler) prototype; see SoundVis4-ImprovedPerformance for
+// a faster, more featureful version of the same class family.
+// ---------------------------------------------------------------------------
+
 class Rectangle {
   constructor(x, y, width, height, backgroundColor) {
     this.x = x;
@@ -24,27 +40,54 @@ class Rectangle {
     this.backgroundColor = backgroundColor;
   }
 
+  /**
+   * Returns the left side of the rectangle
+   * @return {Number} the left side of the rectangle
+   */
   getLeft() {
     return this.x;
   }
 
+  /**
+   * Returns the right side of the rectangle
+   * @return {Number} the right side of the rectangle
+   */
   getRight() {
     return this.x + this.width;
   }
 
+  /**
+   * Returns the top of the rectangle
+   * @return {Number} the top of the rectangle
+   */
   getTop() {
     return this.y;
   }
 
+  /**
+   * Returns the bottom of the rectangle
+   * @return {Number} the bottom of the rectangle
+   */
   getBottom() {
     return this.y + this.height;
   }
 
+  /**
+   * Scales the rectangle width and height by the given fraction
+   * @param {Number} fraction the fraction used for scaling
+   */
   scale(fraction) {
     this.width *= fraction;
     this.height *= fraction;
   }
 
+  /**
+   * Increments the height by the given pixel amount. If lockAspectRatio
+   * is true, also scales the width a proportional amount
+   *
+   * @param {Number} yIncrement the amount of pixels to increment height
+   * @param {Number} lockAspectRatio if true, also increments width proportional amount
+   */
   incrementHeight(yIncrement, lockAspectRatio) {
     let yIncrementFraction = yIncrement / this.height;
     this.height += yIncrement;
@@ -54,6 +97,13 @@ class Rectangle {
     }
   }
 
+  /**
+   * Increments the width by the given pixel amount. If lockAspectRatio
+   * is true, also scales the height a proportional amount
+   *
+   * @param {Number} xIncrement the amount of pixels to increment width
+   * @param {Number} lockAspectRatio if true, also increments height proportional amount
+   */
   incrementWidth(xIncrement, lockAspectRatio) {
     let xIncrementFraction = xIncrement / this.width;
     this.width += xIncrement;
@@ -63,6 +113,12 @@ class Rectangle {
     }
   }
 
+  /**
+   * Returns true if this rectangle overlaps the rectangle r
+   *
+   * @param {Rectangle} r the rectangle to check for overlap
+   * @return {boolean} true if there is overlap
+   */
   overlaps(r) {
     // based on https://stackoverflow.com/a/4098512
     return !(this.getRight() < r.x ||
@@ -71,6 +127,13 @@ class Rectangle {
       this.y > r.getBottom());
   }
 
+  /**
+   * Returns true if this rectangle contains the point x,y
+   *
+   * @param {Number} x the x position of the point
+   * @param {Number} y the y position of the point
+   * @return {boolean} true if this rectangle contains the point
+   */
   contains(x, y) {
     return x >= this.x && // check within left edge
       x <= (this.x + this.width) && // check within right edge
@@ -79,7 +142,10 @@ class Rectangle {
   }
 }
 
-// "Abstract" class extended by WaveformVisualizer, Spectrogram, etc.
+// "Abstract" base class for the time-scrolling visualizers (extended by
+// WaveformVisualizer, Spectrogram, etc.). Holds the audio timeline (sampling
+// rate, how many seconds fit on screen) and the conversions between sample
+// index <-> x pixel <-> time in seconds that subclasses rely on.
 class SoundVisualizer extends Rectangle{
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
     super(x, y, width, height, backgroundColor);
@@ -91,7 +157,10 @@ class SoundVisualizer extends Rectangle{
     print("One x pixel = " + this.getNumSecondsInOnePixel() + " secs");
     print("Waveform buffer segment (1024) is " + nfc((1024/this.samplingRate),2) + " secs");
   }
-  
+
+  // Conversion helpers between the coordinate spaces this vis juggles:
+  // x-axis length expressed in seconds vs. samples, and how many samples/seconds
+  // map onto a single x pixel.
   getXAxisLengthInSeconds() {
     return this.lengthInSeconds;
   }
@@ -109,6 +178,9 @@ class SoundVisualizer extends Rectangle{
   }
 }
 
+// Scrolling amplitude waveform. Accumulates incoming samples and, for each
+// x pixel, collapses the samples that fall on it into a single min/max range so
+// the visible history (waveformDraw) stays one entry per pixel.
 class WaveformVisualizer extends SoundVisualizer {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
@@ -117,6 +189,9 @@ class WaveformVisualizer extends SoundVisualizer {
     this.waveformDraw = [];
   }
 
+  // Append the new samples, then drain the buffer one x-pixel's worth at a time,
+  // recording each pixel's min/max amplitude and dropping ranges that scroll off
+  // the left edge.
   update(waveform) {
     
     if(this.waveformBuffer.length <= 0){
@@ -159,10 +234,12 @@ class WaveformVisualizer extends SoundVisualizer {
     }
   }
 
+  // Draw the stored per-pixel min/max ranges as one connected vertical-zigzag
+  // shape across the panel.
   draw() {
     if (this.waveformDraw) {
       push();
-      
+
       noStroke();
       fill(this.backgroundColor);
       rect(this.x, this.y, this.width, this.height);
@@ -192,6 +269,7 @@ class WaveformVisualizer extends SoundVisualizer {
   }
 }
 
+// Tiny helper holding two endpoints (x1,y1)-(x2,y2).
 class Line {
   constructor(x1, y1, x2, y2) {
     this.x1 = x1;
@@ -201,6 +279,7 @@ class Line {
   }
 }
 
+// Tiny helper holding a min/max pair (used to track value ranges).
 class MinMaxRange {
   constructor(min, max) {
     this.min = min;
@@ -208,6 +287,9 @@ class MinMaxRange {
   }
 }
 
+// Scrolling spectrogram: time on the x-axis, frequency on the y-axis, with
+// brightness encoding the energy at each frequency. Draws each spectrum column
+// once onto one of two ping-ponging offscreen buffers for performance.
 class Spectrogram extends SoundVisualizer {
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
     super(x, y, width, height, backgroundColor, lengthInSeconds);
@@ -231,15 +313,18 @@ class Spectrogram extends SoundVisualizer {
     this.spectrum = null;
   }
   
+  // Clear an offscreen buffer to the background color.
   resetGraphicsBuffer(gfxBuffer){
     gfxBuffer.push();
     gfxBuffer.background(this.backgroundColor);
     gfxBuffer.pop();
   }
-  
 
+
+  // Draw this frame's spectrum as one vertical column (frequency up the y-axis,
+  // energy as brightness) onto the current offscreen buffer for the scroll.
   update(spectrum) {
-    
+
     this.spectrum = spectrum; // grab cur ref to spectrum
     
     if(this.hasUpdateEverBeenCalled == false){
@@ -291,13 +376,16 @@ class Spectrogram extends SoundVisualizer {
   }
 
 
+  // Blit the two offscreen buffers to the screen at their scrolled positions.
   draw() {
-    // draw our offscreen buffers to the screen!   
+    // draw our offscreen buffers to the screen!
     image(this.offscreenGfxBuffer1, this.offscreenGfxBuffer1.x, this.y);
     image(this.offscreenGfxBuffer2, this.offscreenGfxBuffer2.x, this.y);
   }
 }
 
+// Live frequency spectrum drawn as a single connected curve of the current
+// FFT bins (no scrolling, peaks, or averaging — just the latest snapshot).
 class SpectrumVisualizer extends Rectangle {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor) {
@@ -306,10 +394,12 @@ class SpectrumVisualizer extends Rectangle {
     this.samplingRate = sampleRate();
   }
 
+  // Store the latest spectrum for drawing.
   update(spectrum) {
     this.spectrum = spectrum;
   }
 
+  // Draw the current spectrum as a connected curve spanning the full width.
   draw() {
     if (this.spectrum) {
       push();
@@ -329,6 +419,8 @@ class SpectrumVisualizer extends Rectangle {
   }
 }
 
+// Non-scrolling waveform: draws just the current audio buffer as a single
+// snapshot each frame, rather than scrolling history.
 class InstantWaveformVis extends SoundVisualizer {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
@@ -336,6 +428,8 @@ class InstantWaveformVis extends SoundVisualizer {
     this.waveform = null;
   }
 
+  // Snapshot the current waveform buffer; unlike the scrolling vis, no history
+  // is kept.
   // not sure if I should pass the fft reference to InstanveWaveformVis
   // in the constructor or this waveform in update
   update(waveform) {
@@ -343,6 +437,7 @@ class InstantWaveformVis extends SoundVisualizer {
     this.waveform = waveform.slice();
   }
 
+  // Draw the snapshotted waveform as a single connected curve.
   draw() {
     if (this.waveform) {
       push();

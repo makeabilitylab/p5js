@@ -44,6 +44,7 @@ function updateFreqText(spectrum){
   }
 }
 
+// Open the mic and create the FFT analyzer that produces the frequency spectrum.
 function setup() {
   createCanvas(600, 400);
 
@@ -73,6 +74,9 @@ function setup() {
   fft.setInput(mic);
 }
 
+// Each frame: run an FFT on the mic, group the linear FFT bins into log-spaced
+// octaves, and hand each octave's frequency->amplitude map to a persistent Bar
+// object (created once per bin) that handles its own animation and drawing.
 function draw() {
   background(50);
 
@@ -82,7 +86,7 @@ function draw() {
   }
 
   // Returns an array of amplitude values (between 0 and 255) across the frequency spectrum.
-  // See: https://p5js.org/reference/#/p5.FFT/analyze 
+  // See: https://p5js.org/reference/#/p5.FFT/analyze
   const minFreqAmplitude = 0, maxFreqAmplitude = 255;
   const spectrum = fft.analyze();
 
@@ -140,6 +144,7 @@ function draw() {
   drawFps();
 }
 
+// Draw the current frame rate in the top-left corner.
 function drawFps(){
   // Draw fps
   push();
@@ -177,18 +182,21 @@ function drawEnableMicText() {
   pop();
 }
 
+// Resume the audio context on touch (browsers require a user gesture to start audio).
 function touchStarted() {
   if (getAudioContext().state !== 'running') {
     getAudioContext().resume();
   }
 }
 
+// Resume the audio context on click (browsers require a user gesture to start audio).
 function mouseClicked() {
   getAudioContext().resume().then(() => {
     console.log('Playback resumed successfully');
   });
 }
 
+// One-time diagnostic: log the mic object, available input devices, and sample rate.
 function printAudioSourceInformation() {
   let micSamplingRate = sampleRate();
   print(mic);
