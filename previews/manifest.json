@@ -228,11 +228,11 @@
     "appHash": "a03010a100783c99"
   },
   "Sound/SoundVis3": {
-    "mode": "poster",
+    "mode": "animated",
     "appHash": "8d93bbef54eb3006"
   },
   "Sound/SoundVis4-ImprovedPerformance": {
-    "mode": "poster",
+    "mode": "animated",
     "appHash": "08854d50b5e0de2b"
   },
   "Sound/WaveformVis1-Simple": {
