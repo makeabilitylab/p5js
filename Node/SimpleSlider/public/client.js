@@ -1,3 +1,10 @@
+//
+// SimpleSlider browser client. Wires the on-page <input type="range"> to the server:
+// local slider changes are sent to the server (which broadcasts them to other clients)
+// and also written out to a connected Arduino over Web Serial (see serial.js).
+// Incoming values from the server update this client's slider and serial output.
+//
+
 socket = io.connect(); // if no url is passed to connect, defaults to defaults to window.location
 socket.on("slider", onNewSliderValueFromServer);
 

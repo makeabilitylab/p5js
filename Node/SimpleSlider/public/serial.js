@@ -59,7 +59,9 @@ function onNewSerialDataReceived(data){
 }
 
 /**
- * Connects to the Web Serial port and starts listening to serial input
+ * Prompts the user to pick a serial port, opens it at 9600 baud, sets up the
+ * write stream (serialWriter, used elsewhere to send data to the device), then
+ * loops forever reading incoming lines and handing each to onNewSerialDataReceived.
  */
 async function connectSerial() {
   const log = document.getElementById('error-message');
@@ -118,6 +120,9 @@ async function connectSerial() {
   }
 }
 
+// A TransformStream transformer that buffers raw serial bytes and emits one
+// complete line at a time (splitting on "\r\n"), so onNewSerialDataReceived gets
+// whole lines instead of arbitrary chunks.
 class LineBreakTransformer {
   constructor() {
     // A container for holding stream data until a new line.

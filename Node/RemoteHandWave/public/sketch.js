@@ -19,6 +19,10 @@ let hand;
 
 let mostRecentRemoteHandData = null;
 
+// Set up the webcam, the ml5 handpose model, the Hand wave-detector, and the socket
+// connection. The Hand object emits high-level events (entered/exited wave position,
+// new wave angle) that we forward to the server; incoming remote waves are stored in
+// mostRecentRemoteHandData and drawn in draw().
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -45,6 +49,8 @@ function setup() {
   hand.on(Hand.EVENT_EXITED_HAND_WAVE_POSITION, onHandWavePositionExited);
 }
 
+// A remote client waved: store their hand data for drawing, and (if connected to an
+// Arduino) relay the wave angle out over serial.
 function onNewHandWaveEventFromServer(data) {
   console.log("onNewHandWaveEventFromServer:", data);
   mostRecentRemoteHandData = data;
@@ -54,12 +60,15 @@ function onNewHandWaveEventFromServer(data) {
   }
 }
 
+// Hand emitted a new wave angle (our local hand is mid-wave): forward it to the server.
 function onNewHandWaveAngle(handWaveAngle) {
   // console.log("onNewHandWaveAngle", handWaveAngle);
   //serialWriteHandWaveAngle(handWaveAngle);
   sendNewWaveEventToServer(hand, handWaveAngle);
 }
 
+// Package the current hand state (bounding box, in-wave flag, angle, landmarks) and
+// emit it to the server, which broadcasts it to the other clients.
 function sendNewWaveEventToServer(hand, handWaveAngle) {
   let boundingBox = null;
   if (hand.handPose) {
@@ -91,16 +100,19 @@ function sendNewWaveEventToServer(hand, handWaveAngle) {
   socket.emit(SOCKET_EVENT_HANDWAVE, data);
 }
 
+// Local hand just moved into the wave position: notify the server.
 function onHandWavePositionEntered() {
   console.log("onHandWavePositionEntered");
   sendNewWaveEventToServer(hand, null);
 }
 
+// Local hand just left the wave position: notify the server.
 function onHandWavePositionExited() {
   console.log("onHandWavePositionExited");
   sendNewWaveEventToServer(hand, null);
 }
 
+// ml5 handpose finished loading: hide the "loading" status message.
 function onHandPoseModelReady() {
   console.log("Handpose model ready!");
   document.getElementById("status").style.display = "none";
@@ -115,6 +127,9 @@ function onNewHandPosePrediction(predictions) {
   hand.setNewHandPose(predictions);
 }
 
+// Each frame: draw the webcam feed and our local hand overlay, show fps/detection
+// debug text, then (if we've heard from a remote client) draw their hand's bounding
+// box, wave info, and landmarks on top.
 function draw() {
 
   // Draw the video to the screen
@@ -179,9 +194,12 @@ function draw() {
   }
 }
 
+// Relay a wave angle to a connected Arduino over Web Serial (no-op if no serial
+// writer is open). serialWriter comes from serial.js.
 async function serialWriteHandWaveAngle(handWaveAngle) {
 
-  // // let remappedAngle = //-70, 
+  // Shift into a 0..360-style range so the Arduino receives a non-negative angle.
+  // // let remappedAngle = //-70,
   let remappedAngle = handWaveAngle + 180;
   if (serialWriter) {
     console.log("Writing to serial: ", remappedAngle.toString());
