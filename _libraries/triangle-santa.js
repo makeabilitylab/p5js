@@ -1,3 +1,14 @@
+// TriangleSanta — builds a pixel-art Santa from a 9-row x 10-column grid of
+// triangle "cells", mirroring the Makeability Lab logo's triangle grid so the
+// two shapes can morph into each other. Shared by the TriangleSanta and
+// SantaToMakeabilityLab sketches; kept here in _libraries/ as the single source
+// of truth (please don't auto-consolidate or fork it).
+//
+// Depends on the Makeability Lab graphics classes Cell, TriangleDir, Colorer,
+// and ColorUtils (loaded alongside this file). The constants below are Santa's
+// color palette; each is jittered slightly when a row is built (see the
+// getSanta*Color helpers) so the figure looks hand-shaded rather than flat.
+
 const COLOR_SANTA_FACE = "#fdf2d0";
 const COLOR_SANTA_SUIT_RED = "#cc4133";
 const COLOR_SANTA_SUIT_WHITE = "#ffffff";
@@ -22,14 +33,16 @@ class TriangleSanta {
      */
     static get numCols() { return 10; }
   
+    // Position/size accessors derived from the top-left cell and the grid
+    // dimensions (read x/y/cellSize/width/height like properties).
     get x(){ return this.santaArray[0][0].x }
-  
+
     get y(){ return this.santaArray[0][0].y }
-  
+
     get cellSize(){ return this.santaArray[0][0].size }
-  
+
     get width(){ return TriangleSanta.numCols * this.santaArray[0][0].size }
-  
+
     get height(){ return TriangleSanta.numRows * this.santaArray[0][0].size }
   
   
@@ -67,6 +80,7 @@ class TriangleSanta {
       }  
     }
 
+    // Sets the stroke color on every triangle (leaving fill colors untouched).
     setStrokeColors(strokeColor){
       for (let row = 0; row < this.santaArray.length; row++) {
         for (let col = 0; col < this.santaArray[row].length; col++) {
@@ -75,6 +89,8 @@ class TriangleSanta {
       } 
     }
   
+    // Flattens the grid into a single array of triangles. If onlyVisible is
+    // true, skips triangles whose .visible flag is false.
     getAllTriangles(onlyVisible=true){
       let allTriangles = new Array();
       for (let row = 0; row < this.santaArray.length; row++) {
@@ -92,6 +108,7 @@ class TriangleSanta {
       return allTriangles;
     }
   
+    // Draw every cell in the grid (no-op if the whole Santa is hidden).
     draw() {
       if(!this.visible){ return; }
   
@@ -125,6 +142,9 @@ class TriangleSanta {
       }
     }
   
+    // Builds the full 9x10 grid one row at a time, nudging y down by
+    // triangleSize after each row. Each createSanta*Row helper returns that
+    // row's array of Cells (hat, face, beard, suit, belt...).
     //TODO: in future read in like a .csv or json pixel grid with this info so can create any shape
     //      but maybe that's just an SVG? Don't want to recreate existing format
     static createTriangleSanta(x, y, triangleSize) {
@@ -167,6 +187,9 @@ class TriangleSanta {
       return triSanta;
     }
 
+    // Color helpers: each returns a palette color jittered slightly in
+    // brightness (and sometimes saturation) so Santa looks hand-shaded rather
+    // than flat. Called per-triangle while a row is built.
     static getSantaSuitColor(){
       const brightnessAmt = random(75, 100);
       const newRed = ColorUtils.changeColorBrightness(color(COLOR_SANTA_SUIT_RED), brightnessAmt);
@@ -205,6 +228,8 @@ class TriangleSanta {
       return newFaceColor;
     }
   
+    // Each createSanta*Row builds one row of Cells, choosing triangle directions
+    // and palette colors to form that slice of Santa.
     static createSantaTopRow(x, y, triangleSize) {
       let topRow = new Array(TriangleSanta.numCols);
       let col = 0;

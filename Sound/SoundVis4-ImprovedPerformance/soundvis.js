@@ -44,6 +44,24 @@
 //  - https://gomakethings.com/whats-the-best-way-to-document-javascript/
 //  - https://google.github.io/styleguide/jsguide.html#jsdoc-method-and-function-comments
 
+// ---------------------------------------------------------------------------
+// This file defines several self-contained sound visualizers, each fed by
+// p5.sound's waveform/FFT data (wired up in sketch.js):
+//   Rectangle          - geometry base class (position, size, hit tests)
+//   SoundVisualizer    - base for time-scrolling vis: sample<->pixel<->time math
+//   ScrollingWaveform  - scrolling amplitude waveform (the "improved" vis)
+//   Spectrogram        - scrolling time x frequency heat map
+//   SpectrumBarGraph   - live frequency bar graph (log-binned)
+//   SpectrumVisualizer - live frequency spectrum with peak + average lines
+//   InstantWaveformVis - non-scrolling snapshot of the current waveform
+//
+// Why "ImprovedPerformance": the scrolling vis (ScrollingWaveform, Spectrogram)
+// draw each incoming audio buffer ONCE onto offscreen graphics buffers, then
+// just blit those images to the screen each frame (two buffers ping-pong to
+// create the scroll). This avoids redrawing the entire history every frame,
+// which is what made the earlier SoundVis versions slow.
+// ---------------------------------------------------------------------------
+
 class Rectangle {
   constructor(x, y, width, height, backgroundColor) {
     this.x = x;
@@ -155,7 +173,10 @@ class Rectangle {
   }
 }
 
-// "Abstract" class extended by WaveformVisualizer, Spectrogram, etc.
+// "Abstract" base class for the time-scrolling visualizers (extended by
+// ScrollingWaveform, Spectrogram, etc.). Holds the audio timeline (sampling
+// rate, how many seconds fit on screen) and the conversions between sample
+// index <-> x pixel <-> time in seconds that subclasses rely on.
 class SoundVisualizer extends Rectangle {
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
     super(x, y, width, height, backgroundColor);
@@ -183,6 +204,8 @@ class SoundVisualizer extends Rectangle {
     this.curBuffer = null;
   }
 
+  // Record the latest audio buffer and advance the running sample index (which
+  // drives the scroll). Subclasses call super.update() after drawing.
   update(buffer) {
     this.curBuffer = buffer;
 
@@ -198,6 +221,10 @@ class SoundVisualizer extends Rectangle {
     this.bufferIndex += buffer.length;
   }
 
+  // Conversion helpers between the three coordinate spaces this vis juggles:
+  // sample index <-> x pixel <-> time in seconds (plus the on-screen min/max of
+  // each as the timeline scrolls). The subclasses use these to map audio data
+  // onto the canvas.
   getXAxisLengthInSeconds() {
     return this.lengthInSeconds;
   }
@@ -255,10 +282,12 @@ class SoundVisualizer extends Rectangle {
     return xVal;
   }
 
+  // Draw the time (seconds) ticks and labels along the bottom x-axis, recycling
+  // ticks that scroll off the left edge so the labels keep advancing.
   drawXAxisTicksAndLabels() {
     push();
 
-    // ** Draw x axis ticks and labels **  
+    // ** Draw x axis ticks and labels **
     let xTickBufferInPixels = 15;
     textSize(this.axisLabelsTextSize);
     for (let i = this.xTicks.length - 1; i >= 0; i--) {
@@ -289,16 +318,19 @@ class SoundVisualizer extends Rectangle {
   }
 }
 
+// Tiny helper holding a min/max pair (used to track value ranges).
 class MinMaxRange {
   constructor(min, max) {
     this.min = min;
     this.max = max;
   }
 
+  // The signed span (max - min).
   getRange() {
     return this.max - this.min;
   }
 
+  // The unsigned span (absolute value of the range).
   getAbsRange() {
     return abs(this.getRange());
   }
@@ -339,6 +371,8 @@ class ScrollingWaveform extends SoundVisualizer {
     this.previousOffScreenBuffer = this.offscreenGfxBuffer1;
   }
 
+  // Clear an offscreen buffer to the background (or clearColor) and re-apply the
+  // waveform stroke settings, ready to be drawn onto again.
   resetGraphicsBuffer(gfxBuffer, clearColor) {
     gfxBuffer.push();
 
@@ -355,6 +389,8 @@ class ScrollingWaveform extends SoundVisualizer {
     gfxBuffer.noFill();
   }
 
+  // Pick which of the two ping-ponging buffers the given x should draw into,
+  // repositioning both buffers for the scroll and clearing one when it wraps.
   setupAndGetOffScreenBuffer(xBufferVal) {
     let selectOffscreenBuffer = int(xBufferVal / this.width) % 2;
     let offScreenBuffer = this.offscreenGfxBuffer1;
@@ -395,11 +431,12 @@ class ScrollingWaveform extends SoundVisualizer {
     return offScreenBuffer;
   }
   
+  // Map a waveform value to a stroke color based on the current color scheme.
   getColorForWaveformValue(waveformVal){
     //TODO fix and test this
     colorMode(HSB);
     if(this.colorScheme == COLORSCHEME.GRAYSCALE){
-      return color(0, 0, 100); 
+      return color(0, 0, 100);
     }else if(this.colorScheme == COLORSCHEME.RAINBOW){
       let hue = map(waveformVal, 0, 1, 280, 0);
       return color(hue, 80, 90);
@@ -407,10 +444,12 @@ class ScrollingWaveform extends SoundVisualizer {
       let hue = map(waveformVal, 0, 1, 340, 240);
       return color(hue, 80, 90);
     }else{
-      return color(0, 100, 100); 
+      return color(0, 100, 100);
     }
   }
 
+  // Draw this buffer's waveform once onto the appropriate offscreen buffer as a
+  // connected shape, splitting the shape across buffers at the scroll seam.
   update(waveform) {
 
     let xAxisLengthInSamples = this.getXAxisLengthInSamples();
@@ -423,15 +462,12 @@ class ScrollingWaveform extends SoundVisualizer {
     let bufferLengthInXPixels = this.convertBufferLengthToXPixels(waveform.length);
 
 
-    let debugLastX = null;
-    let debugI = 0;
     let prevOffScreenBuffer = offScreenBuffer;
-    
+
     // TODO:
     //  - Investigate and then address drawing across offscreen gfx buffer seams
     //  - Investigate and address starting shape with prev last vertex
-    
-    let swappedBuffers = false;
+
     let maxWaveformVal = max(waveform);
     offScreenBuffer.colorMode(HSB);
     
@@ -461,28 +497,14 @@ class ScrollingWaveform extends SoundVisualizer {
         
         offScreenBuffer.beginShape();
         prevOffScreenBuffer = offScreenBuffer;
-        swappedBuffers = true;
-      }else{
-        swappedBuffers = false; 
       }
-      
+
       let x = map(xIndexWithinAxis, 0, xAxisLengthInSamples, 0, this.width);
       let y = map(waveformVal, -1, 1, this.getBottom(), this.y);
 
       offScreenBuffer.vertex(x, y);
-    
+
       xIndex++;
-
-      if (debugLastX != null && abs(debugLastX - x) > 10) {
-        print("swappedBuffers", swappedBuffers, "x", x, "y", y, "lastX", debugLastX, "i", debugI, "waveform.length", waveform.length, "this.width", this.width);
-        print("xBufferVal", xBufferVal, "xIndex", xIndex, "xIndexWithinAxis", xIndexWithinAxis);
-        let selectOffscreenBuffer = int(xBufferVal / this.width) % 2;
-        print("...start swapping buffers; xBufferVal", xBufferVal, "this.width", 
-            this.width, "selectOffscreenBuffer", selectOffscreenBuffer);
-      }
-
-      debugLastX = x;
-      debugI++;
     }
     offScreenBuffer.endShape();
 
@@ -492,13 +514,17 @@ class ScrollingWaveform extends SoundVisualizer {
   }
 
 
+  // Blit the two offscreen buffers to the screen at their scrolled positions.
   draw() {
-    // draw our offscreen buffers to the screen! 
+    // draw our offscreen buffers to the screen!
     image(this.offscreenGfxBuffer1, this.offscreenGfxBuffer1.x, this.y);
     image(this.offscreenGfxBuffer2, this.offscreenGfxBuffer2.x, this.y);
   }
 }
 
+// Scrolling spectrogram: time on the x-axis, frequency on the y-axis, with
+// brightness encoding the energy at each frequency. Like ScrollingWaveform, it
+// uses two ping-ponging offscreen buffers for performance.
 class Spectrogram extends SoundVisualizer {
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
     super(x, y, width, height, backgroundColor, lengthInSeconds);
@@ -521,12 +547,15 @@ class Spectrogram extends SoundVisualizer {
     this.colorScheme = COLORSCHEME.GRAYSCALE;
   }
 
+  // Clear an offscreen buffer to the background color.
   resetGraphicsBuffer(gfxBuffer) {
     gfxBuffer.push();
     gfxBuffer.background(this.backgroundColor);
     gfxBuffer.pop();
   }
 
+  // Draw this frame's spectrum as one vertical column (frequency up the y-axis,
+  // energy as brightness) onto the current offscreen buffer for the scroll.
   update(spectrum) {
 
     this.spectrum = spectrum; // grab cur ref to spectrum
@@ -602,8 +631,9 @@ class Spectrogram extends SoundVisualizer {
   }
 
 
+  // Blit the two offscreen buffers to the screen, then overlay the axes.
   draw() {
-    // draw our offscreen buffers to the screen! 
+    // draw our offscreen buffers to the screen!
     image(this.offscreenGfxBuffer1, this.offscreenGfxBuffer1.x, this.y);
     image(this.offscreenGfxBuffer2, this.offscreenGfxBuffer2.x, this.y);
 
@@ -612,6 +642,8 @@ class Spectrogram extends SoundVisualizer {
     }
   }
 
+  // Draw the frequency (Hz) ticks/labels up the y-axis and the time ticks along
+  // the x-axis.
   drawAxes() {
     if (this.spectrum) {
       push();
@@ -659,6 +691,9 @@ class Spectrogram extends SoundVisualizer {
   }
 }
 
+// Live frequency bar graph. Groups the FFT's many linear-frequency bins into a
+// smaller number of log-spaced bars (more bars for low frequencies, where the
+// ear is more sensitive) and draws falling "peak" lines on top.
 class SpectrumBarGraph extends Rectangle {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor) {
@@ -678,6 +713,8 @@ class SpectrumBarGraph extends Rectangle {
     this.setFadeBackground(false);
   }
 
+  // Re-bin the latest spectrum into log-spaced bars (averaging the linear FFT
+  // bins that fall in each octave) and update each bar's slowly-falling peak.
   update(spectrum) {
     this.spectrum = spectrum;
 
@@ -730,6 +767,7 @@ class SpectrumBarGraph extends Rectangle {
     }
   }
 
+  // The upper frequency (Hz) of a log bar bin, capped at the Nyquist frequency.
   getMaxFreqAtBin(binIndex) {
     let minFreqAtBin = pow(2, binIndex);
     let maxFreqAtBin = pow(2, binIndex + 1);
@@ -740,6 +778,7 @@ class SpectrumBarGraph extends Rectangle {
     return maxFreqAtBin;
   }
   
+  // Map a bar value to a fill/stroke color based on the current color scheme.
   //todo: maybe add min max here to make more reusuable?
   getFillColorForValue(val){
     colorMode(HSB); //TODO should we just be setting colorMode like this? 
@@ -771,12 +810,13 @@ class SpectrumBarGraph extends Rectangle {
     }
   }
   
+  // Toggle a semi-transparent background (so old bars fade out) vs. opaque.
   setFadeBackground(turnOnFadeBackground){
     if(turnOnFadeBackground){
-      this.backgroundColor = color(red(this.backgroundColor), 
+      this.backgroundColor = color(red(this.backgroundColor),
                                  green(this.backgroundColor),
                                  blue(this.backgroundColor),
-                                 15); 
+                                 15);
     }else{
      this.backgroundColor = color(red(this.backgroundColor), 
                                  green(this.backgroundColor),
@@ -784,6 +824,7 @@ class SpectrumBarGraph extends Rectangle {
     }
   }
 
+  // Draw the log-binned bars with their peak lines and per-bar Hz labels.
   draw() {
     push();
 
@@ -840,6 +881,9 @@ class SpectrumBarGraph extends Rectangle {
   }
 }
 
+// Live frequency spectrum drawn as a continuous filled curve, with a held
+// "peak" line that slowly falls and a rolling-average line (like the spectrum
+// displays in audio editors such as GoldWave/Audacity).
 class SpectrumVisualizer extends Rectangle {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor) {
@@ -866,6 +910,8 @@ class SpectrumVisualizer extends Rectangle {
     this.setupColors();
   }
 
+  // Set the stroke/fill colors for the spectrum, peaks, and average lines based
+  // on the current color scheme.
   setupColors() {
     if (this.colorScheme == COLORSCHEME.CUSTOM) {
       // no op; in this mode, we let user select color via this.strokeColor 
@@ -912,6 +958,8 @@ class SpectrumVisualizer extends Rectangle {
     }
   }
 
+  // Store the latest spectrum and update the rolling average (over the last
+  // spectrumHistoryTime seconds) and the held peak values.
   update(spectrum) {
     this.spectrum = spectrum;
     this.setupColors();
@@ -956,6 +1004,7 @@ class SpectrumVisualizer extends Rectangle {
     }
   }
 
+  // Draw the peak, average, and current spectrum as three filled curves.
   draw() {
     if (this.spectrum) {
       push();
@@ -965,7 +1014,7 @@ class SpectrumVisualizer extends Rectangle {
       fill(this.backgroundColor);
       rect(this.x, this.y, this.width, this.height);
 
-      // draw spectrums   
+      // draw spectrums
       this.drawSpectrum(this.spectrumPeaks, this.spectrumPeaksFillColor, this.spectrumPeaksStrokeColor);
       this.drawSpectrum(this.spectrumAvg, this.spectrumAvgFillColor, this.spectrumAvgFillColor);
       this.drawSpectrum(this.spectrum, this.spectrumFillColor, this.spectrumStrokeColor);
@@ -976,6 +1025,8 @@ class SpectrumVisualizer extends Rectangle {
     }
   }
 
+  // Draw one spectrum array as a filled curve spanning the full width, with the
+  // given fill/stroke colors (honoring isFillOn/isStrokeOn).
   drawSpectrum(spectrum, fillColor, strokeColor) {
     //noFill();
     if (this.isFillOn && fillColor) {
@@ -1001,6 +1052,7 @@ class SpectrumVisualizer extends Rectangle {
     endShape();
   }
 
+  // Axis drawing for the spectrum (work-in-progress; not yet finished).
   drawAxes() {
     // draw x axis
     // TODO: finish this
@@ -1014,6 +1066,8 @@ class SpectrumVisualizer extends Rectangle {
   }
 }
 
+// Non-scrolling waveform: draws just the current audio buffer as a single
+// snapshot each frame (with a fade trail), rather than scrolling history.
 class InstantWaveformVis extends SoundVisualizer {
   // see: https://p5js.org/reference/#/p5.FFT
   constructor(x, y, width, height, backgroundColor, lengthInSeconds) {
@@ -1028,12 +1082,13 @@ class InstantWaveformVis extends SoundVisualizer {
     this.colorScheme = COLORSCHEME.GRAYSCALE;
   }
   
+  // Toggle a semi-transparent background (leaving a fade trail) vs. opaque.
   setFadeBackground(turnOnFadeBackground){
     if(turnOnFadeBackground){
-      this.backgroundColor = color(red(this.backgroundColor), 
+      this.backgroundColor = color(red(this.backgroundColor),
                                  green(this.backgroundColor),
                                  blue(this.backgroundColor),
-                                 20); 
+                                 20);
     }else{
      this.backgroundColor = color(red(this.backgroundColor), 
                                  green(this.backgroundColor),
@@ -1041,11 +1096,12 @@ class InstantWaveformVis extends SoundVisualizer {
     }
   }
   
+  // Map a waveform value to a stroke color based on the current color scheme.
   getColorForWaveformValue(waveformVal){
     //TODO fix and test this
     colorMode(HSB);
     if(this.colorScheme == COLORSCHEME.GRAYSCALE){
-      return color(0, 0, 100); 
+      return color(0, 0, 100);
     }else if(this.colorScheme == COLORSCHEME.RAINBOW){
       let hue = map(waveformVal, 0, 1, 280, 0);
       return color(hue, 80, 90);
@@ -1057,6 +1113,8 @@ class InstantWaveformVis extends SoundVisualizer {
     }
   }
 
+  // Snapshot the current waveform buffer (and pick its stroke color); unlike the
+  // scrolling vis, no history is kept.
   // not sure if I should pass the fft reference to InstanveWaveformVis
   // in the constructor or this waveform in update
   update(waveform) {
@@ -1066,6 +1124,8 @@ class InstantWaveformVis extends SoundVisualizer {
     this.strokeColor = this.getColorForWaveformValue(this.maxWaveformVal);
   }
 
+  // Draw the snapshotted waveform as a single connected curve over a (fading)
+  // background.
   draw() {
     if (this.waveform) {
       push();
