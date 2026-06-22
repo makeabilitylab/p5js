@@ -1,3 +1,7 @@
+// Geometry base class for every panel in this picker: holds a rectangle
+// (x, y, width, height), edge accessors + a hit test, and empty input
+// handlers that subclasses override. ColorPanel (below), the sliders, the 2D
+// planes, and the swatches all ultimately extend this.
 class Panel {
   constructor(x, y, width, height) {
     this.x = x;
@@ -50,8 +54,9 @@ class Panel {
       y <= (this.y + this.height); // check within bottom edge
   }
 
+  // Input handler hooks; subclasses override the ones they care about.
   keyPressed(){
-    
+
   }
 
   mousePressed() {
@@ -71,11 +76,17 @@ class Panel {
   }
 }
 
+// The two events a color panel can emit: the color under the cursor changed
+// (hover), or the user committed a new color (selected).
 const ColorEvents = Object.freeze({
   NEW_HOVER_COLOR: Symbol("New hover color"),
   NEW_SELECTED_COLOR: Symbol("New selected color")
 });
 
+// Base class for any panel that participates in color picking. Adds a tiny
+// publish/subscribe event system (so panels can notify the parent picker when
+// hover/selected colors change), the current hover + selected colors, and
+// static color-formatting/parsing helpers shared by all the panels.
 class ColorPanel extends Panel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
@@ -93,6 +104,7 @@ class ColorPanel extends Panel {
     this.showHoverColor = true;
   }
 
+  // Subscribe a callback to one of the known ColorEvents.
   on(label, callback) {
     if (this.knownEvents.has(label)) {
       if (!this.events.has(label)) {
@@ -104,6 +116,7 @@ class ColorPanel extends Panel {
     }
   }
 
+  // Notify all subscribers of a new hover/selected color (passing sender + color).
   fireNewHoverColorEvent(newHoverColor) {
     if (this.events.has(ColorEvents.NEW_HOVER_COLOR)) {
       for (let callBackForNewHoverColor of this.events.get(ColorEvents.NEW_HOVER_COLOR)) {
@@ -122,6 +135,7 @@ class ColorPanel extends Panel {
     }
   }
 
+  // Set the hover/selected color, coercing non-p5.Color inputs via parseColor().
   setHoverColor(hoverColor) {
     if (!(hoverColor instanceof p5.Color)) {
       //print("hoverColor not instanceof p5.Color", hoverColor);
@@ -138,10 +152,12 @@ class ColorPanel extends Panel {
     this.selectedColor = selectedColor;
   }
 
+  // Format a color as an "r, g, b" string (rightDigits decimal places each).
   static getRgbString(c, rightDigits = 1) {
     return nfc(red(c), rightDigits) + ", " + nfc(green(c), rightDigits) + ", " + nfc(blue(c), rightDigits);
   }
 
+  // Format a color as a "#rrggbb" (or "#rrggbbaa") hex string.
   static getRgbHexString(c, includeAlpha = true) {
     // code from https://stackoverflow.com/a/24390910
     hex = [0, 1, 2].map(
@@ -160,6 +176,8 @@ class ColorPanel extends Panel {
     return ('0' + num.toString(16)).slice(-2);
   }
 
+  // Coerce a value into a p5.Color, accepting a p5.Color, an object with a
+  // `levels` array, or an [r, g, b(, a)] array. Throws if it can't.
   static parseColor(possibleColor) {
     //print("possibleColor type", typeof possibleColor);
     if (possibleColor instanceof p5.Color) {

@@ -26,6 +26,24 @@
  *      on current selected color and slice?
  */
 
+// ---------------------------------------------------------------------------
+// This file defines the 3D RGB color-cube model and its on-screen axes.
+// The cube is a discretized RGB space: numCols^3 small boxes laid out so the
+// x-axis = red, y-axis = green, z-axis = blue (rendered in WEBGL).
+//
+//   SelectedColorRenderBehavior - enum of how to render the picked color
+//                                 (just the cube, or the R/G/B columns too)
+//   ColorPanel3D  - thin 3D extension of the (external) ColorPanel base,
+//                   adding a z position and depth
+//   ColorCube3D   - the cube itself: color<->cube-coordinate math, selection
+//                   and hover state, and drawing of boxes/columns; also routes
+//                   keyboard navigation. Inherits color events from ColorPanel.
+//   ColorAxes3D   - the red/green/blue axes, grid, tick marks, and labels that
+//                   frame the cube (one instance owned by each ColorCube3D)
+//
+// Note: ColorPanel, ColorEvents, and the selectedColor/hoverColor/event
+// machinery live in an external base file loaded by index.html.
+// ---------------------------------------------------------------------------
 
 // Enum formulation from: https://stackoverflow.com/a/44447975/388117
 const SelectedColorRenderBehavior = Object.freeze({
@@ -37,6 +55,7 @@ const SelectedColorRenderBehavior = Object.freeze({
   // SHOW_ALL: Symbol("Show all cubes")
 });
 
+// A 2D ColorPanel extended into 3D by adding a z position and a depth.
 class ColorPanel3D extends ColorPanel {
   constructor(x, y, z, width, height, depth) {
     super(x, y, width, height);
@@ -45,7 +64,13 @@ class ColorPanel3D extends ColorPanel {
   }
 }
 
+// The discretized 3D RGB cube: a numCols x numCols x numCols grid of small
+// boxes (x=red, y=green, z=blue). Tracks the selected and hovered colors,
+// converts freely between p5.Color, cube coordinates, and world positions,
+// and draws the boxes (optionally with the R/G/B columns leading to the pick).
 class ColorCube3D extends ColorPanel3D {
+  // Build a cube anchored at (x,y,z). numCols sets the resolution per channel;
+  // boxSize/boxMargin set each box's size and the gap between boxes.
   constructor(x, y, z, numCols = 10, boxSize = 10, boxMargin = 2) {
 
     let cubeSize = ColorCube3D.calcCubeSize(numCols, boxSize, boxMargin);
@@ -67,6 +92,8 @@ class ColorCube3D extends ColorPanel3D {
     this.showHoverColor = true;
   }
 
+  // Change the cube's per-channel resolution (1..255), resizing the cube and
+  // its axes to match. Returns the (constrained) numCols actually applied.
   setNumCols(numCols) {
     numCols = constrain(numCols, 1, 255);
     if (numCols !== this.numCols) {
@@ -98,6 +125,7 @@ class ColorCube3D extends ColorPanel3D {
     return ColorCube3D.getCubeForColor(c, this.numCols);
   }
 
+  // Maps a color's 0..255 R/G/B channels to integer cube columns 0..numCols-1.
   static getCubeForColor(c, numCols) {
     let xCol = floor(map(red(c), 0, 255, 0, numCols - 1));
     let yCol = floor(map(green(c), 0, 255, 0, numCols - 1));
@@ -113,6 +141,7 @@ class ColorCube3D extends ColorPanel3D {
     return ColorCube3D.getColorForCube(cube, this.numCols);
   }
 
+  // Inverse of getCubeForColor: maps cube columns back to 0..255 [r, g, b].
   static getColorForCube(cube, numCols) {
     let r = map(cube[0], 0, numCols - 1, 0, 255);
     let g = map(cube[1], 0, numCols - 1, 0, 255);
@@ -137,6 +166,8 @@ class ColorCube3D extends ColorPanel3D {
     return ColorCube3D.getCubeLocationForCube(cube, this.boxSize, this.boxMargin);
   }
 
+  // Converts cube columns to a world (x, y, z) position. y is negated so green
+  // grows upward on screen (WEBGL +y points down).
   static getCubeLocationForCube(cube, boxSize, boxMargin) {
     let x = cube[0] * (boxSize + boxMargin);
     let y = -cube[1] * (boxSize + boxMargin);
@@ -203,6 +234,8 @@ class ColorCube3D extends ColorPanel3D {
     // }
   }
 
+  // Render the cube each frame: axes/grid first, then the selected color's
+  // boxes, then (optionally) the hovered color's boxes on top.
   draw() {
     //print(this.selectedColor, this.getCubeForColor(this.selectedColor));
     //print(this.selectedColor, this.getCubeLocationForColor(this.selectedColor));
@@ -221,6 +254,9 @@ class ColorCube3D extends ColorPanel3D {
     }
   }
 
+  // Draw the boxes that visualize one color, per the given render behavior:
+  // either just its cube, or the R/G/B columns leading up to it plus the cube.
+  // isHover styles hovered boxes differently (see drawCube).
   drawSelection(selColor, renderBehavior, isHover) {
 
     let selCubeLoc = this.getCubeLocationForColor(selColor);
@@ -245,6 +281,8 @@ class ColorCube3D extends ColorPanel3D {
     }
   }
 
+  // Draw a single box at world position cubeLoc. Selected boxes get a white
+  // outline; non-selected hover boxes are drawn as translucent wireframes.
   drawCube(cubeLoc, fillColor, isHover, isSelected) {
     push();
     translate(cubeLoc[0], cubeLoc[1], cubeLoc[2]);
@@ -301,6 +339,9 @@ class ColorCube3D extends ColorPanel3D {
     }
   }
 
+  // Move the selection through the cube: arrows nudge red (left/right) and
+  // green (up/down); space steps blue forward (shift+space steps it back);
+  // ESC toggles the hover display. Fires a NEW_SELECTED_COLOR event after.
   keyPressed() {
     let selectedCube = this.getCubeForColor(this.selectedColor);
 
@@ -337,10 +378,12 @@ class ColorCube3D extends ColorPanel3D {
     this.fireNewSelectedColorEvent(newSelectedColor);
   }
 
+  // Overall edge length of the cube for a given resolution and box geometry.
   static calcCubeSize(numCols, boxSize, boxMargin) {
     return numCols * (boxSize + boxMargin);
   }
 
+  // True if two [xCol, yCol, zCol] cube coordinates are identical.
   static areCubeCoordsEqual(cube1, cube2) {
     return cube1[0] === cube2[0] &&
       cube1[1] === cube2[1] &&
@@ -348,11 +391,15 @@ class ColorCube3D extends ColorPanel3D {
   }
 }
 
+// Draws the scaffolding around a ColorCube3D: the red/green/blue axis arrows
+// with titles, the three outline grids on the cube's back faces, and the
+// per-channel tick marks/labels (with markers for the selected/hovered color).
 class ColorAxes3D {
 
   constructor(colorCube3D) {
     this.colorCube3D = colorCube3D;
-    this.axisLength = colorCube3D.width * 1.1;
+    this.axisLength = colorCube3D.width * 1.1; // 10% longer than the cube so arrows poke out past it
+
     this.axisRadius = 2;
     this.coneRadius = 4; // used for axis arrows
     this.coneLength = 10;
@@ -362,6 +409,7 @@ class ColorAxes3D {
     this.tickMarkMargin = 2;
   }
 
+  // Draw the full frame: back-face grids, axis arrows + titles, then ticks.
   draw() {
 
     this.drawGrid();
@@ -369,6 +417,9 @@ class ColorAxes3D {
     this.drawTickMarks();
   }
 
+  // Draw tick marks and 0..255 labels along each colored axis, plus a small
+  // marker on the tick for the currently hovered (line) and selected (circle)
+  // value of that channel. Each axis is handled by rotating into its plane.
   drawTickMarks() {
 
     let cubeForSelColor = this.colorCube3D.getCubeForColor(colorCube3D.selectedColor);
@@ -499,6 +550,8 @@ class ColorAxes3D {
     pop();
   }
 
+  // Draw the three axis arrows (cylinder + cone) in their channel colors with
+  // "Red"/"Green"/"Blue" titles at the arrow tips.
   drawAxes() {
     push();
 
@@ -564,6 +617,8 @@ class ColorAxes3D {
     pop();
   }
 
+  // Draw three color-gridded outline planes on the cube's back faces (RG, RB,
+  // and GB), giving the cube a reference floor and walls.
   drawGrid() {
     // draw green (y) and red (x) outline grid
     push();

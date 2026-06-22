@@ -2,8 +2,14 @@
 // added mouse drag/release handling for this demo. Kept separate on purpose —
 // please don't auto-consolidate.
 
+// 2D RGB color-picker companion to the cross-fade cube: a panel you scrub with
+// the mouse (drag/release) or keyboard to pick a color, with the hover bar off.
+// The RgbColorPickerPanel class lives in the Makeability Lab color library;
+// this file wires up the p5 lifecycle and forwards events to the parent page.
+
 var rgbColorPickerPanel;
 
+// Build the picker panel, turn off the hover color, and subscribe to its events.
 function setup() {
   createCanvas(600, 120);
   // Accessibility: text description of the canvas for screen readers
@@ -16,6 +22,7 @@ function setup() {
   rgbColorPickerPanel.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
 
+// Relay hover/selected color changes up to the embedding page.
 function onNewHoverColorEvent(sender, newHoverColor) {
   parent.broadcastNewHoverColor(sender, newHoverColor);
 }
@@ -27,12 +34,14 @@ function onNewSelectedColorEvent(sender, newSelectedColor){
   parent.broadcastNewSelectedColor(sender, newSelectedColor);
 }
 
+// Each frame: clear to black and redraw the picker panel.
 function draw() {
   background(0);
 
   rgbColorPickerPanel.draw();
 }
 
+// Forward mouse (press/release/drag/move) and keyboard input to the panel.
 function mousePressed(){
   rgbColorPickerPanel.mousePressed();
 }

@@ -14,17 +14,25 @@
  */
 
 
+// Interactive 3D RGB color explorer: a cube of small colored boxes (one per
+// sampled RGB value) that you rotate with the mouse (orbitControl) and navigate
+// with the keyboard to hover/select a color. The ColorCube3D class lives in the
+// Makeability Lab color library; this file just wires up the p5 lifecycle and
+// forwards color events to the parent page (the cube renders inside an iframe).
+
 let myFont;
 
 var colorCube3D;
 let hoverColor;
 
+// Load the label font and pick the initial hover color before setup() runs.
 function preload() {
   //font = textFont("Inconsolata");
   myFont = loadFont('assets/AvenirNextLTPro-Demi.ttf');
   hoverColor = color(100);
 }
 
+// Build the cube, subscribe to its color events, and print usage help once.
 function setup() {
   createCanvas(600, 400, WEBGL);
   // Accessibility: text description of the canvas for screen readers
@@ -52,16 +60,20 @@ function setup() {
   print("Hit esc to hide the hover bar");
 }
 
+// Fired when the cursor moves to a new box (the hovered color changed).
 function onNewHoverColorEvent(sender, newHoverColor) {
   print("color-cube onNewHoverColorEvent", sender, newHoverColor);
   //hoverColor = ColorPanel.parseColor(newHoverColor);
 }
 
+// Fired when a color is selected; relay it up to the embedding page.
 function onNewSelectedColorEvent(sender, newSelectedColor) {
   print("color-cube onNewSelectedColorEvent", sender, newSelectedColor);
   parent.broadcastNewSelectedColor(sender, newSelectedColor);
 }
 
+// Each frame: paint the background with the selected color, draw the cube, and
+// let orbitControl() handle mouse rotation/zoom.
 function draw() {
   //background(hoverColor);
   background(colorCube3D.selectedColor);
@@ -71,6 +83,7 @@ function draw() {
   orbitControl();
 }
 
+// Forward key presses to the cube for arrow-key/space-bar navigation.
 function keyPressed() {
   colorCube3D.keyPressed();
 }

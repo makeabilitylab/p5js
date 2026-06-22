@@ -10,12 +10,16 @@
  * http://makeabilitylab.cs.washington.edu
  */
 
+// Which RGB channel a slider controls.
 const SliderColorType = Object.freeze({
   RED: Symbol("Red"),
   GREEN: Symbol("Green"),
   BLUE: Symbol("Blue")
 });
 
+// The draggable knob on a slider track. Holds its channel value (0-255) and
+// color; overrides contains() to use a circular (radius) hit test. A panel has
+// a solid "main" thumb for the selected value and an outlined "hover" thumb.
 class Thumb extends Panel {
   constructor(x, y, radius, isHoverThumb = false) {
     super(x, y, radius * 2, radius * 2);
@@ -32,10 +36,12 @@ class Thumb extends Panel {
     return this.width / 2;
   }
 
+  // Circular hit test (point within radius of the thumb's center).
   contains(x, y) {
     return dist(this.x, this.y, x, y) <= this.getRadius();
   }
 
+  // Draw the thumb: outlined if it's the hover thumb, filled otherwise.
   draw() {
 
     push();
@@ -53,12 +59,14 @@ class Thumb extends Panel {
   }
 }
 
+// The horizontal line the thumb slides along.
 class Track extends Panel {
   constructor(x, y, width) {
     super(x, y, width, 1);
     this.color = color(100);
   }
 
+  // Draw the track as a horizontal line.
   draw() {
     push();
     translate(this.x, this.y);
@@ -71,6 +79,11 @@ class Track extends Panel {
   }
 }
 
+// A 1D slider that controls a single RGB channel (red, green, or blue) of the
+// shared color. Drag/click the track to set the selected value; arrow keys
+// nudge it; moving the mouse drives a separate hover thumb. Like the 2D planes,
+// it emits selected/hover color events so the parent picker keeps all panels in
+// sync. The static helpers below convert between a channel value and full color.
 class ColorSliderPanel extends ColorPanel {
   constructor(x, y, width, height, sliderColorType) {
     super(x, y, width, height);
@@ -102,6 +115,8 @@ class ColorSliderPanel extends ColorPanel {
     this.stepValue = 5; //used for keyboard
   }
 
+  // Sync the hover thumb's color, value, and x-position to the given color's
+  // value for this slider's channel.
   setHoverColor(hoverColor) {
     super.setHoverColor(hoverColor);
     let sliderColorAndValue = ColorSliderPanel.getSliderColorAndValue(this.sliderColorType, hoverColor);
@@ -110,6 +125,8 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbHover.x = map(this.thumbHover.value, this.minValue, this.maxValue, this.track.x, this.track.getRight());
   }
 
+  // Sync the main thumb's color, value, and x-position to the given color's
+  // value for this slider's channel.
   setSelectedColor(selectedColor) {
     super.setSelectedColor(selectedColor);
     let sliderColorAndValue = ColorSliderPanel.getSliderColorAndValue(this.sliderColorType, selectedColor);
@@ -118,8 +135,9 @@ class ColorSliderPanel extends ColorPanel {
     this.thumbMain.x = map(this.thumbMain.value, this.minValue, this.maxValue, this.track.x, this.track.getRight());
   }
 
+  // Left/right arrows nudge the channel value by stepValue (clamped to 0-255);
+  // if it changed, update and broadcast the new selected color.
   keyPressed() {
-    print("keypressed", keyCode);
     let sliderColorAndValue = ColorSliderPanel.getSliderColorAndValue(this.sliderColorType, this.selectedColor);
 
     let oldThumbVal = this.thumbMain.value;
@@ -145,6 +163,8 @@ class ColorSliderPanel extends ColorPanel {
     super.keyPressed();
   }
 
+  // Click/drag: move the main thumb to the mouse, derive the channel value and
+  // full color from its position, then broadcast the new selected color.
   mousePressed() {
     this.thumbMain.x = constrain(mouseX, this.track.x, this.track.getRight());
     this.thumbMain.value = map(this.thumbMain.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
@@ -165,6 +185,8 @@ class ColorSliderPanel extends ColorPanel {
     super.mouseDragged();
   }
 
+  // Moving the mouse drives the hover thumb (not the selected value) and
+  // broadcasts the resulting hover color.
   mouseMoved() {
     this.thumbHover.x = constrain(mouseX, this.track.x, this.track.getRight());
     this.thumbHover.value = map(this.thumbHover.x, this.track.x, this.track.getRight(), this.minValue, this.maxValue);
@@ -175,6 +197,8 @@ class ColorSliderPanel extends ColorPanel {
     super.mouseMoved();
   }
 
+  // Draw the background, track, main + hover thumbs, and the channel
+  // title/value labels.
   draw() {
     if (this.contains(mouseX, mouseY)) {
       this.thumbMain.isSelected = false;
@@ -211,6 +235,9 @@ class ColorSliderPanel extends ColorPanel {
     pop();
   }
 
+  // From a full color, extract this channel's value, a thumb color (that
+  // channel alone), and the full color, returned as {thumbValue, thumbColor,
+  // fullColor}. (getSliderColor below does the inverse: builds these from a value.)
   static getSliderColorAndValue(sliderColorType, col) {
     let colorVal = 0;
     let thumbColor;
@@ -284,6 +311,7 @@ class ColorSliderPanel extends ColorPanel {
     };
   }
 
+  // Human-readable channel name ("Red"/"Green"/"Blue") for the slider title.
   static getTitleFromSliderColor(sliderColorType) {
     switch (sliderColorType) {
       case SliderColorType.RED:

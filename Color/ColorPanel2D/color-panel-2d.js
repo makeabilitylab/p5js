@@ -12,6 +12,8 @@
  * 
  */
 
+// Which two RGB channels a 2D panel maps to its x and y axes. The third
+// channel is held fixed at the selected color's value.
 // Enum formulation from: https://stackoverflow.com/a/44447975/388117
 const ColorAxes2D = Object.freeze({
   RED_GREEN: Symbol("Red-green"),
@@ -19,6 +21,10 @@ const ColorAxes2D = Object.freeze({
   GREEN_BLUE: Symbol("Green-blue")
 });
 
+// A 2D color plane: two RGB channels vary across the panel's x/y axes (per
+// colorAxes), the third is fixed at the selected color. The gradient is
+// rendered once into an offscreen buffer for speed; selected/hover markers are
+// drawn on top each frame. A click selects; moving the mouse hovers.
 class ColorPanel2D extends ColorPanel {
 
   constructor(x, y, width, height, colorAxes2D) {
@@ -32,6 +38,7 @@ class ColorPanel2D extends ColorPanel {
     this.yTitle = "y title";
   }
 
+  // Clicking selects the color under the cursor and broadcasts it.
   mousePressed() {
     super.setSelectedColor(this.getColorForPixel(mouseX, mouseY, true));
     this.fireNewSelectedColorEvent(this.selectedColor);
@@ -45,12 +52,15 @@ class ColorPanel2D extends ColorPanel {
   //   this.fireNewSelectedColorEvent(this.thumbMain.color);
   // }
 
+  // Moving the mouse updates the hover color under the cursor and broadcasts it.
   mouseMoved() {
     this.hoverColor = this.getColorForPixel(mouseX, mouseY, true);
     this.fireNewHoverColorEvent(this.hoverColor);
     super.mouseMoved();
   }
 
+  // Selecting a new color changes the fixed third channel, so the gradient must
+  // be re-rendered into the offscreen buffer.
   setSelectedColor(selectedColor){
     super.setSelectedColor(selectedColor);
     this.updateOffscreenBuffer();
@@ -125,6 +135,10 @@ class ColorPanel2D extends ColorPanel {
     }
   }
 
+  // Re-render the color gradient into the offscreen buffer (so draw() only has
+  // to blit an image). Computes each pixel's color, writes it directly to the
+  // pixel array for speed (handling high-density displays), then overlays the
+  // title and axis ticks/labels. Call whenever the fixed channel changes.
   updateOffscreenBuffer() {
     if (this.width != this.offscreenBuffer.width || this.height != this.offscreenBuffer.height) {
       this.offscreenBuffer = createGraphics(width, height);
@@ -233,8 +247,10 @@ class ColorPanel2D extends ColorPanel {
     //print("updateOffscreenBuffer took", millis() - startT, "ms");
   }
 
+  // Blit the precomputed gradient, then overlay the selected-color dot and (if
+  // enabled) the hover crosshair with its RGB readout.
   draw() {
-   
+
     push();
     translate(this.x, this.y);
     image(this.offscreenBuffer, 0, 0);
@@ -270,6 +286,7 @@ class ColorPanel2D extends ColorPanel {
  
   }
 
+  // Human-readable title for a given pair of axes (e.g. "Red vs. Green").
   static getDefaultTitle(colorAxes){
     switch (colorAxes) {
       case ColorAxes2D.RED_GREEN:

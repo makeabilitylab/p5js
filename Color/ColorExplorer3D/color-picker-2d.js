@@ -1,5 +1,11 @@
+// 2D RGB color-picker companion to the 3D cube: a horizontal panel you scrub
+// with the mouse or keyboard to choose a color. The RgbColorPickerPanel class
+// lives in the Makeability Lab color library; this file wires up the p5
+// lifecycle and forwards color events to the parent page (runs in an iframe).
+
 var rgbColorPickerPanel;
 
+// Build the picker panel and subscribe to its hover/selected color events.
 function setup() {
   createCanvas(600, 120);
   // Accessibility: text description of the canvas for screen readers
@@ -11,6 +17,7 @@ function setup() {
   rgbColorPickerPanel.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
 
+// Relay hover/selected color changes up to the embedding page.
 function onNewHoverColorEvent(sender, newHoverColor) {
   parent.broadcastNewHoverColor(sender, newHoverColor);
 }
@@ -22,12 +29,14 @@ function onNewSelectedColorEvent(sender, newSelectedColor){
   parent.broadcastNewSelectedColor(sender, newSelectedColor);
 }
 
+// Each frame: clear to black and redraw the picker panel.
 function draw() {
   background(0);
 
   rgbColorPickerPanel.draw();
 }
 
+// Forward mouse/keyboard input to the panel for hovering and selecting.
 function mouseMoved(){
   rgbColorPickerPanel.mouseMoved();
 }

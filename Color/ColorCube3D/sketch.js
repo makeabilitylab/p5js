@@ -1,15 +1,22 @@
-
+//
+// Entry point for the interactive 3D RGB color-cube explorer (WEBGL).
+// Sets up the cube, wires its color-change events to logging handlers, and
+// each frame renders the cube and lets the mouse orbit the camera. The cube
+// model and its axes live in color-cube-3d.js.
+//
 
 let pFrameRate;
 let myFont;
 
 let colorCube3D;
 
+// Load the font used for the axis tick labels before setup() runs.
 function preload() {
   //font = textFont("Inconsolata");
   myFont = loadFont('assets/AvenirNextLTPro-Demi.ttf');
 }
 
+// Create the WEBGL canvas, build the color cube, and subscribe to its events.
 function setup() {
   createCanvas(500, 400, WEBGL);
   // Accessibility: text description of the canvas for screen readers
@@ -29,6 +36,8 @@ function setup() {
   colorCube3D.on(ColorEvents.NEW_SELECTED_COLOR, onNewSelectedColorEvent);
 }
 
+// Color-change event handlers (fired by the cube, not per-frame): log the new
+// hover / selected color for debugging.
 function onNewHoverColorEvent(sender, newHoverColor) {
   print("onNewHoverColorEvent", sender, newHoverColor);
 }
@@ -37,6 +46,7 @@ function onNewSelectedColorEvent(sender, newSelectedColor){
   print("onNewSelectedColorEvent", sender, newSelectedColor);
 }
 
+// Each frame: clear, draw the cube, apply mouse orbit, and update the FPS readout.
 function draw() {
   background(100);
   fill(255);
@@ -48,6 +58,7 @@ function draw() {
   pFrameRate.html(nfc(frameRate(), 1) + " fps");
 }
 
+// Forward key presses to the cube so it can move the selected color.
 function keyPressed() {
   colorCube3D.keyPressed();
 }

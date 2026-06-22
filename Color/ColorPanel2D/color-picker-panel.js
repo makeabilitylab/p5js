@@ -11,12 +11,20 @@
  * 
  */
 
+// The top-level picker that owns and lays out all the child panels: three
+// channel sliders (R/G/B), three 2D color planes, and three solid swatches
+// (previous/current/hover). It subscribes to each child's hover/selected
+// events and, when one fires, pushes the new color to all the *other* children
+// so every panel stays in sync. Input events are routed to whichever child
+// panel is under the mouse.
 class RgbColorPickerPanel extends ColorPanel {
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
     this.colorPanels = [];
 
+    // Lay the children out in columns left-to-right: sliders, then the three 2D
+    // planes, then the three swatches. Track running x/y as we place each panel.
     //TODO: if mouse moved outside of RgbColorPickerPanel, then switch off hover? Otherwise, weird lingering hover.
     let xColorPanel = 0;
     let yColorPanel = 0;
@@ -58,6 +66,7 @@ class RgbColorPickerPanel extends ColorPanel {
     this.hoverColorPanel = new SolidColorPanel(xColorPanel, yColorPanel, wColorPanel, hSolidColorPanel, "Hover");
     this.colorPanels.push(this.prevColorPanel, this.curColorPanel, this.hoverColorPanel);
 
+    // Adopt every child and subscribe to its hover/selected color events.
     for (let colorPanel of this.colorPanels) {
       colorPanel.parentPanel = this;
       if (colorPanel instanceof ColorPanel) {
@@ -67,17 +76,22 @@ class RgbColorPickerPanel extends ColorPanel {
     }
   }
 
+  // Toggle hover-color display across all child panels.
   setShowHoverColor(visibility){
     for (let colorPanel of this.colorPanels) {
       colorPanel.showHoverColor = visibility;
     }
   }
 
+  // Set the picker's selected color and propagate it to all children.
   setSelectedColor(newSelectedColor) {
     super.setSelectedColor(newSelectedColor);
     RgbColorPickerPanel.setSelectedColorOfChildren(this, this.selectedColor);
   }
 
+  // A child's hover/selected color changed: push it to the sibling panels and
+  // re-broadcast so outside listeners hear it too. (`sender` is excluded so it
+  // isn't redundantly updated.)
   onNewHoverColorEvent(sender, newHoverColor) {
     //print("onNewHoverColorEvent", sender, newHoverColor);
     if (sender.parentPanel) {
@@ -100,6 +114,7 @@ class RgbColorPickerPanel extends ColorPanel {
     }
   }
 
+  // Route input events to whichever child panel is under the mouse.
   keyPressed() {
     let colorPanelAtMouse = this.getColorPanelAtCoords(mouseX, mouseY);
     if (colorPanelAtMouse) {
@@ -135,6 +150,7 @@ class RgbColorPickerPanel extends ColorPanel {
     }
   }
 
+  // Return the first child panel containing (x, y), or null.
   getColorPanelAtCoords(x, y) {
     for (let colorPanel of this.colorPanels) {
       if (colorPanel.contains(x, y)) {
@@ -144,12 +160,16 @@ class RgbColorPickerPanel extends ColorPanel {
     return null;
   }
 
+  // Draw every child panel.
   draw() {
     for (let colorPanel of this.colorPanels) {
       colorPanel.draw();
     }
   }
 
+  // Push a new hover/selected color to all child color panels (skipping
+  // exceptPanel, the one that originated the change) and update the relevant
+  // swatch(es): hover updates the Hover swatch; selected shifts Current -> Previous.
   static setHoverColorOfChildren(rgbPanel, newHoverColor, exceptPanel = null) {
     for (let colorPanel of rgbPanel.colorPanels) {
       if (colorPanel instanceof ColorPanel && colorPanel != exceptPanel) {
@@ -162,7 +182,6 @@ class RgbColorPickerPanel extends ColorPanel {
 
   static setSelectedColorOfChildren(rgbPanel, newSelectedColor, exceptPanel = null) {
     if(!(newSelectedColor instanceof p5.Color)){
-      print("We are here", newSelectedColor);
       newSelectedColor = ColorPanel.parseColor(newSelectedColor);
     }
 
@@ -177,6 +196,9 @@ class RgbColorPickerPanel extends ColorPanel {
   }
 }
 
+// A single solid color swatch with a title (e.g. "Previous", "Current",
+// "Hover") that also prints the fill color's RGB and hex values. Display-only;
+// it extends Panel rather than ColorPanel since it isn't interactive.
 class SolidColorPanel extends Panel {
   constructor(x, y, width, height, title) {
     super(x, y, width, height);
@@ -185,6 +207,7 @@ class SolidColorPanel extends Panel {
     this.fillColor = color(0);
   }
 
+  // Draw the swatch with its title and RGB + hex readouts.
   draw() {
     push();
     translate(this.x, this.y);
