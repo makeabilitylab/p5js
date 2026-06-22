@@ -500,11 +500,12 @@ def build_html(entries: list[dict]) -> str:
       border-bottom: 1px solid var(--color-border);
     }}
     /* Animated previews ship with a static poster; show the poster only when the
-       user prefers reduced motion. */
-    .thumb-still {{ display: none; }}
+       user prefers reduced motion. The `.card-thumb img` qualifier matches the
+       specificity of the sizing rule above so these display toggles actually win. */
+    .card-thumb img.thumb-still {{ display: none; }}
     @media (prefers-reduced-motion: reduce) {{
-      .thumb-anim {{ display: none; }}
-      .thumb-still {{ display: block; }}
+      .card-thumb img.thumb-anim {{ display: none; }}
+      .card-thumb img.thumb-still {{ display: block; }}
     }}
     /* Final fallback tier: a category emoji on a tinted panel. */
     .card-thumb-empty {{

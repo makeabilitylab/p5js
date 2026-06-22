@@ -192,11 +192,12 @@
       border-bottom: 1px solid var(--color-border);
     }
     /* Animated previews ship with a static poster; show the poster only when the
-       user prefers reduced motion. */
-    .thumb-still { display: none; }
+       user prefers reduced motion. The `.card-thumb img` qualifier matches the
+       specificity of the sizing rule above so these display toggles actually win. */
+    .card-thumb img.thumb-still { display: none; }
     @media (prefers-reduced-motion: reduce) {
-      .thumb-anim { display: none; }
-      .thumb-still { display: block; }
+      .card-thumb img.thumb-anim { display: none; }
+      .card-thumb img.thumb-still { display: block; }
     }
     /* Final fallback tier: a category emoji on a tinted panel. */
     .card-thumb-empty {
@@ -857,7 +858,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelBubbles1-Simple.webp" alt="Sound Level Bubbles 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelBubbles1-Simple.poster.png" alt="Sound Level Bubbles 1 – Simple preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundLevelBubbles1-Simple.poster.png" alt="Sound Level Bubbles 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Bubbles 1 – Simple</div>
           <div class="card-meta">SoundLevelBubbles1-Simple</div>
           <div class="card-links">
@@ -867,7 +868,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelBubbles2-Image.webp" alt="Sound Level Bubbles 2 – Image preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelBubbles2-Image.poster.png" alt="Sound Level Bubbles 2 – Image preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundLevelBubbles2-Image.poster.png" alt="Sound Level Bubbles 2 – Image preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Bubbles 2 – Image</div>
           <div class="card-meta">SoundLevelBubbles2-Image</div>
           <div class="card-links">
@@ -877,7 +878,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelTimesSeries1-Simple.webp" alt="Sound Level Times Series 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelTimesSeries1-Simple.poster.png" alt="Sound Level Times Series 1 – Simple preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundLevelTimesSeries1-Simple.poster.png" alt="Sound Level Times Series 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Times Series 1 – Simple</div>
           <div class="card-meta">SoundLevelTimesSeries1-Simple</div>
           <div class="card-links">
@@ -887,7 +888,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelTimesSeries2-Axes.webp" alt="Sound Level Times Series 2 – Axes preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelTimesSeries2-Axes.poster.png" alt="Sound Level Times Series 2 – Axes preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundLevelTimesSeries2-Axes.poster.png" alt="Sound Level Times Series 2 – Axes preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Times Series 2 – Axes</div>
           <div class="card-meta">SoundLevelTimesSeries2-Axes</div>
           <div class="card-links">
@@ -917,7 +918,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundVis1-WaveformAndSpectrogram.webp" alt="Sound Vis 1 – Waveform And Spectrogram preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundVis1-WaveformAndSpectrogram.poster.png" alt="Sound Vis 1 – Waveform And Spectrogram preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundVis1-WaveformAndSpectrogram.poster.png" alt="Sound Vis 1 – Waveform And Spectrogram preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 1 – Waveform And Spectrogram</div>
           <div class="card-meta">SoundVis1-WaveformAndSpectrogram</div>
           <div class="card-links">
@@ -927,7 +928,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundVis2-NowWithAxisLabels.webp" alt="Sound Vis 2 – Now With Axis Labels preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundVis2-NowWithAxisLabels.poster.png" alt="Sound Vis 2 – Now With Axis Labels preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundVis2-NowWithAxisLabels.poster.png" alt="Sound Vis 2 – Now With Axis Labels preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 2 – Now With Axis Labels</div>
           <div class="card-meta">SoundVis2-NowWithAxisLabels</div>
           <div class="card-links">
@@ -957,7 +958,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/WaveformVis1-Simple.webp" alt="Waveform Vis 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/WaveformVis1-Simple.poster.png" alt="Waveform Vis 1 – Simple preview" loading="lazy"></div><div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/WaveformVis1-Simple.poster.png" alt="Waveform Vis 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Waveform Vis 1 – Simple</div>
           <div class="card-meta">WaveformVis1-Simple</div>
           <div class="card-links">

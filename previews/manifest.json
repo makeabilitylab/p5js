@@ -196,19 +196,19 @@
     "appHash": "9f4770fefd2cf4be"
   },
   "Sound/SoundLevelBubbles1-Simple": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "1a20c9254b4ee41e"
   },
   "Sound/SoundLevelBubbles2-Image": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "40811abf25c8df5a"
   },
   "Sound/SoundLevelTimesSeries1-Simple": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "9efaad3ca96bb733"
   },
   "Sound/SoundLevelTimesSeries2-Axes": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "7d07da61d541c8ba"
   },
   "Sound/SoundReactiveFlower1-SoundLevel": {
@@ -220,11 +220,11 @@
     "appHash": "e6438212c1f197a9"
   },
   "Sound/SoundVis1-WaveformAndSpectrogram": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "8f1ac8927f361494"
   },
   "Sound/SoundVis2-NowWithAxisLabels": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "a03010a100783c99"
   },
   "Sound/SoundVis3": {
@@ -236,7 +236,7 @@
     "appHash": "08854d50b5e0de2b"
   },
   "Sound/WaveformVis1-Simple": {
-    "mode": "animated",
+    "mode": "poster",
     "appHash": "f2129ae09b49d9c4"
   },
   "Vectors/AngleExplorer": {

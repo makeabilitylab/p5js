@@ -85,9 +85,13 @@ function discoverApps() {
       try { config = JSON.parse(readFileSync(cfgPath, 'utf8')); }
       catch (err) { console.warn(`  ! bad preview.json in ${rel}: ${err.message}`); }
     }
-    // Default mode: poster for hardware/serial categories, animated otherwise.
-    const baseMode = POSTER_CATEGORIES.has(e.category) ? 'poster' : DEFAULTS.mode;
-    const opts = { ...DEFAULTS, mode: baseMode, ...config };
+    // Hardware/serial categories default to a poster of their UI, and we don't
+    // click them (their loaded UI *is* the thumbnail; a click could trip a
+    // serial-connect prompt). Everything else defaults to an animated capture.
+    const categoryDefaults = POSTER_CATEGORIES.has(e.category)
+      ? { mode: 'poster', click: false }
+      : {};
+    const opts = { ...DEFAULTS, ...categoryDefaults, ...config };
     return {
       key: rel,
       category: e.category,
@@ -221,9 +225,13 @@ async function renderApp(browser, app) {
     }
 
     if (mode === 'poster') {
-      // Static thumbnail: full-page screenshot of the UI as loaded (e.g. serial
-      // demos show their instructions/controls). No click — that UI *is* the
-      // intended thumbnail, and clicking could trip a serial-connect prompt.
+      // Static thumbnail. For sketches that gate on a gesture (e.g. audio
+      // visualizers), maybeClick + the warm-up settle let the canvas fill in
+      // before the screenshot, so the poster shows real content rather than a
+      // "click to begin" splash. WebSerial keeps click:false (its loaded UI is
+      // the intended thumbnail), and maybeClick no-ops when click is false.
+      await maybeClick(page, app);
+      await sleep(app.opts.delay);
       const raw = path.join(tmp, 'page.png');
       await page.screenshot({ path: raw });
       encodePoster(raw, app.opts.width, posterOut);
