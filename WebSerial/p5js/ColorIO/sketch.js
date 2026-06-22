@@ -17,6 +17,9 @@ let button;
 
 let serialInputRgb;
 
+// Create the (initially hidden) canvas, wire up the Serial event handlers, and
+// build the connect button plus the output/input sliders (input slider is
+// disabled since it only mirrors data received from the device).
 function setup() {
   createCanvas(400, 400);
 
@@ -62,6 +65,8 @@ function setup() {
   // serial.autoConnectAndOpenPreviouslyApprovedPort();
 }
 
+// Button handler: the click is the required user gesture, so open the serial
+// port here (guarded in try/catch).
 async function onButtonConnectToSerialDevice(){
   if (!serial.isOpen()) {
     try {
@@ -72,11 +77,14 @@ async function onButtonConnectToSerialDevice(){
   }
 }
 
+// Serial event handler: a serial error occurred; show it on the page.
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
   pHtmlMsg.html(error);
 }
 
+// Serial event handler: connection opened; reveal the canvas and sliders, hide
+// the button, and push the slider's current value out so the device is in sync.
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("Serial connection opened successfully");
@@ -92,6 +100,7 @@ function onSerialConnectionOpened(eventSender) {
   onSliderOutToSerialValueChanged();
 }
 
+// Serial event handler: connection closed; hide the sliders and re-show the button.
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
   pHtmlMsg.html("onSerialConnectionClosed");
@@ -100,6 +109,9 @@ function onSerialConnectionClosed(eventSender) {
   button.style('visibility', 'visible');
 }
 
+// Serial event handler: a line arrived from the device. Skip comment lines
+// (starting with '#'), otherwise parse the RGB and mirror its hue onto the
+// read-only input slider.
 function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
@@ -115,8 +127,8 @@ function onSerialDataReceived(eventSender, newData) {
 }
 
 /**
- * Called automatically when the slider value changes
- * Sends data out on serial
+ * Called automatically when the output slider value changes (an input event,
+ * not per-frame). Writes the slider value out to the device if the port is open.
  */
 function onSliderOutToSerialValueChanged() {
   console.log("Slider:", sliderOutToSerial.value());
@@ -126,10 +138,12 @@ function onSliderOutToSerialValueChanged() {
   }
 }
 
+// Each frame: paint the left panel with the outgoing slider color, the right
+// panel with the last color received from the device, and the slider value labels.
 function draw() {
   background(220);
 
-  // Split the canvas into two: 
+  // Split the canvas into two:
   //  - left side is for serial output
   //  - right side is for serial input
   let panelWidth = width / 2;

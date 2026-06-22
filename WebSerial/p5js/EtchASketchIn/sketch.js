@@ -12,6 +12,10 @@ let circleY = 0;
 
 let serialOptions = { baudRate: 115200  };
 
+// Create the canvas, center the circle, wire up the Serial event handlers, try
+// to silently reconnect to a previously approved port, and relocate the connect
+// button and message <p> below the canvas. Paints the background once so the
+// circle leaves a persistent trail (draw() never clears it).
 function setup() {
   createCanvas(640, 480);
 
@@ -100,9 +104,11 @@ function onSerialConnectionClosed(eventSender) {
 }
 
 /**
- * Callback function serial.js when new web serial data is received
- * 
- * @param {*} eventSender 
+ * Callback function serial.js when new web serial data is received.
+ * Skips comment lines (starting with '#'), otherwise parses a "x,y" pair of
+ * normalized [0, 1] floats and maps them to the circle's canvas position.
+ *
+ * @param {*} eventSender
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
@@ -129,7 +135,8 @@ function onSerialDataReceived(eventSender, newData) {
 
 /**
  * Called automatically by p5js. Call frameRate(<num>) to change how often this
- * function is called
+ * function is called. Draws a semi-transparent circle at the current location
+ * without clearing the canvas, so movement leaves an Etch A Sketch style trail.
  */
 function draw() {
   //background(100, 100, 100, 1);

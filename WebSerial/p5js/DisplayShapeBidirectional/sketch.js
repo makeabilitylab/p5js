@@ -28,6 +28,7 @@ let maxShapeSize = -1;
 
 let serialOptions = { baudRate: 115200 };
 
+// Create the canvas, wire up the Serial event handlers, and compute sizing limits.
 function setup() {
   createCanvas(640, 480);
 
@@ -82,9 +83,12 @@ function onSerialConnectionClosed(eventSender) {
 }
 
 /**
- * Callback function serial.js when new web serial data is received
- * 
- * @param {*} eventSender 
+ * Callback function serial.js when new web serial data is received.
+ * This is the READ side of the bidirectional flow: the Arduino sends back the
+ * current shape type and draw mode (format "ShapeType, ShapeDrawMode"), which
+ * we parse and apply so the on-screen shape mirrors the device's state.
+ *
+ * @param {*} eventSender
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
@@ -117,6 +121,9 @@ function onSerialDataReceived(eventSender, newData) {
   }
 }
 
+// WRITE side of the bidirectional flow: send the current shape state to the
+// Arduino. Size is sent as a 0..1 fraction (so the device is resolution-independent);
+// type and draw mode are sent as integer codes. Format: "type, sizeFrac, drawMode".
 async function serialWriteShapeData(shapeType, shapeSize, shapeDrawMode) {
 
   if (serial.isOpen()) {
@@ -131,10 +138,8 @@ async function serialWriteShapeData(shapeType, shapeSize, shapeDrawMode) {
   }
 }
 
-/**
- * Called automatically by p5js. Call frameRate(<num>) to change how often this
- * function is called
- */
+// Each frame: draw the current shape (type/size/fill) centered on the canvas, plus instructions.
+// Called automatically by p5js. Call frameRate(<num>) to change how often this function is called.
 function draw() {
 
   background(100);
@@ -187,6 +192,7 @@ function draw() {
   text(strInstructions, xText, height - tSize + 6);
 }
 
+// Map horizontal mouse position to shape size; if it changed, write the new state to serial.
 function mouseMoved() {
   let lastShapeSize = curShapeSize;
   curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, maxShapeSize);
@@ -198,6 +204,7 @@ function mouseMoved() {
   // console.log(mouseX, width, curShapeSize, maxShapeSize);
 }
 
+// While connected: left click cycles shape type, right click toggles fill/outline; write the new state to serial.
 function mousePressed() {
   // Only update states if we're connected to serial
   if (serial.isOpen()) {
@@ -219,10 +226,13 @@ function mousePressed() {
 }
 
 /**
- * Called automatically when the mouse button has been pressed and then released
+ * CONNECT trigger: a left click opens the serial connection dialog if not
+ * already connected (browsers require a user gesture to request a serial port).
+ *
+ * Called automatically when the mouse button has been pressed and then released.
  * According to the p5.js docs, this function is only guaranteed to be called when
  * the left mouse button is clicked.
- * 
+ *
  * See: https://p5js.org/reference/#/p5/mouseClicked
  */
 function mouseClicked() {

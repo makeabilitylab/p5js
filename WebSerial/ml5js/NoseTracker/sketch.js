@@ -35,6 +35,8 @@ let serialOptions = { baudRate: 115200  };
 let timestampLastTransmit = 0;
 const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 100;
 
+// One-time setup: start the webcam, load the ml5 PoseNet model, and open the
+// Web Serial connection (click-to-connect via mouseClicked).
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -127,11 +129,12 @@ function onPoseNetModelReady() {
 }
 
 /**
- * Triggers every time there's a new pose detected. If you create a new poseNet method 
- * with a video element, this Event Listener will be called continuously over the video 
- * frames. Returns an array of objects containing pose estimations using single detection
- * 
- * @param {*} poses 
+ * Callback by ml5 PoseNet each time poses are detected (fires continuously over
+ * video frames). We keep only the first body, then normalize the nose's x,y to
+ * [0, 1] and (if serial is open and the throttle window has elapsed) write the
+ * "x, y" pair over Web Serial.
+ *
+ * @param {*} poses array of detected bodies (PoseNet supports multiple)
  */
 function onPoseDetected(poses) {
   // poses can contain an array of bodies (because PoseNet supports
@@ -158,6 +161,8 @@ function onPoseDetected(poses) {
   }
 }
 
+// Each frame: draw the webcam feed and, if a body is detected, overlay a
+// cartoon nose and two googly eyes on the tracked face.
 function draw() {
   image(video, 0, 0); // draw the video to screen
 
@@ -203,6 +208,8 @@ function drawEye(x, y) {
   ellipse(x, y, pupilWidth);
 }
 
+// Called by p5.js on mouse click. Opens the Web Serial connection dialog
+// (the browser requires a user gesture to grant serial port access).
 function mouseClicked() {
   if (!serial.isOpen()) {
     try {

@@ -1,6 +1,8 @@
-// This sketch demonstrates how to 
-// 
-// TODO:
+// Sends shape data out over Web Serial to a connected microcontroller.
+// Move the mouse to set the shape size (mapped from mouse x), and click to
+// connect (first click) or cycle the shape type: circle -> square -> triangle.
+// Each change writes "<shapeType>, <sizeFraction>" out over serial, where
+// sizeFraction is the size normalized to [0, 1].
 //
 // By Jon E. Froehlich
 // http://makeabilitylab.io/
@@ -22,6 +24,8 @@ let curShapeSize = 10;       // the current shape size
 
 let serialOptions = { baudRate: 115200  };
 
+// Create the canvas, wire up the Serial event handlers, compute the max shape
+// size, and try to silently reconnect to a previously approved port.
 function setup() {
   createCanvas(640, 480);
 
@@ -86,6 +90,8 @@ function onSerialDataReceived(eventSender, newData) {
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 }
 
+// Normalizes the shape size to a [0, 1] fraction and writes "<shapeType>, <fraction>"
+// out to the device (only when the port is open).
 async function serialWriteShapeData(shapeType, shapeSize) {
   if (serial.isOpen()) {
     //console.log("serialWriteShapeData ", shapeType, shapeSize);
@@ -101,7 +107,8 @@ async function serialWriteShapeData(shapeType, shapeSize) {
 
 /**
  * Called automatically by p5js. Call frameRate(<num>) to change how often this
- * function is called
+ * function is called. Each frame: draw the current centered shape and the
+ * connect/cycle instructions.
  */
 function draw() {
 
@@ -149,6 +156,8 @@ function draw() {
   text(strInstructions, xText, height - tSize + 6);
 }
 
+// On mouse move: map mouse x to a shape size and, if it changed, write the new
+// shape data out over serial.
 function mouseMoved(){
   let lastShapeSize = curShapeSize;
   curShapeSize = map(mouseX, 0, width, MIN_SHAPE_SIZE, maxShapeSize);
@@ -160,6 +169,8 @@ function mouseMoved(){
   //console.log(mouseX, width, curShapeSize, maxShapeSize);
 }
 
+// On click: open the port (first click is the required user gesture), or if
+// already connected, cycle to the next shape type and write it out over serial.
 function mouseClicked() {
   if (!serial.isOpen()) {
     serial.connectAndOpen(null, serialOptions);

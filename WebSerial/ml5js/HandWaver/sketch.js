@@ -28,6 +28,8 @@ let palmXNormalized = 0;
 let timestampLastTransmit = 0;
 const MIN_TIME_BETWEEN_TRANSMISSIONS_MS = 50; // 50 ms is ~20 Hz
 
+// One-time setup: start the webcam, load the ml5 HandPose model, and open the
+// Web Serial connection (click-to-connect via mouseClicked).
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -66,7 +68,9 @@ function onHandPoseModelReady() {
 }
 
 /**
- * Callback function called by ml5.js HandPose when a pose has been detected
+ * Callback by ml5.js HandPose each time a hand is detected. Stores the latest
+ * pose, normalizes the palm's x-position to [0, 1], and (if serial is open and
+ * the throttle window has elapsed) writes that value over Web Serial.
  */
 function onNewHandPosePrediction(predictions) {
   if (predictions && predictions.length > 0) {
@@ -91,6 +95,8 @@ function onNewHandPosePrediction(predictions) {
   }
 }
 
+// Each frame: draw the webcam feed; show a loading message until the model is
+// ready, then overlay the detected hand, its bounding box, and the palm x-value.
 function draw() {
   image(video, 0, 0, width, height);
 
@@ -121,6 +127,7 @@ function draw() {
   }
 }
 
+// Draw a green dot at each of the hand's 21 landmark keypoints.
 function drawHand(handPose) {
 
   // Draw keypoints. While each keypoints supplies a 3D point (x,y,z), we only draw
@@ -133,6 +140,7 @@ function drawHand(handPose) {
   }
 }
 
+// Draw the hand's bounding box (red) with its detection confidence label.
 function drawBoundingBox(handPose){
   // Draw hand pose bounding box
   const bb = handPose.boundingBox;
@@ -192,7 +200,8 @@ function onSerialDataReceived(eventSender, newData) {
 }
 
 /**
- * Called automatically by the browser through p5.js when mouse clicked
+ * Called by p5.js on mouse click. Opens the Web Serial connection dialog
+ * (the browser requires a user gesture to grant serial port access).
  */
 function mouseClicked() {
   if (!serial.isOpen()) {

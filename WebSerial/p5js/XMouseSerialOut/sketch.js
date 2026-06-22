@@ -13,6 +13,8 @@ let serial;
 let xMouseConstrained = 0;
 let xMouseNormalized = 0;
 
+// Create the canvas, wire up the Serial event handlers, and try to silently
+// reconnect to a previously approved port.
 function setup() {
   createCanvas(640, 480);
 
@@ -34,9 +36,11 @@ function setup() {
   pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
+// Each frame: draw a vertical line at the constrained mouse x and the normalized
+// value (0..1) as large centered text.
 function draw() {
   background(100);
-  
+
   // draw vertical line at x position
   noFill();
   stroke(150);
@@ -52,9 +56,10 @@ function draw() {
 }
 
 /**
- * The mouseMoved() function is called every time the mouse moves and a 
- * use button is not pressed.
- */ 
+ * The mouseMoved() function is called every time the mouse moves and a
+ * use button is not pressed. Here it normalizes the mouse x to [0, 1] and,
+ * if the port is open, writes that value out to the device.
+ */
 function mouseMoved(){
   xMouseConstrained = constrain(mouseX, 0, width);
   xMouseNormalized = xMouseConstrained / width;
@@ -106,7 +111,8 @@ function onSerialDataReceived(eventSender, newData) {
 }
 
 /**
- * Called automatically by the browser through p5.js when mouse clicked
+ * Called automatically by the browser through p5.js when mouse clicked.
+ * The click is the required user gesture that lets us open the serial port.
  */
 function mouseClicked() {
   if (!serial.isOpen()) {

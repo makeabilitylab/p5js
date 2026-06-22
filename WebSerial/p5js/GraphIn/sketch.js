@@ -7,10 +7,14 @@
 //
 
 let serial; // the Serial object
-let serialOptions = { baudRate: 115200  };
-let queue = []
-let xPos = 0;
+let serialOptions = { baudRate: 115200  }; // must match the Arduino's Serial.begin() baud rate
+let queue = [];  // buffer of incoming values waiting to be plotted (drained in draw)
+let xPos = 0;    // current x pixel column; wraps back to 0 at the right edge
 
+// Run once at startup: create the canvas and wire up Web Serial (make a Serial
+// object, register connection/data/error handlers, try to reconnect to a
+// previously approved port), add a status <p>, and paint the dark background
+// once (draw() never clears it, so bars accumulate left-to-right).
 function setup() {
   createCanvas(750, 420);
 
@@ -34,8 +38,11 @@ function setup() {
   background(50);
 }
 
+// Each frame: drain any queued serial values, drawing one vertical bar per
+// value and advancing one pixel column each time. When we reach the right edge,
+// wrap back to the left and repaint the background to start a fresh sweep.
 function draw() {
-  
+
   while(queue.length > 0){
     // Grab the least recent value of queue (first in first out)
     // JavaScript is not multithreaded, so we need not lock the queue
@@ -58,18 +65,24 @@ function draw() {
   }
 }
 
+// Called by serial.js if anything goes wrong on the serial connection.
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
 }
 
+// Called by serial.js once the port opens.
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
 }
 
+// Called by serial.js when the port closes.
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
 }
 
+// Called by serial.js when data arrives: parse the value and push it onto the
+// queue for draw() to plot. (Buffering here decouples the serial event rate
+// from the frame rate.)
 function onSerialDataReceived(eventSender, newData) {
   //console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
@@ -79,6 +92,9 @@ function onSerialDataReceived(eventSender, newData) {
   queue.push(parseFloat(newData));
 }
 
+// Browsers require a user gesture to open a serial port, so we connect here on
+// click. connectAndOpen() shows the port-picker dialog; wrap it in try/catch
+// because the user can cancel or the port can fail to open.
 function mouseClicked() {
   if (!serial.isOpen()) {
     try {

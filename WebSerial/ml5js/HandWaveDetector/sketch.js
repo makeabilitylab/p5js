@@ -26,6 +26,8 @@ let video;
 let hand;
 let pHtmlMsg;
 
+// One-time setup: start the webcam, load the ml5 HandPose model, wire up the
+// Hand gesture-detection events and the Web Serial connection.
 function setup() {
   createCanvas(640, 480);
   // Accessibility: text description of the canvas for screen readers
@@ -155,6 +157,7 @@ async function serialWriteHandWaveAngle(handWaveAngle) {
   }
 }
 
+// Callback by hand.js when a full wave gesture (back-and-forth motion) is detected.
 function onNewHandWaveDetected(contiguousHandWaveCount, overallHandWaveCount){
   print("onNewHandWaveDetected: contiguousHandWaveCount: " + contiguousHandWaveCount + " overallHandWaveCount:" + overallHandWaveCount);
 }
@@ -218,6 +221,8 @@ function onNewHandPosePrediction(predictions) {
   hand.setNewHandPose(predictions);
 }
 
+// Each frame: draw the webcam feed, overlay fps + hand-detection debug text,
+// then draw the detected hand.
 function draw() {
 
   // Draw the video to the screen

@@ -56,6 +56,8 @@ let showInstructions = true;
 
 let serialOptions = { baudRate: 115200 };
 
+// Create the canvas, wire up Serial event handlers, set HSB color mode, and
+// prepare the offscreen graphics buffer we paint into.
 function setup() {
   createCanvas(640, 480);
 
@@ -124,9 +126,13 @@ function onSerialConnectionClosed(eventSender) {
 }
 
 /**
- * Callback function serial.js when new web serial data is received
- * 
- * @param {*} eventSender 
+ * Callback function serial.js when new web serial data is received.
+ * This is the READ side of the bidirectional flow: the Arduino streams brush
+ * data (position/size/type/fillmode) that we apply to the global brush state so
+ * the device can "paint" on the canvas. Lines starting with "#" are treated as
+ * comments/debug and ignored; a "cls" line clears the offscreen buffer.
+ *
+ * @param {*} eventSender
  * @param {String} newData new data received over serial
  */
 function onSerialDataReceived(eventSender, newData) {
@@ -145,9 +151,11 @@ function onSerialDataReceived(eventSender, newData) {
 }
 
 /**
- * Called by onSerialDataReceived to parse our incoming brush data
- * 
- * @param {string} newData 
+ * Called by onSerialDataReceived to parse one line of incoming brush data and
+ * update the global brush state. Position and size arrive as 0..1 fractions
+ * (resolution-independent) and are scaled to pixels / MAX_BRUSH_SIZE here.
+ *
+ * @param {string} newData CSV line: xPosFrac, yPosFrac, sizeFrac, brushType, brushFillMode
  */
 function parseBrushData(newData){
   // Parse the data
@@ -199,6 +207,9 @@ function parseBrushData(newData){
   }
 }
 
+// WRITE side of the bidirectional flow: send the chosen brush shape + fill mode
+// back to the Arduino (so a device display/LEDs can mirror them). Called from
+// keyPressed when the user changes brush type or fill mode. Format: "type,drawMode".
 async function serialWriteShapeData(shapeType, shapeDrawMode) {
   if (serial.isOpen()) {
     // Format the text string to send over serial. nf simply formats the floating point
@@ -208,10 +219,10 @@ async function serialWriteShapeData(shapeType, shapeDrawMode) {
   }
 }
 
-/**
- * Called automatically by p5js. Call frameRate(<num>) to change how often this
- * function is called
- */
+// Each frame: pick the brush hue from the current color mode, paint a stroke at
+// the mouse and/or serial brush position into the offscreen buffer, blit the
+// buffer to the screen, then draw the crosshair cursor and keyboard instructions.
+// Called automatically by p5js. Call frameRate(<num>) to change how often this is called.
 function draw() {
 
   //background(100);
@@ -368,13 +379,16 @@ function drawBrushStroke(xBrush, yBrush){
 }
 
 /**
+ * Keyboard commands (see drawInstructions): f=fill mode, b=brush type, c=color
+ * mode, s=serial brush, m=mouse brush, i=instructions, l=clear, o=open serial.
+ * If brush type or fill mode changed, also WRITE the new shape state to serial.
+ *
  * The keyPressed() function is called once every time a key is pressed.
  * See: https://p5js.org/reference/#/p5/keyPressed
  */
 function keyPressed() {
   let lastFillMode = brushFillMode;
   let lastBrushType = brushType;
-  print("keyPressed", key);
   if(key == 'f'){
     brushFillMode++;
     if (brushFillMode >= Object.keys(mapBrushFillMode).length) {

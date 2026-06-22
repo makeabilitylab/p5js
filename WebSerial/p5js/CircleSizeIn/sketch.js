@@ -16,12 +16,15 @@ let pHtmlMsg;
 
 let curShapeSize = 10;
 
-const MIN_SHAPE_SIZE = 10;
-const MAX_SHAPE_MARGIN = 10;
-let maxShapeSize = -1;
+const MIN_SHAPE_SIZE = 10;    // smallest circle diameter, in pixels
+const MAX_SHAPE_MARGIN = 10;  // gap kept between the largest circle and the canvas edge
+let maxShapeSize = -1;        // computed in setup() once the canvas size is known
 
-const serialOptions = { baudRate: 115200  };
+const serialOptions = { baudRate: 115200  }; // must match the Arduino's Serial.begin() baud rate
 
+// Run once at startup: create the canvas and wire up Web Serial (make a Serial
+// object, register connection/data/error handlers), add a status <p>, and
+// compute the circle's max size. The actual connect happens on click below.
 function setup() {
   createCanvas(640, 480);
 
@@ -86,10 +89,13 @@ function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 
+  // The Arduino sends a 0.0-1.0 fraction; map it onto the circle's size range.
   let newShapeFrac = parseFloat(newData);
   curShapeSize = MIN_SHAPE_SIZE + newShapeFrac * (maxShapeSize - MIN_SHAPE_SIZE);
 }
 
+// Each frame: if not yet connected, prompt the user to click; otherwise draw a
+// centered circle sized by the latest value received over serial.
 /**
  * Called automatically by p5js. Call frameRate(<num>) to change how often this
  * function is called
@@ -120,6 +126,9 @@ function draw() {
   circle(xCenter, yCenter, curShapeSize);
 }
 
+// Browsers require a user gesture to open a serial port, so we connect here on
+// click. connectAndOpen() shows the port-picker dialog; wrap it in try/catch
+// because the user can cancel or the port can fail to open.
 function mouseClicked() {
   if (!serial.isOpen()) {
     try {

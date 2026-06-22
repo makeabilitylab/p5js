@@ -20,6 +20,10 @@ let slider;
 let serial;
 let pHtmlMsg;
 
+// Run once at startup: create the canvas, wire up Web Serial (make a Serial
+// object, register connection/data/error handlers, try to reconnect to a
+// previously approved port), and build a hidden slider that becomes visible
+// once a connection opens. The actual connect happens on click (mousePressed).
 function setup() {
   createCanvas(400, 400);
 
@@ -43,28 +47,36 @@ function setup() {
   slider.style('visibility', 'hidden');
 }
 
+// Called by serial.js if anything goes wrong on the serial connection.
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
   pHtmlMsg.html(error);
 }
 
+// Called by serial.js once the port opens: reveal the slider so the user can
+// start sending values.
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("onSerialConnectionOpened");
   slider.style('visibility', 'visible');
 }
 
+// Called by serial.js when the port closes: hide the slider again.
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
   pHtmlMsg.html("onSerialConnectionClosed");
   slider.style('visibility', 'hidden');
 }
 
+// Called by serial.js when data arrives from the microcontroller. This sketch
+// is output-only, so we just echo whatever comes back to the status <p>.
 function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 }
 
+// Fires whenever the slider moves: send its value (0-255) out over serial as a
+// line of text for the Arduino to read.
 function onSliderValueChanged() {
   console.log("Slider:", slider.value());
 
@@ -74,6 +86,8 @@ function onSliderValueChanged() {
   }
 }
 
+// Each frame: show the current slider value once connected, otherwise prompt
+// the user to click to set up the serial connection.
 function draw() {
   background(220);
 
@@ -84,6 +98,8 @@ function draw() {
   }
 }
 
+// Browsers require a user gesture to open a serial port, so the connection is
+// triggered here on click. connectAndOpen() shows the port-picker dialog.
 function mousePressed() {
   if (!serial.isOpen()) {
     serial.connectAndOpen();

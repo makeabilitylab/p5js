@@ -8,9 +8,13 @@
 
 
 let pHtmlMsg;
-let serialOptions = { baudRate: 115200  };
+let serialOptions = { baudRate: 115200  }; // must match the Arduino's Serial.begin() baud rate
 let serial;
 
+// Run once at startup: create the canvas, then wire up Web Serial. The pattern
+// is: make a Serial object, register handlers for its connection/data/error
+// events, try to reconnect to a previously approved port, and add a status <p>.
+// The actual connect is triggered later by a user click (see mouseClicked).
 function setup() {
   createCanvas(640, 480);
 
@@ -32,6 +36,8 @@ function setup() {
   pHtmlMsg = createP("Click anywhere on this page to open the serial connection dialog");
 }
 
+// Each frame: clear to dark gray. This template doesn't draw the serial data
+// itself; do that here in your own sketch (see CircleSizeIn for an example).
 function draw() {
   background(100);
 }
@@ -77,9 +83,9 @@ function onSerialDataReceived(eventSender, newData) {
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 }
 
-/**
- * Called automatically by the browser through p5.js when mouse clicked
- */
+// Browsers require a user gesture to open a serial port, so we trigger the
+// connection here on click. connectAndOpen() shows the port-picker dialog;
+// once a port is chosen, the registered event handlers above take over.
 function mouseClicked() {
   if (!serial.isOpen()) {
     serial.connectAndOpen(null, serialOptions);

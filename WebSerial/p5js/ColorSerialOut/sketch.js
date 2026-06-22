@@ -18,6 +18,8 @@ let serialConnectButton;
 let mouseXSaved = null;
 let rgbSaved = null;
 
+// Create the canvas, wire up the Serial event handlers, and try to silently
+// reconnect to a port the user already approved this session.
 function setup() {
   createCanvas(600, 400);
 
@@ -38,6 +40,8 @@ function setup() {
   pHtmlMsg = createP('Connect to your serial device to begin!');
 }
 
+// Button handler: a user gesture is required to open the serial port, so this
+// kicks off connectAndOpen() on the first click and hides the button afterward.
 function onSerialConnectButtonClicked(){
   if (!serial.isOpen()) {
     serial.connectAndOpen();
@@ -46,28 +50,35 @@ function onSerialConnectButtonClicked(){
   }
 }
 
+// Serial event handler: a serial error occurred; show it on the page.
 function onSerialErrorOccurred(eventSender, error) {
   console.log("onSerialErrorOccurred", error);
   pHtmlMsg.html(error);
 }
 
+// Serial event handler: connection opened; hide the connect button.
 function onSerialConnectionOpened(eventSender) {
   console.log("onSerialConnectionOpened");
   pHtmlMsg.html("onSerialConnectionOpened");
   serialConnectButton.style("display", "none");
 }
 
+// Serial event handler: connection closed; re-show the connect button.
 function onSerialConnectionClosed(eventSender) {
   console.log("onSerialConnectionClosed");
   pHtmlMsg.html("onSerialConnectionClosed");
   serialConnectButton.style("display", "block");
 }
 
+// Serial event handler: data arrived from the device (this sketch is output-only,
+// so we just echo it to the page). Triggered per line received, not per frame.
 function onSerialDataReceived(eventSender, newData) {
   console.log("onSerialDataReceived", newData);
   pHtmlMsg.html("onSerialDataReceived: " + newData);
 }
 
+// Each frame: draw the hue gradient, a line at the live mouse x, and (if a color
+// has been clicked) a marker line plus its RGB text.
 function draw() {
   background(220);
 
@@ -97,6 +108,8 @@ function draw() {
   }
 }
 
+// On click: sample the hue under the mouse, save it, and write "R,G,B" out to
+// the device (only if the port is open).
 function mousePressed(){
   // When the mouse is pressed, check to see if the serial device is open and connected
   // And, if so, save the mouse position and convert it to a color
