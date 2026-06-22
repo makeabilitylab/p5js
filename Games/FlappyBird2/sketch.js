@@ -57,10 +57,12 @@ let isInvincible = false; // change this to be true to become invincible
 let minDistanceBetweenPipes;
 let nextSpawnDistance;
 
+// Load the arcade font before setup so text can use it immediately.
 function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
+// Set up the canvas and font, then start a fresh game paused until the first flap.
 function setup() {
   createCanvas(600, 400);
 
@@ -76,13 +78,16 @@ function setup() {
   noLoop(); 
 }
 
+// Build a barrier whose speed and max number of gaps scale with the current stage
+// (so the game gets harder as you progress).
 function createBarrier(){
-  return new Barrier(startingSpeed + stage * 0.5, stage - 0.5); 
+  return new Barrier(startingSpeed + stage * 0.5, stage - 0.5);
 }
 
+// Reset score and game state, rebuild the background, bird, and first barrier, and resume the loop.
 function resetGame(){
   score = 0;
-  isGameOver = false; 
+  isGameOver = false;
   
   landscape = new Background();
   bird = new Bird(64, height / 2);
@@ -122,14 +127,17 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: scroll the parallax background, spawn barriers as needed, scroll/draw
+// all barriers, check collisions and scoring (advancing the stage every 10 points),
+// move/draw the bird, draw the score, and update the screen-reader status.
 function draw() {
   background(220);
 
   landscape.update();
   landscape.draw();
-  
+
   if(barriers.length <= 0 || width - barriers[barriers.length - 1].x >= nextSpawnDistance){
-    barriers.push(createBarrier()); 
+    barriers.push(createBarrier());
     nextSpawnDistance = random(minDistanceBetweenPipes, width * 1.2);
   }
   
@@ -173,13 +181,15 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the score, stage, and hi-score, plus the game-over (with new-hi-score
+// notice) or start-screen overlay when relevant.
 function drawScore() {
 
   fill(0);
   textAlign(LEFT);
   textSize(15);
   text('Score:' + score, 10, 20);
-  
+
   let stageStr = 'Stage:' + stage;
   text(stageStr, width - textWidth(stageStr) - 5, 20);
   
@@ -226,35 +236,37 @@ function drawScore() {
  
 }
 
+// Touch (mobile) flaps the bird; delegates to mousePressed. Returns false to
+// suppress the browser's default touch handling.
 function touchStarted(){
-  print("touchStarted with " + touches.length + " touches");
-  
   mousePressed();
-  
+
   // prevent default
   return false;
 }
 
+// A tap/click flaps the bird; a right-click or two-finger touch starts the game
+// the first time and restarts after game over. Returns false to suppress the
+// browser's default handling.
 function mousePressed(){
   bird.flap();
 
-  if(isGameOver == true && 
+  if(isGameOver == true &&
     (mouseButton === RIGHT || touches.length >= 2)){
     resetGame();
-  }else if(hasGameBegun == false && 
+  }else if(hasGameBegun == false &&
     (mouseButton === RIGHT || touches.length >= 2)){
     hasGameBegun = true;
     loop();
   }
 
-  print("mousePressed: mouseButton = " + mouseButton);
-
   // prevent default
   return false;
 }
 
+// Space bar flaps the bird (and starts the game the first time); the up arrow restarts after game over.
 function keyPressed(){
-  if (key == ' '){ // spacebar 
+  if (key == ' '){ // spacebar
     bird.flap();
   }
   

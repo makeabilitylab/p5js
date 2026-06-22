@@ -1,3 +1,6 @@
+// The rival/hazard: Cookie Monster bounces around the canvas, eats cookies the
+// player doesn't grab first (growing and speeding up each time, with a random
+// "om nom nom" sound), and ends the game if it touches the avatar.
 class CookieMonster extends Shape {
   constructor() {
     //cookie monster is 347 x 500
@@ -23,11 +26,14 @@ class CookieMonster extends Shape {
     this.numCookiesEaten = 0;
   }
 
+  // Place Cookie Monster at the top-right corner (used on game reset).
   moveToStartPosition() {
     this.x = width - (this.width + 5);
     this.y = 50;
   }
 
+  // Move by the current velocity and bounce off the walls, flipping velocity and
+  // then nudging back in-bounds (5px margin) so it can't get stuck on an edge.
   update() {
     this.x += this.xVelocity;
     this.y += this.yVelocity;
@@ -39,7 +45,7 @@ class CookieMonster extends Shape {
     if (this.getLeft() < 0 || this.getRight() > width) {
       this.xVelocity *= -1;
     }
-    
+
     if(this.getBottom() > height){
       this.y = height - (this.height + 5) 
     }else if(this.getTop() < 0){
@@ -55,10 +61,14 @@ class CookieMonster extends Shape {
     
   }
 
+  // Play the "thank you, bye" clip (used on game over).
   playThankYouSound() {
     this.thankYouByeSound.play();
   }
 
+  // Eat a cookie: play a random eating sound, grow a bit (up to 70% of the
+  // canvas height), speed up with a fresh random velocity (random direction),
+  // and increment the count.
   ateCookie() {
     let randomSoundIndex = int(floor(random(0, this.eatingSounds.length)));
     let eatingSound = this.eatingSounds[randomSoundIndex];
@@ -85,15 +95,18 @@ class CookieMonster extends Shape {
     this.numCookiesEaten++;
   }
 
+  // Overlap test with a forgiving hit box: shrink Cookie Monster's bounds by a
+  // buffer on all sides so the player has to get well inside before it counts.
   overlaps(shape) {
     // based on https://stackoverflow.com/a/4098512
-    let hitBoxBuffer = 25;
+    let hitBoxBuffer = 25; // pixels trimmed off each side of the hit box
     return !((this.getRight() - hitBoxBuffer) < shape.x ||
       (this.getBottom() - hitBoxBuffer) < shape.y ||
       (this.x + hitBoxBuffer) > shape.getRight() ||
       (this.y + hitBoxBuffer) > shape.getBottom());
   }
 
+  // Draw Cookie Monster, alternating the left/right step images to animate walking.
   draw() {
     let img = this.imgLeftStep;
     if (frameCount % 2 == 0) {

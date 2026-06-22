@@ -1,3 +1,6 @@
+// The player's bird: a rectangle that constantly falls under gravity and gets
+// an upward kick each time you flap. Only moves vertically (the world scrolls
+// past it). Extends Shape for its position/size and hit box.
 class Bird extends Shape{
 
   constructor(x, y) {
@@ -9,11 +12,14 @@ class Bird extends Shape{
     this.gravity = 0.9;
     this.velocity = 0; //only one dimensional velocity (y axis)
   }
-  
+
+  // Give the bird an upward impulse (a "flap").
   flap(){
-    this.velocity += -this.flapStrength;   
+    this.velocity += -this.flapStrength;
   }
 
+  // Apply gravity + air resistance, move vertically, clamp to the screen, and
+  // tilt the bird up/down based on whether it's rising or falling.
   update() {
     this.velocity += this.gravity;
     this.velocity *= 0.9; // some air resistance
@@ -37,6 +43,7 @@ class Bird extends Shape{
     }
   }
 
+  // Draw the bird as a black rectangle, rotated to its current tilt angle.
   draw() {
     push();
       translate(this.x, this.y);

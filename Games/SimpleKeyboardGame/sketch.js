@@ -32,13 +32,15 @@ function updateScreenReaderStatus() {
   }
 }
 
+// One-time setup: make the canvas, create the player ball, and place the black
+// hole at a random size/position.
 function setup() {
   createCanvas(600, 400);
 
   // Accessibility: text description of the canvas for screen readers
   // https://p5js.org/reference/p5/describe/
   describe("A keyboard game: use the arrow keys to move a blue ball into the black hole to score a point.");
-  
+
   // create the game character
   avatar = new Ball(width/2, height/2, 30, color(0, 0, 255, 140));
   
@@ -50,18 +52,19 @@ function setup() {
   blackhole = new Ball(blackholeX, blackholeY, blackholeDiameter, color(0, 0, 0, 128));
 }
 
+// Each frame: draw the black hole, and if the avatar is fully inside it, score
+// a point and relocate the hole. Then draw the avatar and score.
 function draw() {
   background(204);
-  
-  
+
+
   blackhole.draw();
-  
+
   if(blackhole.contains(avatar)){
-    print("Yum!");
     score++;
     blackhole.relocate();
   }
-  
+
   avatar.draw();
   textSize(20);
   text("Score:" + score, 10, 20);
@@ -69,9 +72,10 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Arrow keys move the avatar by a fixed step; space "jumps" it up by 100px.
 function keyPressed() {
   //print(keyCode, key);
-  
+
   // don't put any drawing code in here!
   let pixelIncrement = 15;
   if (keyCode == LEFT_ARROW) {
@@ -89,6 +93,7 @@ function keyPressed() {
   }
 }
 
+// A filled circle used for both the player avatar and the black hole.
 class Ball{
   constructor(x, y, diameter, fillColor){
     this.x = x;
@@ -96,7 +101,7 @@ class Ball{
     this.diameter = diameter;
     this.fillColor = fillColor;
   }
-  
+
   draw(){
     push();
     noStroke();
@@ -104,13 +109,15 @@ class Ball{
     ellipse(this.x, this.y, this.diameter);
     pop();
   }
-  
+
+  // Move to a random spot fully inside the canvas.
   relocate(){
     let radius = this.diameter / 2;
     this.x = random(radius, width - radius);
-    this.y = random(radius, height - radius);  
+    this.y = random(radius, height - radius);
   }
-  
+
+  // Returns true if otherBall is fully contained within this ball.
   contains(otherBall){
     let distFromThisBallToOtherBall = dist(this.x, this.y, otherBall.x, otherBall.y);
     let otherBallRadius = otherBall.diameter / 2;

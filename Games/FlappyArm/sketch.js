@@ -58,10 +58,13 @@ let human = null;
 let armFlap = null;
 let drawDebugInfo = false; // set to true to turn on debug info
 
+// Load the arcade font before setup so text can use it immediately.
 function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
+// Set up the canvas, webcam capture, font, and ml5 PoseNet, then start a fresh
+// game paused until the player begins.
 function setup() {
   createCanvas(640, 480);
 
@@ -84,10 +87,12 @@ function setup() {
   poseNet.on('pose', onPoseDetected); // call onPoseDetected when pose detected
 }
 
+// Called once PoseNet has finished loading.
 function onModelReady() {
   print("The PoseNet model is ready...");
 }
 
+// PoseNet callback: store the first detected body (we only track one player).
 function onPoseDetected(poses) {
   // poses can contain an array of bodies (because PoseNet supports
   // recognition for *multiple* human bodies at the same time
@@ -96,13 +101,17 @@ function onPoseDetected(poses) {
   human = poses[0];
 }
 
+// Build a barrier whose speed and max number of gaps scale with the current stage
+// (so the game gets harder as you progress).
 function createBarrier(){
-  return new Barrier(startingSpeed + stage * 0.5, stage - 0.5); 
+  return new Barrier(startingSpeed + stage * 0.5, stage - 0.5);
 }
 
+// Reset score and game state, rebuild the background, bird, arm-flap detector,
+// and first barrier, and resume the loop.
 function resetGame(){
   score = 0;
-  isGameOver = false; 
+  isGameOver = false;
   
   landscape = new Background();
   bird = new Bird(64, height / 2);
@@ -142,12 +151,16 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: scroll the parallax background, spawn barriers as needed, scroll/draw
+// all barriers, check collisions and scoring (advancing the stage every 10 points),
+// move/draw the bird, run arm-flap detection (drawing pose debug overlays if enabled),
+// draw the score, and update the screen-reader status.
 function draw() {
   background(220);
 
   landscape.update();
   landscape.draw();
-  
+
   if(barriers.length <= 0 || width - barriers[barriers.length - 1].x >= nextSpawnDistance){
     barriers.push(createBarrier()); 
     nextSpawnDistance = random(minDistanceBetweenPipes, width * 1.2);
@@ -199,6 +212,7 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Debug overlay: draw the dimmed webcam feed and label each detected pose keypoint.
 function drawPose(){
   push();
   tint(128, 50);
@@ -221,13 +235,15 @@ function drawPose(){
   pop();
 }
 
+// Draw the score, stage, and hi-score, plus the game-over (with new-hi-score
+// notice) or start-screen overlay when relevant.
 function drawScore() {
 
   fill(0);
   textAlign(LEFT);
   textSize(15);
   text('Score:' + score, 10, 20);
-  
+
   let stageStr = 'Stage:' + stage;
   text(stageStr, width - textWidth(stageStr) - 5, 20);
   
@@ -274,8 +290,10 @@ function drawScore() {
  
 }
 
+// Space bar starts the game the first time and restarts after game over
+// (flapping itself is controlled by the player's arms, not the keyboard).
 function keyPressed(){
- 
+
   // check for special states (game over or if game hasn't begun)
   if (isGameOver == true && key == ' ') {
     resetGame();

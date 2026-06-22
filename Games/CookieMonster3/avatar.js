@@ -1,3 +1,4 @@
+// Named directions the avatar can face (used to flip/rotate its image and to move it).
 const DIRECTION = {
   LEFT: 'left',
   RIGHT: 'right',
@@ -6,6 +7,9 @@ const DIRECTION = {
 }
 
 
+// The player's character: a head image that faces the way it last moved, chomps
+// by alternating open/closed-mouth images, plays a bite sound and grows slightly
+// each time it eats a cookie, and tracks how many cookies it has eaten (the score).
 class Avatar extends Shape {
 
   constructor() {
@@ -32,21 +36,25 @@ class Avatar extends Shape {
     this.moveStrength = 15;
   }
 
+  // Place the avatar back at its top-left starting spot (used on game reset).
   moveToStartPosition() {
     this.x = 50;
     this.y = 50;
   }
 
+  // Eat a cookie: play the bite sound, grow a little (up to a max width), and
+  // increment the score.
   ateCookie() {
     this.biteSound.play();
-    
-    let maxWidth = 200;
+
+    let maxWidth = 200; // stop growing once this wide
     if(this.width < maxWidth){
       this.incrementWidth(2, true);
     }
     this.numCookiesEaten++;
   }
-  
+
+  // Leap a fixed distance in whichever direction the avatar is currently facing.
   jump(){
     if(this.curDirection == DIRECTION.RIGHT){
       avatar.x += this.jumpStrength; 
@@ -59,9 +67,11 @@ class Avatar extends Shape {
     }
   }
 
+  // Face the given direction, step one moveStrength in it, then clamp the
+  // avatar so it stays on screen.
   moveDir(direction) {
     this.curDirection = direction;
-    
+
     if(this.curDirection == DIRECTION.LEFT){
       this.x = this.x - this.moveStrength;
     } else if (this.curDirection == DIRECTION.RIGHT) {
@@ -85,6 +95,8 @@ class Avatar extends Shape {
     }
   }
 
+  // Draw the avatar, flipping/rotating its image to face curDirection and
+  // alternating open/closed mouth every couple frames to animate chewing.
   draw() {
     push();
 

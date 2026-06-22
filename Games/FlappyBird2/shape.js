@@ -1,3 +1,6 @@
+// Shared geometry base class for game objects: an axis-aligned rectangle
+// (x, y, width, height) with edge accessors and overlap/contains hit tests.
+// Bird and Pipe extend this.
 class Shape {
   constructor(x, y, width, height) {
     this.x = x;
@@ -6,6 +9,7 @@ class Shape {
     this.height = height;
   }
 
+  // Edge accessors (left/right/top/bottom in pixels).
   getLeft() {
     return this.x;
   }
@@ -22,6 +26,7 @@ class Shape {
     return this.y + this.height;
   }
   
+  // Returns true if this rectangle overlaps another Shape.
   overlaps(shape){
     // based on https://stackoverflow.com/a/4098512
     return !(this.getRight() < shape.x || 
@@ -30,6 +35,7 @@ class Shape {
              this.y > shape.getBottom());
   }
 
+  // Returns true if the point (x, y) lies inside this rectangle.
   contains(x, y) {
     return x >= this.x && // check within left edge
       x <= (this.x + this.width) && // check within right edge

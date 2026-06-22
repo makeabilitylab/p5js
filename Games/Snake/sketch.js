@@ -51,11 +51,13 @@ function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
+// Slow the frame rate to a playable pace, build the grid (which sizes the
+// canvas), then create the snake and first food piece.
 function setup() {
-  frameRate(4);
+  frameRate(4); // game steps 4 times per second (one snake move per frame)
   textFont(arcadeFont);
   //textFont('Coiny');
-  
+
   grid = new Grid(); // Snake is based on a grid of cells
   createCanvas(grid.getWidth(), grid.getHeight()); // the canvas is derived from grid size
 
@@ -65,6 +67,7 @@ function setup() {
   setupGameEntities();
 }
 
+// Create (or recreate) the snake and food at random grid locations.
 function setupGameEntities() {
   snake = new Snake(grid.cellSize, grid.getRandomLoc());
   food = new Food(grid.cellSize, grid.getRandomLoc());
@@ -102,6 +105,8 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: if playing, eat-and-grow when over food, advance the snake, and
+// end the game if it runs off screen; then redraw grid, food, snake, and score.
 function draw() {
   background(220);
 
@@ -128,6 +133,8 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the current score (snake length minus its starting segment), plus the
+// dark "GAME OVER" overlay when the game has ended.
 function drawScore() {
 
   fill(0);
@@ -152,12 +159,14 @@ function drawScore() {
   }
 }
 
+// Touch input: treat a tap the same as a mouse press.
 function touchStarted(){
-  print("touchStarted: ", mouseX, mouseY);
   mousePressed();
-  
 }
 
+// Steer the snake toward where you tapped/clicked relative to its head: the
+// larger of the horizontal/vertical gaps decides the turn direction. A reversal
+// into itself ends the game; a right-click / two-finger tap restarts after game over.
 function mousePressed(){
   let snakeHead = snake.getHead();
   let diffY = abs(mouseY - snakeHead.y);
@@ -185,6 +194,8 @@ function mousePressed(){
   }
 }
 
+// Arrow keys turn the snake (reversing into itself ends the game); SPACE BAR
+// restarts once the game is over.
 function keyPressed() {
   let hasRunIntoSelf = false;
   switch (keyCode) {
@@ -212,6 +223,8 @@ function keyPressed() {
   }
 }
 
+// The playing field: a fixed grid of square cells. Defines the canvas size and
+// hands out random cell-aligned positions for the snake and food.
 class Grid {
 
   constructor() {
@@ -220,6 +233,7 @@ class Grid {
     this.numRows = 20;
   }
 
+  // Canvas dimensions in pixels (cell size times column/row count).
   getWidth() {
     return floor(this.cellSize * this.numCols);
   }
@@ -228,12 +242,14 @@ class Grid {
     return floor(this.cellSize * this.numRows);
   }
 
+  // Pick a random cell and return its top-left corner in pixel coordinates.
   getRandomLoc() {
     let randCol = floor(random(0, this.numCols));
     let randRow = floor(random(0, this.numRows));
     return createVector(randCol * this.cellSize, randRow * this.cellSize);
   }
 
+  // Draw the faint grid lines.
   draw() {
     // mainly for debugging
     stroke(144, 144, 144, 100);
@@ -249,6 +265,7 @@ class Grid {
   }
 }
 
+// A single piece of food: one red cell-sized square the snake tries to eat.
 class Food {
   constructor(foodSize, loc) {
     this.size = foodSize;
@@ -256,6 +273,7 @@ class Food {
     this.color = color(255, 0, 0);
   }
 
+  // Draw the food as a red square.
   draw() {
     fill(255, 0, 0);
     noStroke();

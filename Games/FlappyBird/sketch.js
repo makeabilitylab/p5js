@@ -53,10 +53,12 @@ let arcadeFont;
 let minDistanceBetweenPipes;
 let nextSpawnDistance;
 
+// Load the arcade font before setup so text can use it immediately.
 function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
+// Set up the canvas and font, then start a fresh game paused until the first flap.
 function setup() {
   createCanvas(600, 400);
 
@@ -72,9 +74,10 @@ function setup() {
   noLoop(); 
 }
 
+// Reset score and game state, spawn a fresh bird and first pipe, and resume the loop.
 function resetGame(){
   score = 0;
-  isGameOver = false; 
+  isGameOver = false;
   
   bird = new Bird(64, height / 2);
   pipes = [new Pipe()];
@@ -111,6 +114,9 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: spawn pipes as needed, scroll/draw all pipes, check for
+// collisions and scoring, move/draw the bird, draw the score, and update the
+// screen-reader status.
 function draw() {
   background(220);
 
@@ -154,6 +160,7 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the current score, plus the game-over or start-screen overlay when relevant.
 function drawScore() {
 
   fill(0);
@@ -191,8 +198,9 @@ function drawScore() {
  
 }
 
+// Space bar flaps the bird; it also starts the game the first time and restarts after game over.
 function keyPressed(){
-  if (key == ' '){ // spacebar 
+  if (key == ' '){ // spacebar
     bird.flap();
   }
   

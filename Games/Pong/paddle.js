@@ -1,13 +1,18 @@
+// A player's paddle: a vertical bar pinned to the left or right edge that the
+// player slides up/down with the keyboard. Extends Shape for position/size and
+// for the contains() hit test it uses against the ball.
 class Paddle extends Shape {
 
   constructor(x, y, width, height, paddleLoc) {
     super(x, y, width, height);
     this.paddleLoc = paddleLoc;
-    this.movementStep = 5;
+    this.movementStep = 5; // pixels the paddle moves per frame while a key is held
   }
 
+  // Move the paddle from held arrow keys (clamped to the canvas), then bounce
+  // the ball back if it has reached this paddle's edge.
   update(ball) {
-   
+
     // check for key press and move paddle up or down
     if (keyIsPressed) {
       // we use the keyIsDown function to support multiple key presses
@@ -40,6 +45,7 @@ class Paddle extends Shape {
     }
   }
 
+  // Draw the paddle as a white bar.
   draw() {
     fill(255);
     rect(this.x, this.y, this.width, this.height);

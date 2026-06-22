@@ -1,3 +1,7 @@
+// Procedurally-generated scrolling backdrop: a field of triangular mountains
+// and drifting clouds plus a sun. Mountains and clouds scroll left and are
+// recycled (removed once off the left edge, new ones spawned on the right) to
+// make an endless scene.
 class Background{
   constructor() {
     this.scrollSpeed = 0.8;
@@ -28,7 +32,9 @@ class Background{
     }
   }
   
-  update(){    
+  // Scroll everything left: shift the mountains, dropping any that exit on the
+  // left and spawning a new one on the right; recycle clouds the same way.
+  update(){
     for(let i = this.mountains.length - 1; i >= 0; i--){
       this.mountains[i].shiftX(-this.scrollSpeed);
 
@@ -61,23 +67,26 @@ class Background{
     }
   }
   
+  // Draw the scene back-to-front: sun, then mountains, then clouds.
   draw(){
-    
+
     this.sun.draw();
-    
+
     // draw mountains
     for (let mountain of this.mountains){
       mountain.draw();
     }
-    
+
     // draw clouds
     for (let cloud of this.clouds){
       cloud.draw();
     }
   }
-  
+
+  // Build a triangular Mountain spanning mountainWidth with a random height,
+  // its peak centered over the base.
   createMountain(x1, y1, mountainWidth){
-    
+
     let mountainHeight = random(40, height * 0.75);
     
     let x2 = x1 + mountainWidth / 2;
@@ -90,24 +99,29 @@ class Background{
   }
 }
 
+// A simple sun: a pale circle at a random spot in the upper sky. Extends Shape.
 class Sun extends Shape{
-  constructor() { 
+  constructor() {
     let diameter = random(70, 130);
     let x = random(width / 2, width);
     let y = random(0, height / 4);
     super(x, y, diameter, diameter);
     this.fillColor = color(240);
   }
-  
+
   draw(){
     push();
      fill(this.fillColor);
      noStroke();
-     circle(this.x, this.y, this.width); 
+     circle(this.x, this.y, this.width);
     pop();
   }
 }
 
+// A drifting cloud. Each cloud pre-renders its overlapping "puffs" once onto an
+// off-screen graphics buffer (this.pg), so the whole cloud can be drawn with a
+// single semi-transparent image() call — otherwise the overlapping puffs would
+// show seams where they blend. Extends Shape.
 class Cloud extends Shape{
   constructor(x, y){
     let cloudWidth = random(70, 150);
@@ -143,17 +157,21 @@ class Cloud extends Shape{
     // this.pg.rect(0, 0, this.width-1, this.height-1);
   }
   
+  // Drift left at this cloud's own (slow) scroll speed.
   update(){
     this.x -= this.scrollSpeed;
   }
-  
+
+  // Blit the pre-rendered puff image, tinted semi-transparent.
   draw(){
     push();
     tint(255, this.alpha); // this enables us to draw the clouds semi-transparently
     image(this.pg, this.x, this.y);
     pop();
   }
-  
+
+  // Earlier approach (unused): drew the puffs directly each frame, which showed
+  // the overlaps between puffs once made transparent. Kept for reference.
   draw_old(){
     //old way of drawing clouds but didn't handle transparency correctly
     //because you could see overlaps on the puffs
@@ -179,6 +197,9 @@ class Cloud extends Shape{
   
 }
 
+// A triangular mountain defined by its three corner points. Extends Shape, and
+// computes its bounding box from the corners so it can be recycled when it
+// scrolls off-screen.
 class Mountain extends Shape{
   constructor(x1, y1, x2, y2, x3, y3) {
     // these are the bounding box dimensions
@@ -199,15 +220,17 @@ class Mountain extends Shape{
     this.outlineColor = color(230);
   }
   
+  // Draw the mountain as a filled triangle.
   draw(){
     push();
      fill(this.fillColor);
      stroke(this.outlineColor);
      noStroke();
-     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3); 
+     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
     pop();
   }
-  
+
+  // Shift all three corners (and the bounding box) horizontally by xShift.
   shiftX(xShift){
     this.x1 += xShift;
     this.x2 += xShift;

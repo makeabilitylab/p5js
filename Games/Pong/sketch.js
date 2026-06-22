@@ -48,6 +48,7 @@ const PADDLE = {
   RIGHT: 'right',
 }
 
+// Set up the canvas, the ball, and the two paddles centered on each side.
 function setup() {
   createCanvas(600, 600);
 
@@ -93,6 +94,8 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: advance the ball, award a point and stop play when it exits a
+// side, end the game once someone reaches endScore, then move/draw everything.
 function draw() {
   background(220);
 
@@ -105,14 +108,10 @@ function draw() {
       scoreRight++;
       isBallActive = false;
       ball.reset();
-
-      print("Score: ", scoreLeft, " to ", scoreRight);
     } else if (ball.getLeft() > width) {
       scoreLeft++;
       isBallActive = false;
       ball.reset();
-
-      print("Score: ", scoreLeft, " to ", scoreRight);
     }
 
     if (scoreLeft >= endScore || scoreRight >= endScore) {
@@ -134,6 +133,8 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the dashed center line and both scores; overlays the win screen when the
+// game is over and the start/instructions screen before the first serve.
 function drawGameboard() {
 
   // draw midpoint line. to make it a dashed line, see:
@@ -197,6 +198,7 @@ function drawGameboard() {
   strokeWeight(1);
 }
 
+// SPACE BAR starts a new game when it's over, or serves the ball when idle.
 function keyPressed() {
   if (isGameOver && key == ' ') {
     // if the game is over and SPACEBAR pressed, reset game

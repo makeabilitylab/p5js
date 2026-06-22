@@ -62,6 +62,8 @@ function updateScreenReaderStatus() {
   }
 }
 
+// One-time setup: make the canvas, start the mic and wire it to an FFT, create
+// the ball, seed the falling stars, and load the hit/lost sound effects.
 function setup() {
   createCanvas(1024, 600);
 
@@ -90,6 +92,8 @@ function setup() {
   starLostSound = loadSound('smw_stomp.wav');
 }
 
+// Make a new star at a random size and x, starting above the top of the canvas
+// so it falls into view.
 function generateStar() {
   let size = random(30, 100);
   let x = random(size / 2, width - size / 2);
@@ -97,6 +101,11 @@ function generateStar() {
   return new Star(x, y, size);
 }
 
+// Each frame: until the player clicks to start, just show the start prompt.
+// Once started, zoom the view to keep the (possibly high-flying) ball in frame,
+// draw the grid/score, analyze the FFT spectrum and use the change in spectrum
+// energy under the ball to push it, then update/draw the stars (scoring hits,
+// recycling stars that are caught or fall off-screen) and the ball.
 function draw() {
   background(20);
 
@@ -190,10 +199,13 @@ function draw() {
   }
 }
 
+// The first click starts the game (also satisfies Chrome's gesture requirement
+// for playing audio).
 function mouseClicked() {
   hasStarted = true;
 }
 
+// Draw the "click to start" prompt shown before the game begins.
 function drawStartGameText(){
   push();
   fill(255);
@@ -204,6 +216,8 @@ function drawStartGameText(){
   pop();
 }
 
+// Draw the saved/lost tally in the top-left. (The game-over overlay is left
+// commented out below as a starting point for an extension.)
 function drawScore(){
   push();
   fill(255, 255, 255, 200);
@@ -229,6 +243,8 @@ function drawScore(){
 //   } 
 }
 
+// Draw a faint background grid (extended well beyond the canvas) so the zoom
+// effect reads as the view pulling back.
 function drawGrid() {
   let gridCellSize = 20;
   stroke(100, 100, 100, 40);
@@ -243,8 +259,11 @@ function drawGrid() {
   }
 }
 
+// A falling, spinning star the player tries to catch with the ball. When hit,
+// it shrinks and fades out (an "explosion"); if it falls off the bottom first,
+// it counts as lost.
 class Star extends Shape {
-  
+
   constructor(x, y, diameter) {
     super(x, y, diameter, diameter);
     this.npoints = floor(random(5, 10));
@@ -261,15 +280,18 @@ class Star extends Shape {
     this.yVelocity = 0;
   }
 
+  // Mark the star as hit, which kicks off the shrink/fade animation in update().
   explode() {
     this.hasBeenHit = true;
   }
 
+  // Fall under gravity; if hit, shrink and fade until the explosion completes;
+  // if it drops below the canvas, flag it as lost.
   update() {
     this.yVelocity += this.gravity;
     this.yVelocity *= 0.9; // some air resistance
     this.y += this.yVelocity;
-    
+
     if (this.hasBeenHit) {
       this.scaleVal = max(0, this.scaleVal - 0.1);
       let a = max(0, alpha(this.fillColor) - 1);
@@ -286,6 +308,8 @@ class Star extends Shape {
     }
   }
 
+  // Draw the star as an n-pointed polygon, spinning over time and scaled by its
+  // current explosion size.
   draw() {
     let angle = TWO_PI / this.npoints;
     let halfAngle = angle / 2.0;
@@ -314,6 +338,8 @@ class Star extends Shape {
   }
 }
 
+// The player's ball: pushed upward by sound energy under it, otherwise falling
+// under gravity and bouncing off the walls and floor.
 class Ball extends Shape {
   constructor(x, y, diameter) {
     super(x, y, diameter, diameter);
@@ -323,10 +349,17 @@ class Ball extends Shape {
     this.xVelocity = 0;
   }
 
+  // Diameter accessor (width == height for the ball).
   getDiameter() {
     return this.width;
   }
 
+  /**
+   * Advance the ball one frame from the FFT spectrum under it.
+   * @param {number} ySpectrumVal - spectrum height (in pixels) under the ball; if above the ball, it lifts it.
+   * @param {number} ySpectrumVel - change in that spectrum value; becomes upward velocity.
+   * @param {number} xSpectrumVel - horizontal offset from the spectrum spike; becomes sideways velocity.
+   */
   update(ySpectrumVal, ySpectrumVel, xSpectrumVel) {
 
     // check to see if the new yVal is less than the current ball position
@@ -345,7 +378,6 @@ class Ball extends Shape {
     // ensure we don't go too fast
     if (this.yVelocity < -MAX_Y_VELOCITY) {
       this.yVelocity = -MAX_Y_VELOCITY;
-      print("over max velocity");
     }
 
     // add in our velocity
@@ -374,6 +406,7 @@ class Ball extends Shape {
     }
   }
 
+  // Draw the ball as a magenta circle (anchored at its top-left corner).
   draw() {
     push();
     ellipseMode(CORNER);

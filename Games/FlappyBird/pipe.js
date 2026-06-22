@@ -1,3 +1,5 @@
+// An obstacle that scrolls right-to-left: a top pipe and a bottom pipe with a
+// randomly sized gap between them for the bird to fly through.
 class Pipe {
   constructor() {
     this.x = width;
@@ -16,8 +18,9 @@ class Pipe {
     this.pastBird = false; 
   }
   
+  // Returns true if the bird overlaps either the top or bottom pipe (i.e. it's
+  // horizontally within the pipe and outside the gap).
   checkIfHitsBird(bird){
-    // returns true if pipe hits bird, false otherwise
     if((bird.x + bird.width > this.x && bird.x < this.x + this.width) &&
        (bird.y < this.topHeight || (bird.y + bird.height) > (height - this.bottomHeight))){
       return true; 
@@ -25,18 +28,19 @@ class Pipe {
     return false;
   }
   
+  // Returns true once the bird has fully passed the pipe (and caches the result
+  // in this.pastBird for scoring).
   checkIfPastBird(bird){
-    // returns true if pipe passes bird, false otherwise
-    // also sets the this.pastBird member variable
     this.pastBird = bird.x > this.x + this.width;
     return this.pastBird;
   }
-  
+
+  // Scroll the pipe left by `speed` each frame.
   update(){
-    // pipes always go from right to left
-    this.x -= this.speed; 
+    this.x -= this.speed;
   }
-  
+
+  // Draw the top and bottom pipes as black rectangles.
   draw(){
     fill(0);
     rect(this.x, 0, this.width, this.topHeight);

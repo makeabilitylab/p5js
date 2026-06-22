@@ -61,10 +61,13 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Load the arcade font before setup() runs.
 function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 }
 
+// One-time setup: make the canvas, build the ground, start a fresh game, then
+// pause the loop until the player hits the space bar to begin.
 function setup() {
   createCanvas(600, 400);
 
@@ -80,18 +83,23 @@ function setup() {
   noLoop(); 
 }
 
+// Reset score and state, spawn a fresh avatar and first barrier, and restart
+// the game loop.
 function resetGame(){
   score = 0;
-  isGameOver = false; 
-  
+  isGameOver = false;
+
   avatar = new Avatar(ground.y);
   barriers = [new Barrier(width, ground.y)];
   loop();
 }
 
+// Each frame: spawn new barriers as needed, update/draw every barrier (ending
+// the game on a collision, scoring when one is cleared, culling off-screen
+// ones), then update and draw the avatar, ground, and score.
 function draw() {
   background(220);
-  
+
   if(barriers.length <= 0 || width - barriers[barriers.length - 1].x >= nextSpawnDistance){
     barriers.push(new Barrier(width, ground.y)); 
     nextSpawnDistance = random(minDistanceBetweenBarriers, width * 1.2);
@@ -126,6 +134,8 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the running score, plus a dark overlay with "game over" or "press space
+// to play" text depending on game state.
 function drawScore() {
 
   fill(0);
@@ -164,8 +174,10 @@ function drawScore() {
 }
 
 
+// Space bar jumps when on the ground; it also starts the first game or
+// restarts after a game over.
 function keyPressed(){
-  if (key == ' ' && avatar.isOnGround()){ // spacebar 
+  if (key == ' ' && avatar.isOnGround()){ // spacebar
     avatar.jump();
   } 
   
@@ -178,14 +190,15 @@ function keyPressed(){
   }
 }
 
+// The static ground: a gray bar across the bottom 20% of the canvas.
 class Ground extends Shape{
   constructor(){
-    let yGround = height * 0.8;
+    let yGround = height * 0.8;        // ground sits at 80% down the canvas
     let groundHeight = ceil(height - yGround);
     super(0, yGround, width, groundHeight);
-    this.fillColor = color(128); 
+    this.fillColor = color(128);
   }
-  
+
   draw(){
     push();
     noStroke();
@@ -195,25 +208,29 @@ class Ground extends Shape{
   }
 }
 
+// An obstacle: a randomly sized rectangle that scrolls right-to-left and ends
+// the game if the avatar hits it.
 class Barrier extends Shape{
   constructor(x, yGround){
     let barrierWidth = random(10, 30);
     let barrierHeight = random(10, 40);
-    let y = yGround - barrierHeight;
+    let y = yGround - barrierHeight;  // rest the barrier on top of the ground
     super(x, y, barrierWidth, barrierHeight);
-    this.fillColor = color(128); 
+    this.fillColor = color(128);
     this.speed = 6;
     this.hasScoredYet = false;
   }
-  
+
+  // Returns true if this barrier overlaps the given shape (the avatar).
   checkIfCollision(shape){
     return this.overlaps(shape);
   }
-  
+
+  // Scroll the barrier left by its speed each frame.
   update(){
-    this.x -= this.speed; 
+    this.x -= this.speed;
   }
-  
+
   draw(){
     push();
     noStroke();
@@ -223,37 +240,42 @@ class Barrier extends Shape{
   }
 }
 
+// The player: a rectangle fixed in x that jumps under gravity. The world
+// scrolls past it, so it only ever moves vertically.
 class Avatar extends Shape{
   constructor(yGround){
     let avatarHeight = 20;
-    super(64, yGround - avatarHeight, 10, 20);
-    this.fillColor = color(70); 
+    super(64, yGround - avatarHeight, 10, 20); // x=64 keeps the avatar near the left edge
+    this.fillColor = color(70);
     this.gravity = 0.9;
     this.jumpStrength = 15;
     this.yVelocity = 0;
     this.yGround = yGround;
   }
-  
+
+  // Give the avatar an upward impulse (a jump).
   jump(){
-    this.yVelocity += -this.jumpStrength;   
+    this.yVelocity += -this.jumpStrength;
   }
-  
+
+  // True when the avatar is resting on the ground (so it can jump again).
   isOnGround(){
     return this.y == this.yGround - this.height;
   }
 
+  // Apply gravity + air resistance, move vertically, and clamp to the ground.
   update() {
     this.yVelocity += this.gravity;
     this.yVelocity *= 0.9; // some air resistance
     this.y += this.yVelocity;
-    
+
     if (this.y + this.height > this.yGround) {
       // hit the ground
       this.y = this.yGround - this.height;
       this.yVelocity = 0;
     }
   }
-  
+
   draw(){
     push();
     noStroke();

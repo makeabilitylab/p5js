@@ -51,20 +51,25 @@ let isGameOver = false;
 let soundClassifier;
 let classificationResults;
 
+// Load the arcade font and set up the ml5 sound classifier. The 'SpeechCommands18w'
+// model recognizes spoken words like up/down/left/right; probabilityThreshold
+// means only classifications it's at least 90% confident about are reported.
 function preload() {
   // I originally tried to load a font like this example, but it didn't work
   //  - Example: https://editor.p5js.org/allison.parrish/sketches/ByyxP7Gbe
   arcadeFont = loadFont('assets/arcadefont.ttf');
-  
+
   let options = { probabilityThreshold: 0.9 };
-  soundClassifier = ml5.soundClassifier('SpeechCommands18w', options); 
+  soundClassifier = ml5.soundClassifier('SpeechCommands18w', options);
 }
 
+// Build the grid/canvas and game entities, then start listening for spoken
+// commands (onNewSoundClassified is called each time the model classifies audio).
 function setup() {
-  frameRate(2);
+  frameRate(2); // slow pace so there's time to react to recognized speech
   textFont(arcadeFont);
   //textFont('Coiny');
-  
+
   grid = new Grid(); // Snake is based on a grid of cells
   createCanvas(grid.getWidth(), grid.getHeight()); // the canvas is derived from grid size
 
@@ -75,6 +80,7 @@ function setup() {
   soundClassifier.classify(onNewSoundClassified);
 }
 
+// Create (or recreate) the snake and food at random grid locations.
 function setupGameEntities() {
   snake = new Snake(grid.cellSize, grid.getRandomLoc());
   food = new Food(grid.cellSize, grid.getRandomLoc());
@@ -109,9 +115,11 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Each frame: show the most recent recognized word, then run the game (eat/grow,
+// advance the snake, detect running off screen) and redraw everything.
 function draw() {
   background(220);
-  
+
   // draw classification
   if(classificationResults){
     push();
@@ -148,6 +156,8 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the current score (snake length minus its starting segment), plus the
+// dark "GAME OVER" overlay when the game has ended.
 function drawScore() {
   push();
   fill(0);
@@ -173,6 +183,8 @@ function drawScore() {
   pop();
 }
 
+// Arrow keys also steer the snake (reversing into itself ends the game); SPACE
+// BAR restarts once the game is over.
 function keyPressed() {
   let hasRunIntoSelf = false;
   switch (keyCode) {
@@ -200,14 +212,15 @@ function keyPressed() {
   }
 }
 
+// ml5 callback fired whenever the sound classifier produces a result. results
+// are sorted most-confident-first; we steer the snake based on the top label
+// (up/down/left/right) and stash the results so draw() can display the word.
 function onNewSoundClassified(error, results){
   // Display error in the console
   if (error) {
     console.error(error);
   }
-  
-  print(results[0].label + ", " + results[0].confidence);
-  
+
   let hasRunIntoSelf = false;
   if(results[0].label == "left"){
     hasRunIntoSelf = !snake.setDir(DIRECTION.LEFT);
@@ -226,6 +239,8 @@ function onNewSoundClassified(error, results){
   classificationResults = results;
 }
 
+// The playing field: a fixed grid of square cells. Defines the canvas size and
+// hands out random cell-aligned positions for the snake and food.
 class Grid {
 
   constructor() {
@@ -234,6 +249,7 @@ class Grid {
     this.numRows = 20;
   }
 
+  // Canvas dimensions in pixels (cell size times column/row count).
   getWidth() {
     return floor(this.cellSize * this.numCols);
   }
@@ -242,12 +258,14 @@ class Grid {
     return floor(this.cellSize * this.numRows);
   }
 
+  // Pick a random cell and return its top-left corner in pixel coordinates.
   getRandomLoc() {
     let randCol = floor(random(0, this.numCols));
     let randRow = floor(random(0, this.numRows));
     return createVector(randCol * this.cellSize, randRow * this.cellSize);
   }
 
+  // Draw the faint grid lines.
   draw() {
     // mainly for debugging
     stroke(144, 144, 144, 100);
@@ -263,6 +281,7 @@ class Grid {
   }
 }
 
+// A single piece of food: one red cell-sized square the snake tries to eat.
 class Food {
   constructor(foodSize, loc) {
     this.size = foodSize;
@@ -270,6 +289,7 @@ class Food {
     this.color = color(255, 0, 0);
   }
 
+  // Draw the food as a red square.
   draw() {
     fill(255, 0, 0);
     noStroke();

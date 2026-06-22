@@ -1,3 +1,6 @@
+// Geometry base class for this game's objects: an axis-aligned rectangle with
+// a color and an optional debug hit-box. (A variant of the shared Shape used in
+// the other game examples, extended here with color + collision()/draw().)
 class Shape {
   constructor(x, y, width, height, strokeColor, fillColor) {
     this.x = x;
@@ -7,9 +10,10 @@ class Shape {
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
     this.strokeWeight = 1;
-    this.drawHitBox = false;
+    this.drawHitBox = false; // set true to outline the rectangular hit box
   }
 
+  // Edge accessors (left/right/top/bottom in pixels).
   getLeft() {
     return this.x;
   }
@@ -26,6 +30,7 @@ class Shape {
     return this.y + this.height;
   }
 
+  // Returns true if this rectangle overlaps another Shape's rectangle.
   collision(shape) {
     // only does collision detection based on rectangular hit boxes
     // and not the potentially more complex underlying geometry
@@ -42,6 +47,7 @@ class Shape {
       this.getTop() <= shape.getBottom();
   }
 
+  // Returns true if the point (x, y) lies inside this rectangle.
   contains(x, y) {
     return x >= this.x && // check within left edge
       x <= (this.x + this.width) && // check within right edge
@@ -49,6 +55,8 @@ class Shape {
       y <= (this.y + this.height); // check within bottom edge
   }
 
+  // Base shapes draw nothing by default; only the debug hit box if enabled.
+  // Subclasses override this to render themselves.
   draw() {
     if (this.drawHitBox) {
       //for debugging

@@ -57,6 +57,7 @@ let lastHiScore = -1;
 let lastAnnouncedScore = -1;
 let announcedGameOver = false;
 
+// Write a message into the aria-live region (only when it actually changes).
 function announceStatus(message) {
   const statusEl = document.getElementById('aria-status');
   if (statusEl && statusEl.textContent !== message) {
@@ -64,6 +65,8 @@ function announceStatus(message) {
   }
 }
 
+// Announce the score (or, once, the game-over result) to screen readers,
+// resetting the tracking when a new game starts.
 function updateScreenReaderStatus() {
   const score = avatar.numCookiesEaten;
   if (isGameOver) {
@@ -80,6 +83,7 @@ function updateScreenReaderStatus() {
   }
 }
 
+// Load the arcade font, characters, and background image before setup.
 function preload() {
   arcadeFont = loadFont('assets/arcadefont.ttf');
 
@@ -90,6 +94,8 @@ function preload() {
   imgBackground = loadImage('assets/sesame_street_background.jpg');
 }
 
+// Set up the canvas and arcade font, start a fresh game, then pause the loop
+// until the player presses a key (the title screen is showing).
 function setup() {
   createCanvas(650, 500);
 
@@ -104,6 +110,8 @@ function setup() {
   noLoop();
 }
 
+// Start a new round: one cookie, fresh avatar and Cookie Monster at their start
+// positions, clear the game-over flag, and resume the draw loop.
 function resetGame() {
   // start with only one cookie
   cookies = [new Cookie()]
@@ -116,6 +124,10 @@ function resetGame() {
   loop();
 }
 
+// Each frame: draw the dimmed background, move the avatar for any held arrow
+// keys, draw/resolve cookies (awarding them to the avatar or Cookie Monster and
+// spawning more as the score climbs), move Cookie Monster, and check for the
+// game-over collision (unless invincible).
 function draw() {
   background(255);
 
@@ -140,14 +152,12 @@ function draw() {
     cookie.draw();
 
     if (avatar.contains(cookie.x, cookie.y)) {
-      print("Yum!");
       avatar.ateCookie();
       cookie.relocate();
 
-      // every 5 cookies, add a new cookie
+      // every 5 cookies, add a new cookie (up to maxCookies)
       if (avatar.numCookiesEaten % 5 == 0 &&
         cookies.length < maxCookies) {
-        print("Adding a new cookie!");
         cookies.push(new Cookie());
       }
     } else if (cookieMonster.contains(cookie.x, cookie.y)) {
@@ -160,7 +170,6 @@ function draw() {
   cookieMonster.draw();
 
   if (cookieMonster.overlaps(avatar) && !isInvincible) {
-    print("Game Over!");
     noLoop();
     cookieMonster.playThankYouSound();
     isGameOver = true;
@@ -177,6 +186,9 @@ function draw() {
   updateScreenReaderStatus();
 }
 
+// Draw the avatar and the two scores, then draw the appropriate overlay: the
+// game-over screen (with hi-score and replay prompt) or, before the first play,
+// the title/instructions screen.
 function drawScore() {
   push();
 
@@ -231,6 +243,7 @@ function drawScore() {
   pop();
 }
 
+// Once the game has begun, drop a new cookie at the mouse position on click.
 function mousePressed(){
   if(hasGameBegun){
     //add new cookie on mouse press
@@ -241,6 +254,9 @@ function mousePressed(){
   }
 }
 
+// Handle key presses: the first key starts the game; 'i'/'d' toggle the
+// invincibility and debug cheats; space restarts after game over or jumps during
+// play; arrow keys move the avatar.
 function keyPressed() {
   //print(keyCode, key);
   if (hasGameBegun == false) {
