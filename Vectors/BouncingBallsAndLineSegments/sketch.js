@@ -42,6 +42,8 @@ function setup() {
   ball = new Ball();
 }
 
+// Each frame: move/draw the ball, then for every barrier line segment check for
+// a collision and, if hit, reflect the ball's velocity off the segment's normal.
 function draw() {
   background(220);
 
@@ -106,6 +108,8 @@ function draw() {
   }
 }
 
+// Two clicks define a barrier: the first sets the start point, the second the
+// end point, adding a new blue line segment to bounce off of.
 function mouseClicked() {
   if (lastMouseClickPos != null) {
     lastMouseClickPos = null;
@@ -121,7 +125,10 @@ function mouseClicked() {
   }
 }
 
+// A line segment with helpers to find its heading and normals and to draw
+// itself (as an arrow, optionally with its perpendicular normals).
 class LineSegment {
+  // Accepts either two p5.Vector endpoints OR four numbers (x1, y1, x2, y2).
   constructor(x1, y1, x2, y2) {
     //x1 and y1 can either be vectors or the points for p1
     if (arguments.length == 2 && typeof x1 === 'object' &&
@@ -143,6 +150,7 @@ class LineSegment {
     this.shouldDrawNormal = true;
   }
 
+  // Endpoint coordinate accessors (read pt1/pt2 as x1/y1/x2/y2).
   get x1() {
     return this.pt1.x;
   }
@@ -159,17 +167,21 @@ class LineSegment {
     return this.pt2.y;
   }
 
+  // Direction of the segment (pt1 -> pt2) in radians.
   get heading() {
     let diffVector = p5.Vector.sub(this.pt2, this.pt1);
     return diffVector.heading();
   }
 
+  // Returns one of the segment's two perpendicular normals (used for reflection).
   getNormal() {
     return this.getNormals()[1];
   }
 
+  // Returns [midpoint, normal1, normal2]: the segment's midpoint and its two
+  // perpendicular normals (pointing opposite ways), each scaled for drawing.
   getNormals() {
-    // From: https://stackoverflow.com/a/1243676  
+    // From: https://stackoverflow.com/a/1243676
     // https://www.mathworks.com/matlabcentral/answers/85686-how-to-calculate-normal-to-a-line
     //  V = B - A;
     //  midV = A + 0.5 * V;
@@ -187,10 +199,12 @@ class LineSegment {
     return [midV, createVector(v.y, -v.x), createVector(-v.y, v.x)];
   }
 
+  // The segment as a vector translated to the origin (pt2 - pt1).
   getVectorAtOrigin() {
     return createVector(this.x2 - this.x1, this.y2 - this.y1);
   }
 
+  // Draw the segment as an arrow; if shouldDrawNormal, also draw its two normals.
   draw() {
     push();
     stroke(this.strokeColor);
@@ -219,6 +233,8 @@ class LineSegment {
     pop();
   }
 
+  // Draws an arrow from `base` along vector `vec`, optionally labeled with its
+  // angle and magnitude.
   drawArrow(base, vec, myColor, drawLabels) {
     push();
     stroke(myColor);
@@ -258,6 +274,9 @@ class LineSegment {
 // don't auto-consolidate it with the other Ball classes.
 class Ball {
 
+  // Start at top-left with a random direction. baseAcceleration is 0 here, so
+  // the ball travels at constant speed (this variant explores reflection, not
+  // acceleration).
   constructor() {
     this.position = createVector(50, 50);
     this.diameter = 20;
@@ -277,6 +296,7 @@ class Ball {
     this.acceleration.setMag(this.baseAcceleration);
   }
 
+  // Reset speed to base and re-aim acceleration along the current velocity.
   resetVelocityAndAcceleration() {
     this.velocity.setMag(this.baseSpeed);
 
@@ -286,6 +306,7 @@ class Ball {
     this.acceleration.setMag(this.baseAcceleration);
   }
 
+  // Position/size accessors (getters let you read x/y/radius like properties).
   get x() {
     return this.position.x;
   }
@@ -298,10 +319,11 @@ class Ball {
     return this.diameter / 2;
   }
 
+  // Advance one frame: apply acceleration, move, and bounce off the canvas walls
+  // (wall bounces only; segment bounces are handled in draw()).
   update() {
     this.velocity.add(this.acceleration);
     if (this.velocity.mag() >= this.maxSpeed) {
-      print("Max speed reached: ", this.velocity.mag());
       this.velocity.setMag(this.maxSpeed);
       this.acceleration.setMag(0);
 
@@ -335,6 +357,7 @@ class Ball {
     }
   }
 
+  // Draw the ball plus a short line pointing in its direction of travel.
   draw() {
     push();
     fill(255);

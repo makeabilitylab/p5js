@@ -22,9 +22,11 @@ function setup() {
   describe("An interactive playground where you click to draw a red vector and a blue vector; the canvas then shows the angle between them in degrees and redraws lighter copies of both vectors from the center with an arc marking the angle.");
 }
 
+// Each frame: draw the two clicked vectors, then (once both exist) compute the
+// angle between them and redraw lighter copies from the center with an arc.
 function draw() {
   background(220);
-  
+
   if(curMouseClickPos && !lastMouseClickPos){
     push();
     fill(255);
@@ -75,6 +77,8 @@ function draw() {
   }
 }
 
+// Builds the two vectors from pairs of clicks: each pair of clicks defines one
+// vector (first vector 1, then vector 2); clicking again once both exist resets.
 function mouseClicked() {
   if(mouseLineSegment1 && mouseLineSegment2){
     mouseLineSegment1 = null;

@@ -1,9 +1,7 @@
-// Use the mouse to draw two vectors (by clicking)
-// The program then outputs the angle between the two
-// vectors
-//
-// TODO:
-//  - In debug area, draw arc with degrees both inside angle and outside angle
+// Use the mouse to explore a vector's MAGNITUDE (its length).
+// Click once to anchor a red vector, then move the mouse left/right to grow
+// or shrink its magnitude. See AnglePlayground for the companion sketch that
+// explores the angle between two vectors.
 //
 // By Jon Froehlich
 // @jonfroehlich
@@ -21,9 +19,11 @@ function setup() {
   describe("An interactive playground where clicking draws a red vector arrow and then moving the mouse left or right changes its magnitude (length), illustrating how a vector's magnitude can be adjusted.");
 }
 
+// Each frame: show a dot at the first click, then draw the red vector once a
+// second point exists.
 function draw() {
   background(220);
-  
+
   if(curMouseClickPos && !lastMouseClickPos){
     push();
     fill(255);
@@ -37,6 +37,7 @@ function draw() {
   
 }
 
+// Two clicks define the vector (anchor point, then tip); clicking again resets.
 function mouseClicked() {
   if(mouseLineSegment){
     mouseLineSegment = null;
@@ -60,6 +61,8 @@ function mouseClicked() {
   return false;
 }
 
+// Dragging the mouse left/right rescales the vector's magnitude (length) while
+// keeping its anchor and direction fixed.
 function mouseMoved(){
   if(mouseLineSegment){
     let maxLength = width - mouseLineSegment.pt1.x;

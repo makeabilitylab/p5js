@@ -42,9 +42,12 @@ function setup() {
 }
 
 
+// Each frame: steer/move the ball with the arrow keys (or auto-drive it after
+// spacebar), then detect collisions with the line segment and draw the
+// collision normal and reflected vector (special-casing hits on the endpoints).
 function draw() {
   background(200);
-  
+
   if (keyIsDown(LEFT_ARROW)) {
     ball.rotate(-0.01);
   } else if (keyIsDown(RIGHT_ARROW)) {
@@ -205,6 +208,9 @@ function draw() {
   }
 }
 
+// EXPERIMENTAL debug helper (currently unused): draws dashed "tractor beam"
+// guide lines out from the ball's edges toward the segment to visualize where
+// it is heading. Takes the LineSegment to aim the beams at.
 function drawBallTractorBeams(ls) {
   push();
 
@@ -245,6 +251,8 @@ function drawBallTractorBeams(ls) {
   pop();
 }
 
+// Spacebar toggles auto-drive (the ball launches and bounces on its own,
+// reflecting off the segment); shows the cursor when on, hides it when off.
 function keyPressed() {
   //if (keyCode === ENTER) {
   if (key == ' ') {
@@ -263,6 +271,8 @@ function keyPressed() {
 // Kept local on purpose — please don't auto-consolidate.
 class Ball {
 
+  // A direction-based ball: instead of a velocity/acceleration, it stores a
+  // `direction` vector (which way it's facing) that you rotate and move along.
   constructor(x, y, size) {
     this.position = createVector(x, y);
     this.diameter = size;
@@ -274,6 +284,7 @@ class Ball {
     this.fillColor = color(255, 255, 255, 128);
   }
 
+  // Position/size accessors (getters let you read x/y/radius like properties).
   get x() {
     return this.position.x;
   }
@@ -286,10 +297,13 @@ class Ball {
     return this.diameter / 2;
   }
 
+  // Rotate the ball's heading direction by `angle` radians.
   rotate(angle) {
     this.direction.rotate(angle);
   }
 
+  // Move the ball to (x, y), re-aiming its direction toward the new position
+  // (so the heading follows where the ball was sent).
   setNewPosition(x, y) {
     let xDiff = x - this.x;
     let yDiff = y - this.y;
@@ -303,6 +317,8 @@ class Ball {
     this.position.y = y;
   }
 
+  // Bounce off the canvas walls by flipping the direction's x or y when the
+  // ball crosses an edge, nudging it back in-bounds so it can't stick.
   update() {
     if (this.x - this.radius <= 0 || this.x + this.radius >= width) {
       this.direction.x *= -1;
@@ -327,6 +343,7 @@ class Ball {
     }
   }
 
+  // Draw the ball plus an arrow showing its heading direction.
   draw() {
     push();
     fill(this.fillColor);

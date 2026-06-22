@@ -13,6 +13,7 @@ let lineSegmentXAxis;
 let lineSegmentRed;
 let lineSegmentBlue = null;
 
+// Create the gray x-axis reference line and the red vector that tracks the mouse.
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -33,6 +34,8 @@ function setup() {
   createP('Right-click to reset.');
 }
 
+// Each frame: aim the "live" vector at the mouse, then draw both vectors and
+// the arcs marking the angle between them.
 function draw() {
   background(220);
 
@@ -67,6 +70,8 @@ function draw() {
   }
 }
 
+// First click freezes the red vector and starts the blue one; second click
+// freezes the blue vector so its angle to red stays put.
 function mouseClicked() {
   if (lineSegmentRed.frozen != true) {
     lineSegmentRed.frozen = true;
@@ -78,8 +83,8 @@ function mouseClicked() {
   }
 }
 
+// Right-click resets: unfreeze the red vector and clear the blue one.
 function mousePressed(event) {
-  // Reset with right mouse click
   if (mouseButton === RIGHT) {
     lineSegmentBlue = null;
     lineSegmentRed.frozen = false;

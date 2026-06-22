@@ -1,9 +1,19 @@
+// Small 2D collision-geometry helpers for the "improved" bouncing-ball sketch:
+// pure functions for line–line, line–rectangle, point–circle, point–line, and
+// line–circle tests, plus a tiny Collision result class. Most are adapted from
+// the p5.collide2D library (https://github.com/bmoren/p5.collide2D); each test
+// returns a Collision (carrying the intersection point) or false.
+
+// Returns >0 if p2 is left of the line p0->p1, <0 if right, 0 if collinear
+// (the signed area of the triangle p0,p1,p2).
 // from: https://gamedev.stackexchange.com/a/110233
 // http://geomalgorithms.com/a01-_area.html
 function isLeft(p0, p1, p2) {
   return ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y));
 }
 
+// Returns true if point p is inside the rectangle with corners x, y, z, w
+// (checks that p is on the same side of all four edges).
 // from: https://gamedev.stackexchange.com/a/110233
 // http://geomalgorithms.com/a01-_area.html
 function isPointInRectangle(p, x, y, z, w) {
@@ -13,6 +23,10 @@ function isPointInRectangle(p, x, y, z, w) {
     isLeft(w, x, p) > 0);
 }
 
+/**
+ * Tests line (x1,y1)-(x2,y2) against each of the rectangle's four edges.
+ * @return {Collision|false} a Collision at the first edge hit, or false if none.
+ */
 // based on https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
 function checkLineRectCollision(x1, y1, x2, y2, rx1, ry1, rx2, ry2, rx3, ry3, rx4, ry4) {
   let left = checkLineLineCollision(x1, y1, x2, y2, rx1, ry1, rx2, ry2);
@@ -33,6 +47,10 @@ function checkLineRectCollision(x1, y1, x2, y2, rx1, ry1, rx2, ry2, rx3, ry3, rx
   return false;
 }
 
+/**
+ * Tests whether two line segments intersect.
+ * @return {Collision|false} a Collision at the intersection point, or false.
+ */
 // based on https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
 function checkLineLineCollision(x1, y1, x2, y2, x3, y3, x4, y4) {
   let intersection;
@@ -54,11 +72,14 @@ function checkLineLineCollision(x1, y1, x2, y2, x3, y3, x4, y4) {
   return false;
 }
 
+// Returns true if point (x,y) is inside the circle at (cx,cy) with diameter d.
 // Based on: https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
 function checkCollisionPointCircle(x, y, cx, cy, d) {
   return dist(x, y, cx, cy) <= d / 2;
 }
 
+// Returns true if point (px,py) lies on the segment (x1,y1)-(x2,y2), within a
+// small tolerance buffer (so floating-point error doesn't miss exact hits).
 // Based on: https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
 function checkCollisionPointLine(px, py, x1, y1, x2, y2, buffer) {
   // get distance from the point to the two ends of the line
@@ -81,6 +102,12 @@ function checkCollisionPointLine(px, py, x1, y1, x2, y2, buffer) {
   return false;
 }
 
+/**
+ * Tests the segment (x1,y1)-(x2,y2) against the circle at (cx,cy).
+ * @return {Collision|false} a Collision at the contact point (an endpoint if
+ *   one is inside the circle, otherwise the closest point on the segment), or
+ *   false if they don't touch.
+ */
 // function based on https://github.com/bmoren/p5.collide2D#collidelinecircle
 // see: https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
 function checkCollisionLineCircle(x1, y1, x2, y2, cx, cy, diameter){
@@ -121,12 +148,14 @@ function checkCollisionLineCircle(x1, y1, x2, y2, cx, cy, diameter){
     return false;
 }
 
+// A collision result: whether something was hit and the contact point.
 class Collision {
   constructor(hit, colPt) {
     this.hit = hit;
     this.pt = colPt;
   }
 
+  // Contact-point coordinate accessors (read pt as x/y).
   get x() {
     return this.pt.x;
   }

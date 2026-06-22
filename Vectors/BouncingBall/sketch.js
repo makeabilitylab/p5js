@@ -1,7 +1,9 @@
 //
-// A vector has magnitude and direction 
-//
-//
+// Bouncing ball, part 1: motion from velocity + acceleration vectors.
+// A vector has both magnitude and direction. Each frame the ball's velocity
+// vector moves it, an acceleration vector speeds it up (in the heading
+// direction), and it bounces off the walls. See BouncingBallWithAcceleration
+// for a version where YOU set the acceleration vector with the mouse.
 //
 // Source Documentation:
 //  - https://p5js.org/reference/#/p5.Vector
@@ -21,6 +23,7 @@
 
 let ball;
 
+// Create the bouncing ball.
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -30,6 +33,7 @@ function setup() {
   //noLoop();
 }
 
+// Each frame: advance the ball's physics, then draw it.
 function draw() {
   background(220);
   ball.update();
@@ -37,7 +41,9 @@ function draw() {
 }
 
 class Ball{
-  
+
+  // Start at top-left with a random direction; acceleration points the same
+  // way as the initial velocity, so the ball speeds up until it hits a wall.
   constructor(){
     this.position = createVector(50, 50);
     this.diameter = 20;
@@ -57,32 +63,37 @@ class Ball{
     this.acceleration.setMag(this.baseAcceleration);
   }
   
+  // Called after a wall bounce: reset speed to base and re-aim acceleration
+  // along the (newly reflected) velocity so the ball keeps speeding up.
   resetVelocityAndAcceleration(){
     this.velocity.setMag(this.baseSpeed);
-    
+
     // sets up an acceleration vector that always accelerates
     // in same exact direction as velocity vector
     this.acceleration = this.velocity.copy().normalize();
     this.acceleration.setMag(this.baseAcceleration);
   }
-  
+
+  // Position/size accessors (getters let you read x/y/radius like properties).
   get x(){
-    return this.position.x; 
+    return this.position.x;
   }
-  
+
   get y(){
-    return this.position.y; 
+    return this.position.y;
   }
-  
+
   get radius(){
     // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
     return this.diameter / 2;  
   }
   
+  // Advance one frame: add acceleration to velocity (capping at maxSpeed), move
+  // the ball, and bounce off any wall it crosses (flipping that axis and nudging
+  // it back in-bounds so it can't stick to the edge).
   update(){
     this.velocity.add(this.acceleration);
     if(this.velocity.mag() >= this.maxSpeed){
-      print("Max speed reached: ", this.velocity.mag());
       this.velocity.setMag(this.maxSpeed);
       this.acceleration.setMag(0); 
       
@@ -120,11 +131,12 @@ class Ball{
     }
   }
   
+  // Draw the ball plus a short line pointing in its direction of travel.
   draw(){
     push();
     fill(255);
     ellipse(this.position.x, this.position.y, this.diameter);
-    
+
     //draw heading line
     //print(degrees(this.velocity.heading()));
     let headingLineSize = this.radius;

@@ -1,7 +1,8 @@
 //
-// A vector has magnitude and direction 
-//
-//
+// Bouncing ball, part 2: steer the acceleration vector with the mouse.
+// A vector has both magnitude and direction. Click two points to define an
+// acceleration vector (drawn as an arrow): its length sets how hard the ball
+// accelerates, its direction sets which way. Builds on BouncingBall.
 //
 // Source Documentation:
 //  - https://p5js.org/reference/#/p5.Vector
@@ -17,6 +18,7 @@ let ball;
 let lastMouseClickPos;
 let curMouseClickPos;
 
+// Create the bouncing ball.
 function setup() {
   createCanvas(400, 400);
   // Accessibility: text description of the canvas for screen readers
@@ -26,6 +28,8 @@ function setup() {
   //noLoop();
 }
 
+// Each frame: advance and draw the ball, then draw the two clicked points and
+// the acceleration arrow between them.
 function draw() {
   background(220);
   ball.update();
@@ -51,6 +55,8 @@ function draw() {
   }
 }
 
+// Draws an arrow starting at `base` and pointing along vector `vec` — used here
+// to visualize the acceleration vector the user defines by clicking two points.
 function drawArrow(base, vec, myColor) {
   push();
   stroke(myColor);
@@ -65,6 +71,8 @@ function drawArrow(base, vec, myColor) {
   pop();
 }
 
+// Two clicks define the acceleration vector: the difference between the first
+// and second click is handed to the ball as its new acceleration.
 function mouseClicked() {
   if (lastMouseClickPos != null) {
     lastMouseClickPos = null;
@@ -84,6 +92,8 @@ function mouseClicked() {
 
 class Ball {
 
+  // Start at top-left with a random velocity; acceleration starts aligned with
+  // it but can later be redirected by the user (see setMouseDiffVector).
   constructor() {
     this.position = createVector(50, 50);
     this.diameter = 20;
@@ -106,6 +116,9 @@ class Ball {
     this.mouseDiffVector = createVector(0, 0);
   }
 
+  // Point the acceleration along the user's click-to-click vector. Its length
+  // is mapped from that vector's magnitude into [baseAcceleration, maxAcceleration]
+  // so a longer drag accelerates harder.
   setMouseDiffVector(mouseDiffVector) {
     this.mouseDiffVector = mouseDiffVector;
 
@@ -116,6 +129,8 @@ class Ball {
     this.acceleration.setMag(accelMag);
   }
 
+  // Called after a wall bounce: reset speed to base and re-aim acceleration
+  // along the (newly reflected) velocity.
   resetVelocityAndAcceleration() {
     this.velocity.setMag(this.baseSpeed);
 
@@ -125,6 +140,7 @@ class Ball {
     this.acceleration.setMag(this.baseAcceleration);
   }
 
+  // Position/size accessors (getters let you read x/y/radius like properties).
   get x() {
     return this.position.x;
   }
@@ -138,10 +154,11 @@ class Ball {
     return this.diameter / 2;
   }
 
+  // Advance one frame: add acceleration to velocity (capping at maxSpeed), move
+  // the ball, and bounce off any wall it crosses (nudging it back in-bounds).
   update() {
     this.velocity.add(this.acceleration);
     if (this.velocity.mag() >= this.maxSpeed) {
-      print("Max speed reached: ", this.velocity.mag());
       this.velocity.setMag(this.maxSpeed);
       this.acceleration.setMag(0);
 
@@ -179,6 +196,7 @@ class Ball {
     }
   }
 
+  // Draw the ball plus a short line pointing in its direction of travel.
   draw() {
     push();
     fill(255);

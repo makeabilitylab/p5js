@@ -2,6 +2,8 @@
 // with collision helpers for this sketch. Not the shared library — kept local
 // on purpose; please don't auto-consolidate.
 
+// Draws a line from `base` along vector `vec`, optionally adding an arrowhead
+// (drawArrow) and an angle/magnitude label (drawLabels).
 function drawLineWithArrow(base, vec, myColor, drawLabels, drawArrow) {
   push();
   stroke(myColor);
@@ -54,7 +56,10 @@ function calculateNormals(pt1, pt2) {
   return [createVector(v.y, -v.x), createVector(-v.y, v.x)];
 }
 
+// A line segment with helpers for its heading, normals, drawing, and
+// circle-collision detection (used to bounce the ball off the segment).
 class LineSegment {
+  // Accepts either two p5.Vector endpoints OR four numbers (x1, y1, x2, y2).
   constructor(x1, y1, x2, y2) {
     //x1 and y1 can either be vectors or the points for p1
     if (arguments.length == 2 && typeof x1 === 'object' &&
@@ -77,6 +82,7 @@ class LineSegment {
     this.shouldDrawNormal = true;
   }
 
+  // Endpoint coordinate accessors (read pt1/pt2 as x1/y1/x2/y2).
   get x1() {
     return this.pt1.x;
   }
@@ -93,6 +99,7 @@ class LineSegment {
     return this.pt2.y;
   }
 
+  // Length of the segment (distance from pt1 to pt2).
   get length() {
     return dist(this.x1, this.y1, this.x2, this.y2);
   }
@@ -128,6 +135,14 @@ class LineSegment {
     return createVector(this.x2 - this.x1, this.y2 - this.y1);
   }
 
+  /**
+   * EXPERIMENTAL / work-in-progress: tries to predict *where* the moving ball
+   * will hit this segment before it arrives, so the sketch can draw "tractor
+   * beam" guide lines. Strategy: cast the ball's heading as a long ray (plus
+   * two rays offset by the ball's radius) and test those against the segment.
+   * It reliably detects *whether* a collision will happen but does not yet
+   * return the exact contact point — see the TODO and references below.
+   */
   calculateExpectedCollisionPoint(ball) {
     // TODO: warning: this function correctly works to determine
     // if there *will* be a collision but does not correctly
@@ -286,6 +301,11 @@ class LineSegment {
   }
 
 
+  /**
+   * Tests this segment against a circle. Accepts either a Ball (single arg) or
+   * an explicit cx, cy, diameter.
+   * @return {Collision|false} a Collision at the contact point, or false.
+   */
   // function based on https://github.com/bmoren/p5.collide2D#collidelinecircle
   // see: https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js
   checkCollisionWithCircle(ballOrCx, cy, diameter) {
@@ -301,6 +321,8 @@ class LineSegment {
       this.y2, cx, cy, diameter);
   }
 
+  // Draw the segment (as a line/arrow, highlighted when isHighlighted); if
+  // shouldDrawNormal, also draw its two perpendicular normals.
   draw() {
     push();
     stroke(this.strokeColor);
