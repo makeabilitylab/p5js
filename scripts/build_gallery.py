@@ -16,7 +16,10 @@ should NOT be edited by hand — it is overwritten on every build.
 
 import os
 import re
+import sys
+import json
 import html
+import argparse
 from pathlib import Path
 from collections import defaultdict
 
@@ -28,6 +31,28 @@ REPO_ROOT = Path(os.getcwd())
 BASE_URL = ""  # Relative paths work for GitHub Pages
 DEFAULT_BRANCH = "main"
 GITHUB_REPO = "makeabilitylab/p5js"
+
+# Where scripts/capture_previews.mjs writes auto-generated thumbnails:
+#   previews/<rel_path>.webp        (animated loop)
+#   previews/<rel_path>.poster.png  (static fallback / reduced-motion)
+PREVIEWS_DIR = REPO_ROOT / "previews"
+
+# Final-tier fallback when an example has no preview/poster/screenshot: a single
+# emoji keyed on its top-level category. Unknown categories fall back to 🎨.
+CATEGORY_EMOJI = {
+    "Animation": "🎞️",
+    "Art": "🎨",
+    "Color": "🌈",
+    "DOM": "📄",
+    "Drawing": "✏️",
+    "Games": "🎮",
+    "Interaction": "🖱️",
+    "ml5js": "🤖",
+    "PerlinNoise": "🌫️",
+    "Sound": "🔊",
+    "Vectors": "➗",
+    "WebSerial": "🔌",
+}
 
 # Directories that should never be treated as example categories.
 EXCLUDED_DIRS = {
@@ -63,12 +88,27 @@ def extract_title_from_html(index_path: Path) -> str | None:
 
 
 def has_screenshot(app_dir: Path) -> str | None:
-    """Return the filename of a screenshot image if one exists."""
+    """Return the filename of a hand-added screenshot image if one exists."""
     for name in ("screenshot.png", "screenshot.jpg", "screenshot.gif",
                  "thumbnail.png", "thumbnail.jpg", "thumbnail.gif"):
         if (app_dir / name).exists():
             return name
     return None
+
+
+def find_preview(rel_path: str) -> dict:
+    """
+    Look up auto-generated previews for an example (see capture_previews.mjs).
+
+    Returns {"webp": <relpath|None>, "poster": <relpath|None>} where each value
+    is a path relative to the repo root (forward slashes), or None if absent.
+    """
+    webp = PREVIEWS_DIR / f"{rel_path}.webp"
+    poster = PREVIEWS_DIR / f"{rel_path}.poster.png"
+    return {
+        "webp": f"previews/{rel_path}.webp" if webp.exists() else None,
+        "poster": f"previews/{rel_path}.poster.png" if poster.exists() else None,
+    }
 
 
 def discover_examples():
@@ -116,16 +156,20 @@ def discover_examples():
         if any(p in ("Arduino", "AdafruitCpx") for p in parts[1:]):
             continue
 
+        rel_path = str(rel).replace("\\", "/")
         title = extract_title_from_html(index_file)
         screenshot = has_screenshot(index_file.parent)
+        preview = find_preview(rel_path)
 
         entries.append({
             "category": category,
             "subcategory": subcategory,
             "name": name,
-            "rel_path": str(rel).replace("\\", "/"),
+            "rel_path": rel_path,
             "title": title,
             "screenshot": screenshot,
+            "preview_webp": preview["webp"],
+            "preview_poster": preview["poster"],
         })
 
     return entries
@@ -157,6 +201,38 @@ def human_readable(name: str) -> str:
     # Restore protected terms
     name = name.replace("\x00", "")
     return name
+
+
+def thumb_html(item: dict, category: str, display_name: str) -> str:
+    """
+    Build a card thumbnail, picking the best available tier (graceful degradation):
+        animated .webp (+ poster for reduced-motion)
+          > static poster .png
+          > hand-added screenshot.*
+          > category emoji placeholder.
+    """
+    alt = html.escape(f"{display_name} preview")
+    webp = item.get("preview_webp")
+    poster = item.get("preview_poster")
+
+    if webp:
+        # Animated loop, with the poster shown instead under prefers-reduced-motion.
+        anim = f'<img class="thumb-anim" src="{webp}" alt="{alt}" loading="lazy">'
+        still = (f'<img class="thumb-still" src="{poster}" alt="{alt}" loading="lazy">'
+                 if poster else "")
+        return f'<div class="card-thumb">{anim}{still}</div>'
+
+    if poster:
+        return f'<div class="card-thumb"><img src="{poster}" alt="{alt}" loading="lazy"></div>'
+
+    if item.get("screenshot"):
+        src = f'{item["rel_path"]}/{item["screenshot"]}'
+        return f'<div class="card-thumb"><img src="{src}" alt="{alt}" loading="lazy"></div>'
+
+    # Final tier: decorative category emoji (hidden from assistive tech).
+    emoji = CATEGORY_EMOJI.get(category, "🎨")
+    return (f'<div class="card-thumb card-thumb-empty" aria-hidden="true">'
+            f'<span class="thumb-emoji">{emoji}</span></div>')
 
 
 def build_html(entries: list[dict]) -> str:
@@ -206,14 +282,7 @@ def build_html(entries: list[dict]) -> str:
                 path = item["rel_path"]
                 code_url = f"https://github.com/{GITHUB_REPO}/tree/{DEFAULT_BRANCH}/{path}"
 
-                thumb = ""
-                if item["screenshot"]:
-                    thumb = (
-                        f'<div class="card-thumb">'
-                        f'<img src="{path}/{item["screenshot"]}" '
-                        f'alt="{html.escape(display_name)} screenshot" loading="lazy">'
-                        f'</div>'
-                    )
+                thumb = thumb_html(item, category, display_name)
 
                 cards_html += f"""      <div class="card">
         {thumb}<div class="card-body">
@@ -430,6 +499,23 @@ def build_html(entries: list[dict]) -> str:
       display: block;
       border-bottom: 1px solid var(--color-border);
     }}
+    /* Animated previews ship with a static poster; show the poster only when the
+       user prefers reduced motion. */
+    .thumb-still {{ display: none; }}
+    @media (prefers-reduced-motion: reduce) {{
+      .thumb-anim {{ display: none; }}
+      .thumb-still {{ display: block; }}
+    }}
+    /* Final fallback tier: a category emoji on a tinted panel. */
+    .card-thumb-empty {{
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent-light);
+      border-bottom: 1px solid var(--color-border);
+    }}
+    .thumb-emoji {{ font-size: 2.5rem; line-height: 1; }}
     .card-body {{
       padding: 0.85rem;
       flex: 1;
@@ -587,7 +673,31 @@ def build_html(entries: list[dict]) -> str:
 # Main
 # ---------------------------------------------------------------------------
 
+def list_json():
+    """
+    Print the discovered examples as JSON to stdout and exit.
+
+    This makes build_gallery.py the single source of truth for *which* folders
+    count as examples (excluded dirs, hidden dirs, variable depth, etc.).
+    scripts/capture_previews.mjs consumes this instead of re-walking the tree,
+    so the gallery and the preview generator can never disagree.
+    """
+    json.dump(discover_examples(), sys.stdout, indent=2)
+    sys.stdout.write("\n")
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--list-json", action="store_true",
+        help="Print discovered examples as JSON and exit (used by capture_previews.mjs).",
+    )
+    args = parser.parse_args()
+
+    if args.list_json:
+        list_json()
+        return
+
     entries = discover_examples()
 
     if not entries:

@@ -191,6 +191,23 @@
       display: block;
       border-bottom: 1px solid var(--color-border);
     }
+    /* Animated previews ship with a static poster; show the poster only when the
+       user prefers reduced motion. */
+    .thumb-still { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .thumb-anim { display: none; }
+      .thumb-still { display: block; }
+    }
+    /* Final fallback tier: a category emoji on a tinted panel. */
+    .card-thumb-empty {
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent-light);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .thumb-emoji { font-size: 2.5rem; line-height: 1; }
     .card-body {
       padding: 0.85rem;
       flex: 1;
@@ -302,7 +319,7 @@
   <h2>Animation<span class="section-count">2 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Animation/BallBounce1D.webp" alt="Ball Bounce 1D preview" loading="lazy"><img class="thumb-still" src="previews/Animation/BallBounce1D.poster.png" alt="Ball Bounce 1D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Ball Bounce 1D</div>
           <div class="card-meta">BallBounce1D</div>
           <div class="card-links">
@@ -312,7 +329,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Animation/BallBounce2D.webp" alt="Ball Bounce 2D preview" loading="lazy"><img class="thumb-still" src="previews/Animation/BallBounce2D.poster.png" alt="Ball Bounce 2D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Ball Bounce 2D</div>
           <div class="card-meta">BallBounce2D</div>
           <div class="card-links">
@@ -328,7 +345,7 @@
   <h2>Art<span class="section-count">11 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/LandscapeGenerator1.webp" alt="Landscape Generator 1 preview" loading="lazy"><img class="thumb-still" src="previews/Art/LandscapeGenerator1.poster.png" alt="Landscape Generator 1 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Landscape Generator 1</div>
           <div class="card-meta">LandscapeGenerator1</div>
           <div class="card-links">
@@ -338,7 +355,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/LandscapeGenerator2.webp" alt="Landscape Generator 2 preview" loading="lazy"><img class="thumb-still" src="previews/Art/LandscapeGenerator2.poster.png" alt="Landscape Generator 2 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Landscape Generator 2</div>
           <div class="card-meta">LandscapeGenerator2</div>
           <div class="card-links">
@@ -348,7 +365,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/LandscapeGenerator2-Santa.webp" alt="Landscape Generator 2 – Santa preview" loading="lazy"><img class="thumb-still" src="previews/Art/LandscapeGenerator2-Santa.poster.png" alt="Landscape Generator 2 – Santa preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Landscape Generator 2 – Santa</div>
           <div class="card-meta">LandscapeGenerator2-Santa</div>
           <div class="card-links">
@@ -358,7 +375,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/LandscapeGenerator3.webp" alt="Landscape Generator 3 preview" loading="lazy"><img class="thumb-still" src="previews/Art/LandscapeGenerator3.poster.png" alt="Landscape Generator 3 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Landscape Generator 3</div>
           <div class="card-meta">LandscapeGenerator3</div>
           <div class="card-links">
@@ -368,7 +385,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/MakeabilityLabAnimation1-GridFade.webp" alt="Makeability Lab Animation 1 – Grid Fade preview" loading="lazy"><img class="thumb-still" src="previews/Art/MakeabilityLabAnimation1-GridFade.poster.png" alt="Makeability Lab Animation 1 – Grid Fade preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Makeability Lab Animation 1 – Grid Fade</div>
           <div class="card-meta">MakeabilityLabAnimation1-GridFade</div>
           <div class="card-links">
@@ -378,7 +395,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/MakeabilityLabAnimation2-ReverseExplosion.webp" alt="Makeability Lab Animation 2 – Reverse Explosion preview" loading="lazy"><img class="thumb-still" src="previews/Art/MakeabilityLabAnimation2-ReverseExplosion.poster.png" alt="Makeability Lab Animation 2 – Reverse Explosion preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Makeability Lab Animation 2 – Reverse Explosion</div>
           <div class="card-meta">MakeabilityLabAnimation2-ReverseExplosion</div>
           <div class="card-links">
@@ -388,7 +405,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/MakeabilityLabLogo.webp" alt="Makeability Lab Logo preview" loading="lazy"><img class="thumb-still" src="previews/Art/MakeabilityLabLogo.poster.png" alt="Makeability Lab Logo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Makeability Lab Logo</div>
           <div class="card-meta">MakeabilityLabLogo</div>
           <div class="card-links">
@@ -398,7 +415,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/SantaToMakeabilityLab.webp" alt="Santa To Makeability Lab preview" loading="lazy"><img class="thumb-still" src="previews/Art/SantaToMakeabilityLab.poster.png" alt="Santa To Makeability Lab preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Santa To Makeability Lab</div>
           <div class="card-meta">SantaToMakeabilityLab</div>
           <div class="card-links">
@@ -408,7 +425,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/SimpleFlower.webp" alt="Simple Flower preview" loading="lazy"><img class="thumb-still" src="previews/Art/SimpleFlower.poster.png" alt="Simple Flower preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Simple Flower</div>
           <div class="card-meta">SimpleFlower</div>
           <div class="card-links">
@@ -418,7 +435,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/SineWavePlayground.webp" alt="Sine Wave Playground preview" loading="lazy"><img class="thumb-still" src="previews/Art/SineWavePlayground.poster.png" alt="Sine Wave Playground preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sine Wave Playground</div>
           <div class="card-meta">SineWavePlayground</div>
           <div class="card-links">
@@ -428,7 +445,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Art/TriangleSanta.webp" alt="Triangle Santa preview" loading="lazy"><img class="thumb-still" src="previews/Art/TriangleSanta.poster.png" alt="Triangle Santa preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Triangle Santa</div>
           <div class="card-meta">TriangleSanta</div>
           <div class="card-links">
@@ -444,7 +461,7 @@
   <h2>Color<span class="section-count">4 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Color/ColorCube3D.webp" alt="Color Cube 3D preview" loading="lazy"><img class="thumb-still" src="previews/Color/ColorCube3D.poster.png" alt="Color Cube 3D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Color Cube 3D</div>
           <div class="card-meta">ColorCube3D</div>
           <div class="card-links">
@@ -454,7 +471,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/Color/ColorExplorer3D.poster.png" alt="Color Explorer 3D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Color Explorer 3D</div>
           <div class="card-meta">ColorExplorer3D</div>
           <div class="card-links">
@@ -464,7 +481,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Color/ColorPanel2D.webp" alt="Color Panel 2D preview" loading="lazy"><img class="thumb-still" src="previews/Color/ColorPanel2D.poster.png" alt="Color Panel 2D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Color Panel 2D</div>
           <div class="card-meta">ColorPanel2D</div>
           <div class="card-links">
@@ -474,7 +491,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/Color/CrossFadeRgb3D.poster.png" alt="Cross Fade Rgb 3D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Cross Fade Rgb 3D</div>
           <div class="card-meta">CrossFadeRgb3D</div>
           <div class="card-links">
@@ -490,7 +507,7 @@
   <h2>DOM<span class="section-count">2 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/DOM/CollapsibleSidebar1-NoP5js.poster.png" alt="Collapsible Sidebar Example from W3.CSS preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Collapsible Sidebar Example from W3.CSS</div>
           <div class="card-meta">CollapsibleSidebar1-NoP5js</div>
           <div class="card-links">
@@ -500,7 +517,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/DOM/CollapsibleSidebar2-WithP5js.webp" alt="Sketch preview" loading="lazy"><img class="thumb-still" src="previews/DOM/CollapsibleSidebar2-WithP5js.poster.png" alt="Sketch preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sketch</div>
           <div class="card-meta">CollapsibleSidebar2-WithP5js</div>
           <div class="card-links">
@@ -516,7 +533,7 @@
   <h2>Drawing<span class="section-count">2 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Drawing/AscentAndDescent.webp" alt="Ascent And Descent preview" loading="lazy"><img class="thumb-still" src="previews/Drawing/AscentAndDescent.poster.png" alt="Ascent And Descent preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Ascent And Descent</div>
           <div class="card-meta">AscentAndDescent</div>
           <div class="card-links">
@@ -526,7 +543,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Drawing/DrawingGrid.webp" alt="Drawing Grid preview" loading="lazy"><img class="thumb-still" src="previews/Drawing/DrawingGrid.poster.png" alt="Drawing Grid preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Drawing Grid</div>
           <div class="card-meta">DrawingGrid</div>
           <div class="card-links">
@@ -542,7 +559,7 @@
   <h2>Games<span class="section-count">14 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/CookieMonster1.webp" alt="Cookie Monster 1 preview" loading="lazy"><img class="thumb-still" src="previews/Games/CookieMonster1.poster.png" alt="Cookie Monster 1 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Cookie Monster 1</div>
           <div class="card-meta">CookieMonster1</div>
           <div class="card-links">
@@ -552,7 +569,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/CookieMonster2.webp" alt="Cookie Monster 2 preview" loading="lazy"><img class="thumb-still" src="previews/Games/CookieMonster2.poster.png" alt="Cookie Monster 2 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Cookie Monster 2</div>
           <div class="card-meta">CookieMonster2</div>
           <div class="card-links">
@@ -562,7 +579,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/CookieMonster3.webp" alt="Cookie Monster 3 preview" loading="lazy"><img class="thumb-still" src="previews/Games/CookieMonster3.poster.png" alt="Cookie Monster 3 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Cookie Monster 3</div>
           <div class="card-meta">CookieMonster3</div>
           <div class="card-links">
@@ -572,7 +589,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/FFTGame.webp" alt="FFTGame preview" loading="lazy"><img class="thumb-still" src="previews/Games/FFTGame.poster.png" alt="FFTGame preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">FFTGame</div>
           <div class="card-meta">FFTGame</div>
           <div class="card-links">
@@ -582,7 +599,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/FlappyArm.webp" alt="Flappy Arm preview" loading="lazy"><img class="thumb-still" src="previews/Games/FlappyArm.poster.png" alt="Flappy Arm preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Flappy Arm</div>
           <div class="card-meta">FlappyArm</div>
           <div class="card-links">
@@ -592,7 +609,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/FlappyBird.webp" alt="Flappy Bird preview" loading="lazy"><img class="thumb-still" src="previews/Games/FlappyBird.poster.png" alt="Flappy Bird preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Flappy Bird</div>
           <div class="card-meta">FlappyBird</div>
           <div class="card-links">
@@ -602,7 +619,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/FlappyBird2.webp" alt="Flappy Bird 2 preview" loading="lazy"><img class="thumb-still" src="previews/Games/FlappyBird2.poster.png" alt="Flappy Bird 2 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Flappy Bird 2</div>
           <div class="card-meta">FlappyBird2</div>
           <div class="card-links">
@@ -612,7 +629,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/Pong.webp" alt="Pong preview" loading="lazy"><img class="thumb-still" src="previews/Games/Pong.poster.png" alt="Pong preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Pong</div>
           <div class="card-meta">Pong</div>
           <div class="card-links">
@@ -622,7 +639,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/SideScroller-CheetahRacer.webp" alt="Side Scroller – Cheetah Racer preview" loading="lazy"><img class="thumb-still" src="previews/Games/SideScroller-CheetahRacer.poster.png" alt="Side Scroller – Cheetah Racer preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Side Scroller – Cheetah Racer</div>
           <div class="card-meta">SideScroller-CheetahRacer</div>
           <div class="card-links">
@@ -632,7 +649,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/SideScroller1-Basic.webp" alt="Side Scroller 1 – Basic preview" loading="lazy"><img class="thumb-still" src="previews/Games/SideScroller1-Basic.poster.png" alt="Side Scroller 1 – Basic preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Side Scroller 1 – Basic</div>
           <div class="card-meta">SideScroller1-Basic</div>
           <div class="card-links">
@@ -642,7 +659,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/Sidescroller2-WithMarioSpriteSheet.webp" alt="Sidescroller 2 – With Mario Sprite Sheet preview" loading="lazy"><img class="thumb-still" src="previews/Games/Sidescroller2-WithMarioSpriteSheet.poster.png" alt="Sidescroller 2 – With Mario Sprite Sheet preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sidescroller 2 – With Mario Sprite Sheet</div>
           <div class="card-meta">Sidescroller2-WithMarioSpriteSheet</div>
           <div class="card-links">
@@ -652,7 +669,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/SimpleKeyboardGame.webp" alt="Simple Keyboard Game preview" loading="lazy"><img class="thumb-still" src="previews/Games/SimpleKeyboardGame.poster.png" alt="Simple Keyboard Game preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Simple Keyboard Game</div>
           <div class="card-meta">SimpleKeyboardGame</div>
           <div class="card-links">
@@ -662,7 +679,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/Snake.webp" alt="Snake preview" loading="lazy"><img class="thumb-still" src="previews/Games/Snake.poster.png" alt="Snake preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Snake</div>
           <div class="card-meta">Snake</div>
           <div class="card-links">
@@ -672,7 +689,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Games/SnakeSpeech.webp" alt="Snake Speech preview" loading="lazy"><img class="thumb-still" src="previews/Games/SnakeSpeech.poster.png" alt="Snake Speech preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Snake Speech</div>
           <div class="card-meta">SnakeSpeech</div>
           <div class="card-links">
@@ -688,7 +705,7 @@
   <h2>Interaction<span class="section-count">3 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Interaction/DrawingWithMouse1.webp" alt="Drawing With Mouse 1 preview" loading="lazy"><img class="thumb-still" src="previews/Interaction/DrawingWithMouse1.poster.png" alt="Drawing With Mouse 1 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Drawing With Mouse 1</div>
           <div class="card-meta">DrawingWithMouse1</div>
           <div class="card-links">
@@ -698,7 +715,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Interaction/DrawingWithMouse2.webp" alt="Drawing With Mouse 2 preview" loading="lazy"><img class="thumb-still" src="previews/Interaction/DrawingWithMouse2.poster.png" alt="Drawing With Mouse 2 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Drawing With Mouse 2</div>
           <div class="card-meta">DrawingWithMouse2</div>
           <div class="card-links">
@@ -708,7 +725,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Interaction/DrawingWithMouse3.webp" alt="Drawing With Mouse 3 preview" loading="lazy"><img class="thumb-still" src="previews/Interaction/DrawingWithMouse3.poster.png" alt="Drawing With Mouse 3 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Drawing With Mouse 3</div>
           <div class="card-meta">DrawingWithMouse3</div>
           <div class="card-links">
@@ -724,7 +741,7 @@
   <h2>PerlinNoise<span class="section-count">3 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/PerlinNoise/Noise2D.webp" alt="Noise 2D preview" loading="lazy"><img class="thumb-still" src="previews/PerlinNoise/Noise2D.poster.png" alt="Noise 2D preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Noise 2D</div>
           <div class="card-meta">Noise2D</div>
           <div class="card-links">
@@ -734,7 +751,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/PerlinNoise/NoiseGraph.webp" alt="Noise Graph preview" loading="lazy"><img class="thumb-still" src="previews/PerlinNoise/NoiseGraph.poster.png" alt="Noise Graph preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Noise Graph</div>
           <div class="card-meta">NoiseGraph</div>
           <div class="card-links">
@@ -744,7 +761,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/PerlinNoise/NoiseLoop.webp" alt="Noise Loop preview" loading="lazy"><img class="thumb-still" src="previews/PerlinNoise/NoiseLoop.poster.png" alt="Noise Loop preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Noise Loop</div>
           <div class="card-meta">NoiseLoop</div>
           <div class="card-links">
@@ -760,7 +777,7 @@
   <h2>Sound<span class="section-count">19 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencyBarGraph1-Simple.webp" alt="Frequency Bar Graph 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencyBarGraph1-Simple.poster.png" alt="Frequency Bar Graph 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Bar Graph 1 – Simple</div>
           <div class="card-meta">FrequencyBarGraph1-Simple</div>
           <div class="card-links">
@@ -770,7 +787,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencyBarGraph2-Axes.webp" alt="Frequency Bar Graph 2 – Axes preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencyBarGraph2-Axes.poster.png" alt="Frequency Bar Graph 2 – Axes preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Bar Graph 2 – Axes</div>
           <div class="card-meta">FrequencyBarGraph2-Axes</div>
           <div class="card-links">
@@ -780,7 +797,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencyBarGraph3-WithClasses.webp" alt="Frequency Bar Graph 3 – With Classes preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencyBarGraph3-WithClasses.poster.png" alt="Frequency Bar Graph 3 – With Classes preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Bar Graph 3 – With Classes</div>
           <div class="card-meta">FrequencyBarGraph3-WithClasses</div>
           <div class="card-links">
@@ -790,7 +807,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencyBubbles1-Simple.webp" alt="Frequency Bubbles 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencyBubbles1-Simple.poster.png" alt="Frequency Bubbles 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Bubbles 1 – Simple</div>
           <div class="card-meta">FrequencyBubbles1-Simple</div>
           <div class="card-links">
@@ -800,7 +817,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencyBubbles2-Image.webp" alt="Frequency Bubbles 2 – Image preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencyBubbles2-Image.poster.png" alt="Frequency Bubbles 2 – Image preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Bubbles 2 – Image</div>
           <div class="card-meta">FrequencyBubbles2-Image</div>
           <div class="card-links">
@@ -810,7 +827,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/FrequencySpectrum1-Simple.webp" alt="Frequency Spectrum 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/FrequencySpectrum1-Simple.poster.png" alt="Frequency Spectrum 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Frequency Spectrum 1 – Simple</div>
           <div class="card-meta">FrequencySpectrum1-Simple</div>
           <div class="card-links">
@@ -820,7 +837,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevel1-CircleSizeMeter.webp" alt="Sound Level 1 – Circle Size Meter preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevel1-CircleSizeMeter.poster.png" alt="Sound Level 1 – Circle Size Meter preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level 1 – Circle Size Meter</div>
           <div class="card-meta">SoundLevel1-CircleSizeMeter</div>
           <div class="card-links">
@@ -830,7 +847,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevel2-CircleYLocationMeter.webp" alt="Sound Level 2 – Circle YLocation Meter preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevel2-CircleYLocationMeter.poster.png" alt="Sound Level 2 – Circle YLocation Meter preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level 2 – Circle YLocation Meter</div>
           <div class="card-meta">SoundLevel2-CircleYLocationMeter</div>
           <div class="card-links">
@@ -840,7 +857,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelBubbles1-Simple.webp" alt="Sound Level Bubbles 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelBubbles1-Simple.poster.png" alt="Sound Level Bubbles 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Bubbles 1 – Simple</div>
           <div class="card-meta">SoundLevelBubbles1-Simple</div>
           <div class="card-links">
@@ -850,7 +867,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelBubbles2-Image.webp" alt="Sound Level Bubbles 2 – Image preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelBubbles2-Image.poster.png" alt="Sound Level Bubbles 2 – Image preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Bubbles 2 – Image</div>
           <div class="card-meta">SoundLevelBubbles2-Image</div>
           <div class="card-links">
@@ -860,7 +877,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelTimesSeries1-Simple.webp" alt="Sound Level Times Series 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelTimesSeries1-Simple.poster.png" alt="Sound Level Times Series 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Times Series 1 – Simple</div>
           <div class="card-meta">SoundLevelTimesSeries1-Simple</div>
           <div class="card-links">
@@ -870,7 +887,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundLevelTimesSeries2-Axes.webp" alt="Sound Level Times Series 2 – Axes preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundLevelTimesSeries2-Axes.poster.png" alt="Sound Level Times Series 2 – Axes preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Level Times Series 2 – Axes</div>
           <div class="card-meta">SoundLevelTimesSeries2-Axes</div>
           <div class="card-links">
@@ -880,7 +897,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundReactiveFlower1-SoundLevel.webp" alt="Sound Reactive Flower 1 – Sound Level preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundReactiveFlower1-SoundLevel.poster.png" alt="Sound Reactive Flower 1 – Sound Level preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Reactive Flower 1 – Sound Level</div>
           <div class="card-meta">SoundReactiveFlower1-SoundLevel</div>
           <div class="card-links">
@@ -890,7 +907,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundReactiveFlower2-Frequency.webp" alt="Sound Reactive Flower 2 – Frequency preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundReactiveFlower2-Frequency.poster.png" alt="Sound Reactive Flower 2 – Frequency preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Reactive Flower 2 – Frequency</div>
           <div class="card-meta">SoundReactiveFlower2-Frequency</div>
           <div class="card-links">
@@ -900,7 +917,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundVis1-WaveformAndSpectrogram.webp" alt="Sound Vis 1 – Waveform And Spectrogram preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundVis1-WaveformAndSpectrogram.poster.png" alt="Sound Vis 1 – Waveform And Spectrogram preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 1 – Waveform And Spectrogram</div>
           <div class="card-meta">SoundVis1-WaveformAndSpectrogram</div>
           <div class="card-links">
@@ -910,7 +927,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/SoundVis2-NowWithAxisLabels.webp" alt="Sound Vis 2 – Now With Axis Labels preview" loading="lazy"><img class="thumb-still" src="previews/Sound/SoundVis2-NowWithAxisLabels.poster.png" alt="Sound Vis 2 – Now With Axis Labels preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 2 – Now With Axis Labels</div>
           <div class="card-meta">SoundVis2-NowWithAxisLabels</div>
           <div class="card-links">
@@ -920,7 +937,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundVis3.poster.png" alt="Sound Vis 3 preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 3</div>
           <div class="card-meta">SoundVis3</div>
           <div class="card-links">
@@ -930,7 +947,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/Sound/SoundVis4-ImprovedPerformance.poster.png" alt="Sound Vis 4 – Improved Performance preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Sound Vis 4 – Improved Performance</div>
           <div class="card-meta">SoundVis4-ImprovedPerformance</div>
           <div class="card-links">
@@ -940,7 +957,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Sound/WaveformVis1-Simple.webp" alt="Waveform Vis 1 – Simple preview" loading="lazy"><img class="thumb-still" src="previews/Sound/WaveformVis1-Simple.poster.png" alt="Waveform Vis 1 – Simple preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Waveform Vis 1 – Simple</div>
           <div class="card-meta">WaveformVis1-Simple</div>
           <div class="card-links">
@@ -956,7 +973,7 @@
   <h2>Vectors<span class="section-count">9 examples</span></h2>
   <div class="grid">
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/AngleExplorer.webp" alt="Angle Explorer preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/AngleExplorer.poster.png" alt="Angle Explorer preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Angle Explorer</div>
           <div class="card-meta">AngleExplorer</div>
           <div class="card-links">
@@ -966,7 +983,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/AnglePlayground.webp" alt="Angle Playground preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/AnglePlayground.poster.png" alt="Angle Playground preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Angle Playground</div>
           <div class="card-meta">AnglePlayground</div>
           <div class="card-links">
@@ -976,7 +993,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/BouncingBall.webp" alt="Bouncing Ball preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/BouncingBall.poster.png" alt="Bouncing Ball preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Bouncing Ball</div>
           <div class="card-meta">BouncingBall</div>
           <div class="card-links">
@@ -986,7 +1003,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/BouncingBallWithAcceleration.webp" alt="Bouncing Ball With Acceleration preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/BouncingBallWithAcceleration.poster.png" alt="Bouncing Ball With Acceleration preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Bouncing Ball With Acceleration</div>
           <div class="card-meta">BouncingBallWithAcceleration</div>
           <div class="card-links">
@@ -996,7 +1013,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/BouncingBallsAndLineSegments.webp" alt="Bouncing Balls And Line Segments preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/BouncingBallsAndLineSegments.poster.png" alt="Bouncing Balls And Line Segments preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Bouncing Balls And Line Segments</div>
           <div class="card-meta">BouncingBallsAndLineSegments</div>
           <div class="card-links">
@@ -1006,7 +1023,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/BouncingBallsAndLineSegmentsImproved.webp" alt="Bouncing Balls And Line Segments Improved preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/BouncingBallsAndLineSegmentsImproved.poster.png" alt="Bouncing Balls And Line Segments Improved preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Bouncing Balls And Line Segments Improved</div>
           <div class="card-meta">BouncingBallsAndLineSegmentsImproved</div>
           <div class="card-links">
@@ -1016,7 +1033,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/BouncingBallsAndRotatingRectangles.webp" alt="Bouncing Balls And Rotating Rectangles preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/BouncingBallsAndRotatingRectangles.poster.png" alt="Bouncing Balls And Rotating Rectangles preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Bouncing Balls And Rotating Rectangles</div>
           <div class="card-meta">BouncingBallsAndRotatingRectangles</div>
           <div class="card-links">
@@ -1026,7 +1043,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/DistancePointLine.webp" alt="Distance Point Line preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/DistancePointLine.poster.png" alt="Distance Point Line preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Distance Point Line</div>
           <div class="card-meta">DistancePointLine</div>
           <div class="card-links">
@@ -1036,7 +1053,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/Vectors/MagnitudePlayground.webp" alt="Magnitude Playground preview" loading="lazy"><img class="thumb-still" src="previews/Vectors/MagnitudePlayground.poster.png" alt="Magnitude Playground preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Magnitude Playground</div>
           <div class="card-meta">MagnitudePlayground</div>
           <div class="card-links">
@@ -1053,7 +1070,7 @@
   <div class="grid">
 <h3 class="subcategory">Basic</h3>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/Basic/DisplayText.poster.png" alt="Display Text Demo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Display Text Demo</div>
           <div class="card-meta">DisplayText</div>
           <div class="card-links">
@@ -1063,7 +1080,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/Basic/SliderOut.poster.png" alt="Simple Web Serial I/O Demo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Simple Web Serial I/O Demo</div>
           <div class="card-meta">SliderOut</div>
           <div class="card-links">
@@ -1073,7 +1090,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/Basic/SliderOutSuperBasic.poster.png" alt="Web Serial Demo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Web Serial Demo</div>
           <div class="card-meta">SliderOutSuperBasic</div>
           <div class="card-links">
@@ -1083,7 +1100,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/Basic/SliderOutWithInstructions.poster.png" alt="Simple Web Serial I/O Demo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Simple Web Serial I/O Demo</div>
           <div class="card-meta">SliderOutWithInstructions</div>
           <div class="card-links">
@@ -1094,7 +1111,7 @@
       </div>
 <h3 class="subcategory">ml5.js</h3>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/ml5js/HandWaveDetector.poster.png" alt="Hand Wave Detector preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Hand Wave Detector</div>
           <div class="card-meta">HandWaveDetector</div>
           <div class="card-links">
@@ -1104,7 +1121,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/ml5js/HandWaver.poster.png" alt="Hand Waver preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Hand Waver</div>
           <div class="card-meta">HandWaver</div>
           <div class="card-links">
@@ -1114,7 +1131,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/ml5js/NoseTracker.poster.png" alt="Nose Tracker preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Nose Tracker</div>
           <div class="card-meta">NoseTracker</div>
           <div class="card-links">
@@ -1125,7 +1142,7 @@
       </div>
 <h3 class="subcategory">p5.js</h3>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/Basic-WithP5js.poster.png" alt="Basic – Withp 5.js preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Basic – Withp 5.js</div>
           <div class="card-meta">Basic-WithP5js</div>
           <div class="card-links">
@@ -1135,7 +1152,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/BlankTemplate.poster.png" alt="Blank Template preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Blank Template</div>
           <div class="card-meta">BlankTemplate</div>
           <div class="card-links">
@@ -1145,7 +1162,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/CircleSizeIn.poster.png" alt="Circle Size In preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Circle Size In</div>
           <div class="card-meta">CircleSizeIn</div>
           <div class="card-links">
@@ -1155,7 +1172,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/CircleSizeInDemo.poster.png" alt="Circle Size In Demo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Circle Size In Demo</div>
           <div class="card-meta">CircleSizeInDemo</div>
           <div class="card-links">
@@ -1165,7 +1182,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/ColorIO.poster.png" alt="Color IO preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Color IO</div>
           <div class="card-meta">ColorIO</div>
           <div class="card-links">
@@ -1175,7 +1192,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/ColorSerialOut.poster.png" alt="Color Serial Out preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Color Serial Out</div>
           <div class="card-meta">ColorSerialOut</div>
           <div class="card-links">
@@ -1185,7 +1202,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/DisplayShapeBidirectional.poster.png" alt="Display Shape Bidirectional preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Display Shape Bidirectional</div>
           <div class="card-meta">DisplayShapeBidirectional</div>
           <div class="card-links">
@@ -1195,7 +1212,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/DisplayShapeOut.poster.png" alt="Display Shape Out preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Display Shape Out</div>
           <div class="card-meta">DisplayShapeOut</div>
           <div class="card-links">
@@ -1205,7 +1222,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/EtchASketchIn.poster.png" alt="Etch ASketch In preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Etch ASketch In</div>
           <div class="card-meta">EtchASketchIn</div>
           <div class="card-links">
@@ -1215,7 +1232,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/GraphIn.poster.png" alt="Graph In preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Graph In</div>
           <div class="card-meta">GraphIn</div>
           <div class="card-links">
@@ -1225,7 +1242,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/PaintIO.poster.png" alt="Paint IO preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Paint IO</div>
           <div class="card-meta">PaintIO</div>
           <div class="card-links">
@@ -1235,7 +1252,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/SerialTemplate.poster.png" alt="Serial Template preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Serial Template</div>
           <div class="card-meta">SerialTemplate</div>
           <div class="card-links">
@@ -1245,7 +1262,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/ShapeLocationIn.poster.png" alt="Shape Location In preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Shape Location In</div>
           <div class="card-meta">ShapeLocationIn</div>
           <div class="card-links">
@@ -1255,7 +1272,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img src="previews/WebSerial/p5js/XMouseSerialOut.poster.png" alt="XMouse Serial Out preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">XMouse Serial Out</div>
           <div class="card-meta">XMouseSerialOut</div>
           <div class="card-links">
@@ -1272,7 +1289,7 @@
   <div class="grid">
 <h3 class="subcategory">HandPose</h3>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/ml5js/HandPose/HandPoseDemo.webp" alt="Hand PoseDemo preview" loading="lazy"><img class="thumb-still" src="previews/ml5js/HandPose/HandPoseDemo.poster.png" alt="Hand PoseDemo preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Hand PoseDemo</div>
           <div class="card-meta">HandPoseDemo</div>
           <div class="card-links">
@@ -1282,7 +1299,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/ml5js/HandPose/HandWaveDetector.webp" alt="Hand Wave Detector preview" loading="lazy"><img class="thumb-still" src="previews/ml5js/HandPose/HandWaveDetector.poster.png" alt="Hand Wave Detector preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Hand Wave Detector</div>
           <div class="card-meta">HandWaveDetector</div>
           <div class="card-links">
@@ -1293,7 +1310,7 @@
       </div>
 <h3 class="subcategory">PoseNet</h3>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/ml5js/PoseNet/ElmoGenerator.webp" alt="Elmo Generator preview" loading="lazy"><img class="thumb-still" src="previews/ml5js/PoseNet/ElmoGenerator.poster.png" alt="Elmo Generator preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Elmo Generator</div>
           <div class="card-meta">ElmoGenerator</div>
           <div class="card-links">
@@ -1303,7 +1320,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/ml5js/PoseNet/ElmoGeneratorMultiperson.webp" alt="Elmo Generator Multiperson preview" loading="lazy"><img class="thumb-still" src="previews/ml5js/PoseNet/ElmoGeneratorMultiperson.poster.png" alt="Elmo Generator Multiperson preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Elmo Generator Multiperson</div>
           <div class="card-meta">ElmoGeneratorMultiperson</div>
           <div class="card-links">
@@ -1313,7 +1330,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-thumb"><img class="thumb-anim" src="previews/ml5js/PoseNet/Skeleton.webp" alt="Skeleton preview" loading="lazy"><img class="thumb-still" src="previews/ml5js/PoseNet/Skeleton.poster.png" alt="Skeleton preview" loading="lazy"></div><div class="card-body">
           <div class="card-name">Skeleton</div>
           <div class="card-meta">Skeleton</div>
           <div class="card-links">

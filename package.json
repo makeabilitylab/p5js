@@ -1,0 +1,14 @@
+{
+  "name": "makeabilitylab-p5js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tooling for the Makeability Lab p5.js examples gallery. NOTE: the examples themselves need no install — they load p5.js from CDN and run by opening index.html. These dev dependencies exist ONLY to (re)generate gallery thumbnail previews.",
+  "scripts": {
+    "previews": "node scripts/capture_previews.mjs",
+    "gallery": "python3 scripts/build_gallery.py"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  },
+  "license": "MIT"
+}

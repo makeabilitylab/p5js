@@ -32,16 +32,20 @@ Web Serial requires **Chrome**, **Edge**, or **Opera**. See the [Web Serial less
 
 1. Create a folder under the appropriate category (e.g., `Sound/MyNewVis/`)
 2. Add an `index.html` (and optional `sketch.js`, `css/style.css`, etc.)
-3. Optionally add a `screenshot.png` for a thumbnail in the gallery
-4. Commit and push — the gallery rebuilds automatically
+3. Commit and push — the gallery rebuilds automatically, and a thumbnail preview
+   (an animated WebP for canvas sketches) is generated for your example. To tune
+   or skip that capture, drop a `preview.json` next to your `index.html` (see
+   [`scripts/README.md`](scripts/README.md)).
 
 ## How the gallery works
 
-The [interactive gallery](https://makeabilitylab.github.io/p5js/) is auto-generated on every push to `main` by a GitHub Actions workflow. Here's how it's set up:
+The [interactive gallery](https://makeabilitylab.github.io/p5js/) is auto-generated on every push to `main` by a GitHub Actions workflow. Here's how it's set up (see [`scripts/README.md`](scripts/README.md) for the full pipeline):
 
-**[`scripts/build_gallery.py`](scripts/build_gallery.py)** walks the repo, finds every folder containing an `index.html`, groups them by category and subcategory, and writes a self-contained `index.html` at the repo root. Configuration (excluded directories, branch name, repo URL) is defined as constants at the top of the script.
+**[`scripts/capture_previews.mjs`](scripts/capture_previews.mjs)** drives a headless browser (Playwright + ffmpeg) to capture a thumbnail for each example — an animated WebP loop for canvas sketches, a static poster otherwise — into `previews/`. It content-hashes each example and **skips unchanged ones**, so previews are generated once and only regenerated when that example's code changes.
 
-**[`.github/workflows/build-gallery.yml`](.github/workflows/build-gallery.yml)** runs the build script and commits the generated `index.html` back to `main`. The `[skip ci]` tag in the commit message prevents an infinite loop.
+**[`scripts/build_gallery.py`](scripts/build_gallery.py)** walks the repo, finds every folder containing an `index.html`, groups them by category and subcategory, and writes a self-contained `index.html` at the repo root. Each card uses the captured preview, falling back to a static poster, a hand-added `screenshot.*`, or a category emoji. Configuration (excluded directories, branch name, repo URL) is defined as constants at the top of the script.
+
+**[`.github/workflows/build-gallery.yml`](.github/workflows/build-gallery.yml)** runs both scripts and commits the generated `index.html` and `previews/` back to `main`. The `[skip ci]` tag in the commit message prevents an infinite loop. (Preview generation needs Node + ffmpeg, but **running the examples needs neither** — they load p5.js from CDN.)
 
 **GitHub Pages** is configured under Settings → Pages to deploy from the `main` branch at `/` (root). No special "GitHub Actions" source setting is needed — the workflow simply commits the file to the branch that Pages already serves.
 
